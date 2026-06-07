@@ -12,16 +12,12 @@
             user-select: none;
             -webkit-tap-highlight-color: transparent;
         }
-
         body {
             width: 100%;
             min-height: 100vh;
             background: #000;
-            overflow-x: hidden;
-            font-family: 'Segoe UI', system-ui, -apple-system, 'Poppins', sans-serif;
+            font-family: 'Segoe UI', system-ui, sans-serif;
         }
-
-        /* Контейнер с фоном */
         .game-container {
             position: relative;
             width: 100%;
@@ -29,15 +25,12 @@
             background-image: url('copy_4432001B-F045-479C-A4B1-7135B9218A73.jpeg');
             background-size: cover;
             background-position: center;
-            background-repeat: no-repeat;
             background-attachment: fixed;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
         }
-
-        /* Затемнение сверху для читаемости счётчика (опционально) */
         .game-container::before {
             content: '';
             position: absolute;
@@ -48,8 +41,6 @@
             background: rgba(0, 0, 0, 0.3);
             pointer-events: none;
         }
-
-        /* Всё поверх фона */
         .content {
             position: relative;
             z-index: 2;
@@ -61,8 +52,6 @@
             min-height: 100vh;
             padding: 30px 20px 50px;
         }
-
-        /* Счётчик деталей */
         .counter-area {
             background: rgba(0, 0, 0, 0.7);
             backdrop-filter: blur(8px);
@@ -73,46 +62,28 @@
             gap: 12px;
             box-shadow: 0 8px 20px rgba(0,0,0,0.4);
             border: 1px solid rgba(255,215,0,0.4);
-            margin-top: 20px;
         }
-        .gear-icon {
-            font-size: 2.8rem;
-            filter: drop-shadow(0 2px 4px black);
-        }
+        .gear-icon { font-size: 2.8rem; }
         .counter-number {
             font-size: 3rem;
             font-weight: bold;
             color: #FFD966;
             text-shadow: 0 2px 0 #7a5c00;
-            letter-spacing: 2px;
-            line-height: 1;
         }
-        .counter-label {
-            font-size: 0.8rem;
-            color: #ddd;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-        }
-
-        /* Мотоцикл (зона тапа) */
         .bike-wrapper {
             flex: 1;
             display: flex;
             align-items: center;
             justify-content: center;
             width: 100%;
-            margin: 20px 0;
         }
         .bike-tap {
             cursor: pointer;
             transition: transform 0.08s cubic-bezier(0.2, 0.9, 0.4, 1.1);
             display: inline-block;
             max-width: 85%;
-            width: auto;
         }
-        .bike-tap:active {
-            transform: scale(0.92);
-        }
+        .bike-tap:active { transform: scale(0.92); }
         .bike-image {
             width: 100%;
             max-width: 400px;
@@ -120,166 +91,170 @@
             display: block;
             margin: 0 auto;
             filter: drop-shadow(0 12px 20px rgba(0,0,0,0.6));
-            pointer-events: none; /* чтобы клики проходили через картинку к родителю */
         }
-
-        /* Подсказка и место для будущих кнопок (магазин и т.д.) */
         .bottom-panel {
             width: 100%;
-            background: rgba(0, 0, 0, 0.65);
+            background: rgba(0, 0, 0, 0.7);
             backdrop-filter: blur(12px);
             border-radius: 48px;
-            padding: 16px 20px;
-            margin-top: 20px;
+            padding: 16px;
             display: flex;
             justify-content: space-between;
-            align-items: center;
             gap: 15px;
             flex-wrap: wrap;
-            border: 1px solid rgba(255,180,50,0.5);
         }
         .future-button {
             background: #f0a500;
-            border: none;
             padding: 12px 20px;
             border-radius: 60px;
             font-weight: bold;
-            font-size: 1.1rem;
-            color: #1f2a0e;
+            text-align: center;
             flex: 1;
+            color: #1f2a0e;
+        }
+        .error-message {
+            background: rgba(0,0,0,0.8);
+            color: #ff8888;
+            padding: 10px;
+            border-radius: 20px;
             text-align: center;
-            box-shadow: 0 4px 8px black;
-            opacity: 0.8;
-            cursor: default; /* пока не добавлен функционал, просто визуально */
+            font-size: 0.8rem;
+            margin-top: 10px;
         }
-        .future-button:active {
-            transform: scale(0.97);
-        }
-        .info-text {
-            font-size: 0.7rem;
-            color: #ffcc88;
-            text-align: center;
-        }
-
         @media (max-width: 600px) {
             .counter-number { font-size: 2.2rem; }
-            .gear-icon { font-size: 2rem; }
             .bike-image { max-width: 280px; }
-            .future-button { font-size: 0.9rem; padding: 10px 12px; }
-            .counter-area { padding: 8px 20px; }
         }
     </style>
 </head>
 <body>
 <div class="game-container">
     <div class="content">
-        <!-- Верхняя часть: счётчик деталей -->
         <div class="counter-area">
             <span class="gear-icon">⚙️</span>
-            <div style="display: flex; flex-direction: column; align-items: center;">
-                <div class="counter-number" id="partsCounter">0</div>
-                <div class="counter-label">деталей</div>
-            </div>
+            <div class="counter-number" id="partsCounter">0</div>
+            <div style="font-size:0.7rem;">деталей</div>
         </div>
 
-        <!-- Мотоцикл - зона для тапа -->
         <div class="bike-wrapper">
             <div class="bike-tap" id="tapZone">
-                <img src="IMG_0877-no-bg-preview-carve.photos.png" alt="Мотоцикл" class="bike-image" id="bikeImg">
+                <img class="bike-image" id="bikeImg" alt="Мотоцикл">
             </div>
         </div>
 
-        <!-- Нижняя панель (здесь скоро появится магазин, награды и т.д.) -->
         <div class="bottom-panel">
             <div class="future-button">🏪 МАГАЗИН (скоро)</div>
             <div class="future-button">🏆 НАГРАДЫ (скоро)</div>
-            <div class="info-text">⚡ тапай по байку → получай детали</div>
         </div>
+        <div id="errorMsg" class="error-message" style="display:none;"></div>
     </div>
 </div>
 
 <script>
-    // ----- ИГРОВАЯ ЛОГИКА -----
-    let parts = 0;  // количество собранных деталей (⚙️)
-    
-    // Элементы на странице
-    const partsCounterElement = document.getElementById('partsCounter');
+    let parts = 0;
+    const partsCounter = document.getElementById('partsCounter');
     const tapZone = document.getElementById('tapZone');
-    const bikeImage = document.getElementById('bikeImg');
+    const bikeImg = document.getElementById('bikeImg');
+    const errorMsg = document.getElementById('errorMsg');
+
+    // ПЫТАЕМСЯ ЗАГРУЗИТЬ МОТОЦИКЛ — СПИСОК ВОЗМОЖНЫХ ИМЁН
+    const possibleNames = [
+        'IMG_0877-no-bg-preview-carve.photos.png',
+        'IMG_0877-no-bg-preview-carve.photos.PNG',
+        'IMG_0877-no-bg-preview-carve.photos.png.png', // на всякий случай
+        'IMG_0877-no-bg-preview-carve.photos.jpg',
+        'IMG_0877-no-bg-preview-carve.photos.jpeg',
+        'motorbike.png',
+        'bike.png',
+        'moto.png'
+    ];
     
-    // Функция обновления счётчика на экране
+    let imageLoaded = false;
+    
+    function tryLoadImage(index) {
+        if (index >= possibleNames.length) {
+            // ничего не загрузилось — показываем ошибку и эмодзи вместо мотоцикла
+            bikeImg.style.display = 'none';
+            tapZone.innerHTML = '<div style="font-size: 5rem; text-align: center;">🏍️<br><span style="font-size:1rem;">(картинка не найдена)</span><br><span style="font-size:0.7rem;">проверь имя файла</span></div>';
+            errorMsg.style.display = 'block';
+            errorMsg.innerHTML = '⚠️ Файл мотоцикла не загрузился!<br>Ожидаемые имена: ' + possibleNames.join(', ') + '<br><br>👉 Переименуй свой PNG в: <b>IMG_0877-no-bg-preview-carve.photos.png</b>';
+            return;
+        }
+        
+        const img = new Image();
+        img.onload = function() {
+            // Картинка загрузилась!
+            bikeImg.src = possibleNames[index];
+            bikeImg.style.display = 'block';
+            imageLoaded = true;
+            errorMsg.style.display = 'none';
+            console.log('✅ Загружено:', possibleNames[index]);
+        };
+        img.onerror = function() {
+            // пробуем следующее имя
+            tryLoadImage(index + 1);
+        };
+        img.src = possibleNames[index];
+    }
+    
+    // Запускаем поиск картинки
+    tryLoadImage(0);
+    
     function updateUI() {
-        partsCounterElement.innerText = Math.floor(parts);
+        partsCounter.innerText = Math.floor(parts);
         saveGame();
     }
     
-    // Добавление деталей (за тап)
     function addParts(amount) {
         parts += amount;
         updateUI();
     }
     
-    // Анимация нажатия (уменьшение + виброотклик на телефонах где поддерживается)
     function animateTap() {
-        // Добавляем класс активной анимации
         tapZone.style.transform = 'scale(0.92)';
-        setTimeout(() => {
-            tapZone.style.transform = 'scale(1)';
-        }, 100);
-        
-        // Лёгкая вибрация (если устройство поддерживает и не в настройках отключено)
-        if (window.navigator && window.navigator.vibrate) {
-            window.navigator.vibrate(20);
-        }
+        setTimeout(() => { tapZone.style.transform = 'scale(1)'; }, 100);
+        if (window.navigator && window.navigator.vibrate) navigator.vibrate(20);
     }
     
-    // Обработчик тапа/клика
-    function onTap(event) {
-        // Анимация
-        animateTap();
-        // Даём 1 деталь за тап
-        addParts(1);
-        
-        // Небольшой визуальный фидбек: можно добавить "всплывающую" надпись +1
-        createFloatingNumber(event.clientX, event.clientY);
-    }
-    
-    // Создаём всплывающую цифру +1 в месте клика (для кайфа)
     function createFloatingNumber(x, y) {
-        const floating = document.createElement('div');
-        floating.innerText = '+1 ⚙️';
-        floating.style.position = 'fixed';
-        floating.style.left = (x - 20) + 'px';
-        floating.style.top = (y - 30) + 'px';
-        floating.style.color = '#FFD966';
-        floating.style.fontWeight = 'bold';
-        floating.style.fontSize = '1.8rem';
-        floating.style.textShadow = '1px 1px 0 black';
-        floating.style.pointerEvents = 'none';
-        floating.style.zIndex = '9999';
-        floating.style.opacity = '1';
-        floating.style.transition = 'all 0.5s ease-out';
-        document.body.appendChild(floating);
-        
-        // Анимация улетания вверх и исчезновения
-        setTimeout(() => {
-            floating.style.transform = 'translateY(-60px)';
-            floating.style.opacity = '0';
-        }, 20);
-        
-        setTimeout(() => {
-            floating.remove();
-        }, 600);
+        const div = document.createElement('div');
+        div.innerText = '+1 ⚙️';
+        div.style.position = 'fixed';
+        div.style.left = (x - 20) + 'px';
+        div.style.top = (y - 30) + 'px';
+        div.style.color = '#FFD966';
+        div.style.fontSize = '1.8rem';
+        div.style.fontWeight = 'bold';
+        div.style.textShadow = '1px 1px 0 black';
+        div.style.pointerEvents = 'none';
+        div.style.zIndex = '9999';
+        div.style.transition = 'all 0.5s ease-out';
+        document.body.appendChild(div);
+        setTimeout(() => { div.style.transform = 'translateY(-60px)'; div.style.opacity = '0'; }, 20);
+        setTimeout(() => div.remove(), 600);
     }
     
-    // СОХРАНЕНИЕ ПРОГРЕССА (localStorage)
+    function onTap(event) {
+        animateTap();
+        addParts(1);
+        let clientX = event.clientX;
+        let clientY = event.clientY;
+        if (event.touches) {
+            clientX = event.touches[0].clientX;
+            clientY = event.touches[0].clientY;
+        }
+        createFloatingNumber(clientX, clientY);
+    }
+    
+    tapZone.addEventListener('click', onTap);
+    tapZone.addEventListener('touchstart', (e) => {
+        e.preventDefault();
+        onTap(e);
+    });
+    
     function saveGame() {
-        const saveData = {
-            parts: parts
-        };
-        localStorage.setItem('MotoTapSave', JSON.stringify(saveData));
+        localStorage.setItem('MotoTapSave', JSON.stringify({ parts: parts }));
     }
-    
     function loadGame() {
         const saved = localStorage.getItem('MotoTapSave');
         if (saved) {
@@ -287,25 +262,10 @@
                 const data = JSON.parse(saved);
                 if (data.parts !== undefined) parts = data.parts;
                 updateUI();
-            } catch(e) { console.warn('ошибка загрузки'); }
+            } catch(e) {}
         }
-        updateUI();
     }
-    
-    // Привязываем обработчики событий (для мышки и для тач-экрана)
-    tapZone.addEventListener('click', onTap);
-    // Для лучшего отклика на тач-устройствах:
-    tapZone.addEventListener('touchstart', (e) => {
-        e.preventDefault();
-        const touch = e.touches[0];
-        onTap(touch);
-    });
-    
-    // Загрузка сохранения при старте
     loadGame();
-    
-    // Небольшая подстраховка: если картинка мотоцикла не загрузилась, ничего страшного
-    console.log('Игра готова! Тапай по мотоциклу и собирай детали ⚙️');
 </script>
 </body>
 </html>
