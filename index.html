@@ -46,13 +46,23 @@
             pointer-events: none;
         }
 
-        /* ТЁМНАЯ СФЕРА — плотные края, прозрачный центр */
+        /* Центрируем всё содержимое по вертикали и чуть опускаем */
+        .content-center {
+            position: relative;
+            z-index: 5;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transform: translateY(8%); /* Опускаем ниже */
+        }
+
+        /* ТЁМНАЯ СФЕРА — увеличенная */
         .sphere {
             position: absolute;
-            width: 280px;
-            height: 280px;
+            width: 320px;
+            height: 320px;
             border-radius: 50%;
-            /* Центр прозрачнее, края плотные */
             background: radial-gradient(circle at 35% 35%, 
                 rgba(30, 30, 45, 0.55) 0%,
                 rgba(25, 25, 40, 0.65) 30%,
@@ -63,12 +73,11 @@
                 0 5px 20px rgba(0, 0, 0, 0.5),
                 inset 0 1px 0 rgba(255, 255, 255, 0.08);
             border: 1px solid rgba(120, 100, 80, 0.4);
-            z-index: 1;
             pointer-events: none;
             transition: all 0.2s ease;
         }
 
-        /* Лёгкое свечение по краю (едва заметное) */
+        /* Лёгкое свечение по краю */
         .sphere::after {
             content: '';
             position: absolute;
@@ -83,16 +92,15 @@
             pointer-events: none;
         }
 
-        /* Зона тапа — свеча ПОВЕРХ сферы */
+        /* Зона тапа — свеча увеличенная */
         .spark-plug-wrapper {
             position: relative;
-            z-index: 10;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
             width: 80%;
-            max-width: 220px;
+            max-width: 260px;
         }
 
         .spark-plug {
@@ -102,7 +110,6 @@
             transition: transform 0.07s cubic-bezier(0.2, 0.9, 0.4, 1.1);
             filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.5));
             position: relative;
-            z-index: 2;
         }
 
         .spark-plug:active {
@@ -121,7 +128,7 @@
             overflow: hidden;
         }
 
-        /* Осколки (белые кусочки) */
+        /* Осколки */
         .debris {
             position: absolute;
             width: 7px;
@@ -165,25 +172,29 @@
         /* Адаптация под телефоны */
         @media (max-width: 600px) {
             .sphere {
-                width: 220px;
-                height: 220px;
+                width: 260px;
+                height: 260px;
             }
             .spark-plug-wrapper {
-                max-width: 170px;
+                max-width: 210px;
+            }
+            .content-center {
+                transform: translateY(10%);
             }
         }
     </style>
 </head>
 <body>
 <div class="game-container">
-    <!-- ТЁМНАЯ СФЕРА — плотные края, прозрачный центр -->
-    <div class="sphere"></div>
+    <div class="content-center">
+        <!-- ТЁМНАЯ СФЕРА -->
+        <div class="sphere"></div>
 
-    <!-- СВЕЧА ПОВЕРХ -->
-    <div class="spark-plug-wrapper" id="tapZone">
-        <img src="IMG_0884-photo.png" alt="Свеча зажигания" class="spark-plug" id="sparkPlug">
+        <!-- СВЕЧА ПОВЕРХ -->
+        <div class="spark-plug-wrapper" id="tapZone">
+            <img src="IMG_0884-photo.png" alt="Свеча зажигания" class="spark-plug" id="sparkPlug">
+        </div>
     </div>
-
     <div class="debris-container" id="debrisContainer"></div>
 </div>
 
@@ -267,7 +278,7 @@
         onTap(touch);
     });
     
-    console.log('✅ Сфера с плотными краями и прозрачным центром');
+    console.log('✅ Увеличенная сфера и свеча, опущены ниже');
 </script>
 </body>
 </html>
