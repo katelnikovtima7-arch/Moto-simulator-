@@ -46,7 +46,7 @@
             pointer-events: none;
         }
 
-        /* Центрируем и ОПУСКАЕМ НИЖЕ */
+        /* Центрируем и ОПУСКАЕМ ЕЩЁ НИЖЕ */
         .content-center {
             position: relative;
             z-index: 5;
@@ -54,10 +54,10 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            transform: translateY(18%); /* Было 8%, теперь 18% — ещё ниже */
+            transform: translateY(32%); /* Опустил ещё ниже */
         }
 
-        /* ТЁМНАЯ СФЕРА — размер не меняем */
+        /* ТЁМНАЯ СФЕРА */
         .sphere {
             position: absolute;
             width: 320px;
@@ -91,7 +91,7 @@
             pointer-events: none;
         }
 
-        /* Зона тапа — свеча УВЕЛИЧЕННАЯ */
+        /* Зона тапа — свеча */
         .spark-plug-wrapper {
             position: relative;
             display: flex;
@@ -99,7 +99,7 @@
             justify-content: center;
             cursor: pointer;
             width: 80%;
-            max-width: 300px; /* Было 260px, увеличил */
+            max-width: 300px;
         }
 
         .spark-plug {
@@ -174,10 +174,10 @@
                 height: 260px;
             }
             .spark-plug-wrapper {
-                max-width: 240px; /* Увеличил для телефона */
+                max-width: 240px;
             }
             .content-center {
-                transform: translateY(20%); /* Ещё ниже на телефоне */
+                transform: translateY(35%); /* На телефоне ещё ниже */
             }
         }
     </style>
@@ -185,10 +185,7 @@
 <body>
 <div class="game-container">
     <div class="content-center">
-        <!-- СФЕРА (размер не менялся) -->
         <div class="sphere"></div>
-
-        <!-- СВЕЧА УВЕЛИЧЕННАЯ -->
         <div class="spark-plug-wrapper" id="tapZone">
             <img src="IMG_0884-photo.png" alt="Свеча зажигания" class="spark-plug" id="sparkPlug">
         </div>
@@ -276,7 +273,7 @@
         onTap(touch);
     });
     
-    console.log('✅ Свеча увеличена, сфера без изменений, опущено ниже');
+    console.log('✅ Свеча и сфера опущены на 32% (ПК) и 35% (телефон)');
 </script>
 </body>
 </html>
