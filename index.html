@@ -47,7 +47,6 @@
             pointer-events: none;
         }
 
-        /* Верхняя панель */
         .stats-panel {
             position: absolute;
             top: 45px;
@@ -99,7 +98,6 @@
             background: rgba(255, 180, 60, 0.4);
         }
 
-        /* Ежедневный бонус */
         .daily-bonus-btn {
             position: absolute;
             top: 130px;
@@ -136,37 +134,50 @@
             color: #aaa;
         }
 
-        /* ===== ШТОРКА (свайп-панель) ===== */
+        /* ===== НОВАЯ ШТОРКА (УДЛИНЁННАЯ И УШИРЕННАЯ) ===== */
         .drawer-handle {
             position: absolute;
             right: 0;
             top: 50%;
             transform: translateY(-50%);
-            width: 8px;
-            height: 80px;
+            width: 28px;          /* Шире */
+            height: 180px;        /* Длиннее */
             background: linear-gradient(135deg, #ffaa44, #cc8800);
             border-radius: 20px 0 0 20px;
             z-index: 40;
             cursor: pointer;
-            box-shadow: -2px 0 10px rgba(0,0,0,0.3);
+            box-shadow: -3px 0 15px rgba(0,0,0,0.4);
             transition: 0.1s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .drawer-handle:active {
-            opacity: 0.7;
+            opacity: 0.8;
+            transform: translateY(-50%) scale(0.97);
+        }
+
+        /* Стрелка внутри хэндла */
+        .handle-arrow {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #2a1a00;
+            text-shadow: 0 1px 0 rgba(255,255,200,0.5);
+            transform: translateX(-3px);
         }
 
         /* Сама шторка */
         .drawer {
             position: absolute;
             top: 0;
-            right: -320px;
-            width: 280px;
+            right: -340px;
+            width: 300px;
             height: 100%;
-            background: rgba(10, 10, 15, 0.95);
+            background: rgba(10, 10, 15, 0.96);
             backdrop-filter: blur(16px);
-            border-left: 1px solid rgba(255, 180, 60, 0.5);
-            box-shadow: -5px 0 25px rgba(0, 0, 0, 0.5);
+            border-left: 2px solid rgba(255, 180, 60, 0.6);
+            box-shadow: -8px 0 30px rgba(0, 0, 0, 0.6);
             z-index: 50;
             transition: right 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
             display: flex;
@@ -179,25 +190,24 @@
             right: 0;
         }
 
-        /* Заголовок шторки */
         .drawer-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 24px;
             padding-bottom: 12px;
-            border-bottom: 1px solid rgba(255, 180, 60, 0.3);
+            border-bottom: 1px solid rgba(255, 180, 60, 0.4);
         }
 
         .drawer-title {
-            font-size: 1.3rem;
+            font-size: 1.4rem;
             font-weight: bold;
             color: #ffcc66;
             letter-spacing: 1px;
         }
 
         .drawer-close {
-            font-size: 1.8rem;
+            font-size: 2rem;
             cursor: pointer;
             color: #ffaa66;
             transition: 0.1s;
@@ -208,49 +218,22 @@
             transform: scale(0.9);
         }
 
-        /* Контент шторки (пока заглушка) */
         .drawer-content {
             flex: 1;
-            color: #ccc;
-            font-size: 0.9rem;
+            color: #ddd;
+            font-size: 0.95rem;
             text-align: center;
-            padding: 20px 0;
+            padding: 10px 0;
         }
 
         .upgrade-placeholder {
             background: rgba(255, 200, 100, 0.1);
-            border-radius: 20px;
-            padding: 20px;
+            border-radius: 24px;
+            padding: 24px 16px;
             margin: 10px 0;
-            border: 1px dashed rgba(255, 200, 100, 0.4);
+            border: 1px dashed rgba(255, 200, 100, 0.5);
         }
 
-        /* Подсказка "смахни" (видна только когда шторка закрыта) */
-        .swipe-hint {
-            position: absolute;
-            right: 15px;
-            top: 50%;
-            transform: translateY(-50%);
-            background: rgba(0,0,0,0.6);
-            backdrop-filter: blur(4px);
-            padding: 8px 12px;
-            border-radius: 30px;
-            font-size: 0.7rem;
-            color: #ffaa66;
-            border: 1px solid rgba(255,170,100,0.5);
-            pointer-events: none;
-            z-index: 41;
-            white-space: nowrap;
-            font-weight: bold;
-            letter-spacing: 1px;
-        }
-
-        .swipe-hint::before {
-            content: '👈';
-            margin-right: 5px;
-        }
-
-        /* Флоаты и остальное */
         .floating-message-container {
             position: absolute;
             top: 120px;
@@ -384,8 +367,8 @@
             .floating-message-container { top: 105px; }
             .daily-bonus-btn { top: 115px; right: 12px; padding: 5px 12px; }
             .drawer { width: 260px; right: -280px; }
-            .swipe-hint { right: 8px; font-size: 0.6rem; padding: 5px 10px; }
-            .drawer-handle { height: 60px; }
+            .drawer-handle { width: 24px; height: 140px; }
+            .handle-arrow { font-size: 1.6rem; }
         }
     </style>
 </head>
@@ -406,13 +389,12 @@
         <div><div class="daily-bonus-text" id="dailyBonusText">ЕЖЕДНЕВНЫЙ БОНУС</div><div class="daily-bonus-timer" id="dailyBonusTimer"></div></div>
     </div>
 
-    <!-- Подсказка "смахни" -->
-    <div class="swipe-hint" id="swipeHint">смахни</div>
+    <!-- ХЭНДЛ ШТОРКИ (с развёрнутой стрелкой) -->
+    <div class="drawer-handle" id="drawerHandle">
+        <div class="handle-arrow">◀◀</div>
+    </div>
 
-    <!-- Свайп-хэндл (зацепка) -->
-    <div class="drawer-handle" id="drawerHandle"></div>
-
-    <!-- Шторка (выезжающая панель) -->
+    <!-- Шторка -->
     <div class="drawer" id="drawer">
         <div class="drawer-header">
             <span class="drawer-title">📈 ПАССИВНЫЙ ДОХОД</span>
@@ -427,7 +409,7 @@
                 🚀 +10 дет/сек<br><br>
                 <span style="font-size:0.75rem; opacity:0.6;">листай вниз — контент будет</span>
             </div>
-            <div style="height: 200px;"></div> <!-- просто для скролла -->
+            <div style="height: 200px;"></div>
         </div>
     </div>
 
@@ -443,7 +425,7 @@
 </div>
 
 <script>
-    // ---- ИГРОВАЯ ЛОГИКА (та же, что и была) ----
+    // ---- ИГРОВАЯ ЛОГИКА (БЕЗ ИЗМЕНЕНИЙ) ----
     const tapZone = document.getElementById('tapZone');
     const debrisContainer = document.getElementById('debrisContainer');
     const messageContainer = document.getElementById('messageContainer');
@@ -643,28 +625,22 @@
     setInterval(() => { if (incomePerSecond > 0) addParts(incomePerSecond); }, 1000);
     loadGame();
     
-    // ========== ЛОГИКА ШТОРКИ (свайп) ==========
+    // ========== ЛОГИКА ШТОРКИ ==========
     const drawer = document.getElementById('drawer');
     const drawerHandle = document.getElementById('drawerHandle');
     const drawerClose = document.getElementById('drawerClose');
-    const swipeHint = document.getElementById('swipeHint');
     
     let startX = 0;
     let isDragging = false;
     
     function openDrawer() {
         drawer.classList.add('open');
-        swipeHint.style.opacity = '0';
-        setTimeout(() => { swipeHint.style.display = 'none'; }, 200);
     }
     
     function closeDrawer() {
         drawer.classList.remove('open');
-        swipeHint.style.display = 'flex';
-        setTimeout(() => { swipeHint.style.opacity = '1'; }, 50);
     }
     
-    // Обработка свайпа (мышь + тач)
     drawerHandle.addEventListener('mousedown', (e) => {
         startX = e.clientX;
         isDragging = true;
@@ -680,7 +656,7 @@
     window.addEventListener('mousemove', (e) => {
         if (!isDragging) return;
         const deltaX = e.clientX - startX;
-        if (deltaX < -20) { // сдвиг влево
+        if (deltaX < -20) {
             openDrawer();
             isDragging = false;
         }
@@ -701,13 +677,10 @@
     
     drawerClose.addEventListener('click', closeDrawer);
     
-    // На случай, если кто-то кликнет по хэндлу (тоже откроем)
     drawerHandle.addEventListener('click', (e) => {
         if (!drawer.classList.contains('open')) openDrawer();
         e.stopPropagation();
     });
-    
-    console.log('✅ Шторка готова. Смахни влево от жёлтой полоски!');
 </script>
 </body>
 </html>
