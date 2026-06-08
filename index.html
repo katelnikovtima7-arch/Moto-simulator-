@@ -46,7 +46,6 @@
             pointer-events: none;
         }
 
-        /* Центрируем и опускаем ещё чуть ниже */
         .content-center {
             position: relative;
             z-index: 5;
@@ -54,10 +53,9 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            transform: translateY(62%); /* Ещё чуть ниже */
+            transform: translateY(50%);
         }
 
-        /* ТЁМНАЯ СФЕРА */
         .sphere {
             position: absolute;
             width: 320px;
@@ -91,7 +89,6 @@
             pointer-events: none;
         }
 
-        /* Зона тапа — свеча (увеличена для двух пальцев) */
         .spark-plug-wrapper {
             position: relative;
             display: flex;
@@ -99,30 +96,24 @@
             justify-content: center;
             cursor: pointer;
             width: 80%;
-            max-width: 320px; /* Чуть увеличил зону тапа */
+            max-width: 320px;
             min-height: 320px;
+            transition: transform 0.07s cubic-bezier(0.2, 0.9, 0.4, 1.1);
         }
 
         .spark-plug {
             width: 100%;
             height: auto;
             display: block;
-            transition: transform 0.07s cubic-bezier(0.2, 0.9, 0.4, 1.1);
             filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.5));
             position: relative;
-            pointer-events: none; /* Чтобы тап проходил через картинку к родителю */
+            pointer-events: none;
         }
 
-        /* Анимация нажатия будет применяться к обёртке */
         .spark-plug-wrapper.tap-active {
             transform: scale(0.96);
         }
 
-        .spark-plug-wrapper {
-            transition: transform 0.07s cubic-bezier(0.2, 0.9, 0.4, 1.1);
-        }
-
-        /* Контейнер осколков */
         .debris-container {
             position: fixed;
             top: 0;
@@ -174,7 +165,6 @@
             }
         }
 
-        /* Адаптация под телефоны */
         @media (max-width: 600px) {
             .sphere {
                 width: 260px;
@@ -185,7 +175,7 @@
                 min-height: 260px;
             }
             .content-center {
-                transform: translateY(68%); /* Ещё ниже на телефоне */
+                transform: translateY(55%);
             }
         }
     </style>
@@ -205,11 +195,10 @@
     const tapZone = document.getElementById('tapZone');
     const debrisContainer = document.getElementById('debrisContainer');
     
-    // Счётчик для отладки (можно убрать)
     let tapCount = 0;
     
     function createDebris(x, y) {
-        const debrisCount = Math.floor(Math.random() * 3) + 1; // 1-3 осколка
+        const debrisCount = Math.floor(Math.random() * 3) + 1;
         
         for (let i = 0; i < debrisCount; i++) {
             const debris = document.createElement('div');
@@ -238,7 +227,6 @@
         }
     }
     
-    // Анимация нажатия на всей зоне
     function animateTap() {
         tapZone.classList.add('tap-active');
         setTimeout(() => {
@@ -247,12 +235,10 @@
         if (window.navigator && window.navigator.vibrate) navigator.vibrate(15);
     }
     
-    // Функция для одного тапа (палец/мышь)
     function handleTap(clientX, clientY) {
         animateTap();
         createDebris(clientX, clientY);
         
-        // Маленькая искра
         const spark = document.createElement('div');
         spark.innerHTML = '⚡';
         spark.style.position = 'fixed';
@@ -267,23 +253,16 @@
         setTimeout(() => { spark.style.transform = 'translateY(-15px)'; spark.style.opacity = '0'; }, 10);
         setTimeout(() => spark.remove(), 200);
         
-        // Счётчик для отладки (можно убрать)
         tapCount++;
         console.log('Тапов:', tapCount);
     }
     
-    // === ПОДДЕРЖКА МНОГОПАЛЬЦЕВОГО ТАПА ===
-    
-    // Для мыши (один клик)
     tapZone.addEventListener('click', (e) => {
         handleTap(e.clientX, e.clientY);
     });
     
-    // Для тач-экранов — обрабатываем ВСЕ пальцы
     tapZone.addEventListener('touchstart', (e) => {
-        e.preventDefault(); // Предотвращаем прокрутку и зум
-        
-        // Проходим по каждому пальцу
+        e.preventDefault();
         const touches = e.touches;
         for (let i = 0; i < touches.length; i++) {
             const touch = touches[i];
@@ -291,8 +270,7 @@
         }
     });
     
-    console.log('✅ Многопальцевый режим активирован! Тапай двумя пальцами — каждый палец засчитывается отдельно.');
-    console.log('✅ Положение — максимально удобное для двух пальцев');
+    console.log('✅ Положение поднято до комфортного уровня');
 </script>
 </body>
 </html>
