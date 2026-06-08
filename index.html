@@ -17,9 +17,9 @@
             width: 100%;
             min-height: 100vh;
             background: #000;
-            font-family: 'Segoe UI', system-ui, sans-serif;
             overflow: hidden;
             position: fixed;
+            font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
         }
 
         /* Контейнер с фоном на весь экран */
@@ -36,7 +36,7 @@
             justify-content: center;
         }
 
-        /* Затемнение для лучшей видимости свечи (опционально) */
+        /* Лёгкое затемнение, чтобы свеча читалась лучше */
         .game-container::before {
             content: '';
             position: absolute;
@@ -48,7 +48,24 @@
             pointer-events: none;
         }
 
-        /* Зона тапа — свеча зажигания */
+        /* === КУПОЛ (круглая обводка со свечением) === */
+        .dome {
+            position: absolute;
+            width: 320px;
+            height: 320px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(180, 220, 255, 0.08) 0%, rgba(100, 160, 220, 0.03) 60%, transparent 90%);
+            box-shadow: 
+                0 0 30px rgba(120, 180, 255, 0.15),
+                inset 0 0 15px rgba(150, 200, 255, 0.1);
+            border: 1px solid rgba(180, 220, 255, 0.25);
+            backdrop-filter: blur(2px);
+            pointer-events: none;
+            z-index: 1;
+            transition: all 0.2s ease;
+        }
+
+        /* Зона тапа — свеча зажигания (поверх купола) */
         .spark-plug-wrapper {
             position: relative;
             z-index: 10;
@@ -57,7 +74,7 @@
             justify-content: center;
             cursor: pointer;
             width: 80%;
-            max-width: 300px;
+            max-width: 260px;
         }
 
         .spark-plug {
@@ -65,7 +82,9 @@
             height: auto;
             display: block;
             transition: transform 0.07s cubic-bezier(0.2, 0.9, 0.4, 1.1);
-            filter: drop-shadow(0 8px 20px rgba(0, 0, 0, 0.5));
+            filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.4));
+            position: relative;
+            z-index: 2;
         }
 
         /* Анимация нажатия */
@@ -81,129 +100,133 @@
             width: 100%;
             height: 100%;
             pointer-events: none;
-            z-index: 1000;
+            z-index: 2000;
             overflow: hidden;
         }
 
-        /* Отдельный осколок */
+        /* Стиль осколка — белый неровный кусочек */
         .debris {
             position: absolute;
-            font-size: 1.5rem;
+            width: 8px;
+            height: 8px;
+            background: white;
+            border-radius: 2px;
+            box-shadow: 0 0 4px rgba(255, 255, 255, 0.8);
             pointer-events: none;
-            animation: flyAway 0.6s ease-out forwards;
-            z-index: 1001;
+            opacity: 0.95;
+            animation: fragmentFly 0.65s ease-out forwards;
         }
 
-        @keyframes flyAway {
+        /* Разные формы осколков (случайные) */
+        .debris.rounded {
+            border-radius: 50%;
+        }
+        .debris.shard {
+            border-radius: 1px;
+            transform: rotate(45deg);
+            width: 6px;
+            height: 12px;
+        }
+        .debris.tiny {
+            width: 5px;
+            height: 5px;
+        }
+
+        @keyframes fragmentFly {
             0% {
                 transform: translate(0, 0) scale(1) rotate(0deg);
                 opacity: 1;
             }
+            30% {
+                opacity: 1;
+            }
             100% {
-                transform: translate(var(--dx, 100px), var(--dy, -100px)) scale(0.3) rotate(720deg);
+                transform: translate(var(--dx, 60px), var(--dy, -80px)) scale(0.2) rotate(200deg);
                 opacity: 0;
             }
         }
 
-        /* Счётчик (пока просто для отладки, можно убрать потом) */
-        .counter-debug {
-            position: fixed;
-            bottom: 20px;
-            left: 20px;
-            background: rgba(0,0,0,0.6);
-            color: #ffaa33;
-            padding: 8px 16px;
-            border-radius: 30px;
-            font-size: 1rem;
-            z-index: 20;
-            font-weight: bold;
-            pointer-events: none;
-        }
-
-        /* Адаптация под разные экраны */
+        /* Адаптация под маленькие экраны */
         @media (max-width: 600px) {
-            .spark-plug-wrapper {
-                max-width: 220px;
+            .dome {
+                width: 240px;
+                height: 240px;
             }
-            .debris {
-                font-size: 1.2rem;
+            .spark-plug-wrapper {
+                max-width: 200px;
             }
         }
     </style>
 </head>
 <body>
 <div class="game-container">
+    <!-- КУПОЛ - круглая обводка со свечением -->
+    <div class="dome"></div>
+
+    <!-- СВЕЧА -->
     <div class="spark-plug-wrapper" id="tapZone">
         <img src="IMG_0884-photo.png" alt="Свеча зажигания" class="spark-plug" id="sparkPlug">
     </div>
+
+    <!-- контейнер для летящих кусочков -->
     <div class="debris-container" id="debrisContainer"></div>
-    <div class="counter-debug" id="tapCounter">Тапов: 0</div>
 </div>
 
 <script>
-    // Счётчик тапов (пока для отладки, потом замените на сбор монет)
-    let tapCount = 0;
-    const tapCounterElement = document.getElementById('tapCounter');
-    
-    // Элементы
     const tapZone = document.getElementById('tapZone');
     const sparkPlug = document.getElementById('sparkPlug');
     const debrisContainer = document.getElementById('debrisContainer');
     
-    // Функция обновления счётчика
-    function updateCounter() {
-        tapCounterElement.innerText = `Тапов: ${tapCount}`;
-    }
-    
-    // Функция создания осколков (кусочков свечи)
+    // Функция создания белого осколка
     function createDebris(x, y) {
-        // Разные символы для осколков (можно заменить на маленькие чёрные кусочки)
-        const debrisTypes = ['⚡', '🔩', '⚙️', '💥', '▪️', '▫️', '•', '⦿'];
-        const debrisCount = Math.floor(Math.random() * 5) + 4; // 4-8 осколков
+        // Сколько кусочков: 1, 2 или 3
+        const debrisCount = Math.floor(Math.random() * 3) + 1;
         
         for (let i = 0; i < debrisCount; i++) {
             const debris = document.createElement('div');
-            debris.className = 'debris';
+            debris.classList.add('debris');
             
-            // Случайный символ осколка
-            const randomType = debrisTypes[Math.floor(Math.random() * debrisTypes.length)];
-            debris.innerText = randomType;
+            // Случайная форма осколка
+            const shape = Math.random();
+            if (shape < 0.33) {
+                debris.classList.add('rounded');
+            } else if (shape < 0.66) {
+                debris.classList.add('shard');
+            } else {
+                debris.classList.add('tiny');
+            }
             
-            // Случайное направление разлёта (в разные стороны)
-            const angle = Math.random() * Math.PI * 2;
-            const distance = 60 + Math.random() * 100;
-            const dx = Math.cos(angle) * distance;
-            const dy = Math.sin(angle) * distance - 30; // чуть вверх для красоты
+            // Случайное направление: сначала вверх, потом разлет в стороны и вниз
+            const angle = (Math.random() - 0.5) * Math.PI * 1.5 - Math.PI / 3; // угол от -120 до +60 градусов (вверх и в стороны)
+            const speed = 60 + Math.random() * 70;
+            const dx = Math.cos(angle) * speed * (Math.random() * 0.8 + 0.6);
+            const dy = Math.sin(angle) * speed * 0.9 - 40; // взлетает вверх
             
-            // Устанавливаем CSS переменные для анимации
             debris.style.setProperty('--dx', dx + 'px');
             debris.style.setProperty('--dy', dy + 'px');
             
-            // Позиция осколка — в месте тапа (с небольшим разбросом)
-            debris.style.left = (x - 15 + (Math.random() - 0.5) * 30) + 'px';
-            debris.style.top = (y - 15 + (Math.random() - 0.5) * 30) + 'px';
+            // Позиция осколка: в месте тапа с разбросом
+            debris.style.left = (x - 8 + (Math.random() - 0.5) * 28) + 'px';
+            debris.style.top = (y - 8 + (Math.random() - 0.5) * 24) + 'px';
             
-            // Случайный размер
-            const size = 1 + Math.random() * 0.8;
-            debris.style.fontSize = (1.2 * size) + 'rem';
+            // Случайный оттенок белого
+            const brightness = 200 + Math.random() * 55;
+            debris.style.backgroundColor = `rgb(${brightness}, ${brightness - 20}, 220)`;
             
             debrisContainer.appendChild(debris);
             
-            // Удаляем осколок после анимации
-            setTimeout(() => {
-                debris.remove();
-            }, 600);
+            // Удалить после анимации
+            setTimeout(() => debris.remove(), 650);
         }
     }
     
-    // Анимация нажатия (уменьшение и возврат)
+    // Анимация уменьшения свечи
     function animateTap() {
         sparkPlug.style.transform = 'scale(0.92)';
         setTimeout(() => {
             sparkPlug.style.transform = 'scale(1)';
         }, 100);
         
-        // Вибрация на телефонах
         if (window.navigator && window.navigator.vibrate) {
             window.navigator.vibrate(20);
         }
@@ -211,81 +234,61 @@
     
     // Обработчик тапа
     function onTap(event) {
-        // Увеличиваем счётчик
-        tapCount++;
-        updateCounter();
-        
-        // Анимация уменьшения свечи
         animateTap();
         
-        // Получаем координаты для осколков
         let clientX, clientY;
         if (event.touches) {
-            // Для тач-событий (телефон)
             clientX = event.touches[0].clientX;
             clientY = event.touches[0].clientY;
             event.preventDefault();
         } else {
-            // Для мыши (ПК)
             clientX = event.clientX;
             clientY = event.clientY;
         }
         
-        // Создаём летящие осколки
+        // Вылетают 1-3 белых кусочка
         createDebris(clientX, clientY);
         
-        // Дополнительный визуальный фидбек — всплывающая искра
-        createSpark(clientX, clientY);
+        // Лёгкий дополнительный эффект — микро-искра для красоты
+        createSparkle(clientX, clientY);
     }
     
-    // Эффект искры при тапе
-    function createSpark(x, y) {
+    // Микро-искра (чисто визуал)
+    function createSparkle(x, y) {
         const spark = document.createElement('div');
-        spark.innerText = '💥';
+        spark.innerHTML = '⚡';
         spark.style.position = 'fixed';
-        spark.style.left = (x - 12) + 'px';
-        spark.style.top = (y - 12) + 'px';
-        spark.style.fontSize = '1.8rem';
+        spark.style.left = (x - 10) + 'px';
+        spark.style.top = (y - 10) + 'px';
+        spark.style.fontSize = '1rem';
+        spark.style.opacity = '0.7';
         spark.style.pointerEvents = 'none';
-        spark.style.zIndex = '1002';
-        spark.style.opacity = '1';
-        spark.style.transition = 'all 0.3s ease-out';
+        spark.style.zIndex = '1000';
+        spark.style.transition = 'transform 0.2s ease-out, opacity 0.3s';
         document.body.appendChild(spark);
         
         setTimeout(() => {
-            spark.style.transform = 'translateY(-40px)';
+            spark.style.transform = 'translateY(-20px)';
             spark.style.opacity = '0';
         }, 10);
-        
-        setTimeout(() => {
-            spark.remove();
-        }, 300);
+        setTimeout(() => spark.remove(), 250);
     }
     
-    // Привязываем события
+    // События
     tapZone.addEventListener('click', onTap);
     tapZone.addEventListener('touchstart', (e) => {
         e.preventDefault();
         const touch = e.touches[0];
-        const fakeEvent = { touches: [touch], clientX: touch.clientX, clientY: touch.clientY };
-        onTap(fakeEvent);
+        onTap(touch);
     });
     
-    // Проверка загрузки картинок
-    const checkImages = () => {
-        const bgImage = new Image();
-        bgImage.src = 'IMG_0881.png';
-        bgImage.onerror = () => console.warn('⚠️ Фон не загрузился. Проверь имя файла: IMG_0881.png');
-        
-        const plugImage = new Image();
-        plugImage.src = 'IMG_0884-photo.png';
-        plugImage.onerror = () => console.warn('⚠️ Свеча не загрузилась. Проверь имя файла: IMG_0884-photo.png');
-        plugImage.onload = () => console.log('✅ Свеча загружена!');
-    };
+    // Проверка загрузки картинок (тихо)
+    const bgTest = new Image();
+    bgTest.src = 'IMG_0881.png';
+    const plugTest = new Image();
+    plugTest.src = 'IMG_0884-photo.png';
     
-    checkImages();
-    
-    console.log('🎮 Игра готова! Тапай по свече 🔥');
+    console.log('🏍️ Игра с куполом и белыми осколками запущена');
 </script>
 </body>
 </html>
