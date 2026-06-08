@@ -35,7 +35,6 @@
             justify-content: center;
         }
 
-        /* Лёгкое затемнение для контраста */
         .game-container::before {
             content: '';
             position: absolute;
@@ -43,126 +42,46 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.15);
+            background: rgba(0, 0, 0, 0.2);
             pointer-events: none;
         }
 
-        /* === ЯРКИЙ ТЁПЛЫЙ КУПОЛ БОЛЬШОГО РАЗМЕРА === */
-        .dome {
+        /* ТЁМНАЯ СФЕРА (компактная, под свечу) */
+        .sphere {
             position: absolute;
-            width: 480px;
-            height: 480px;
+            width: 280px;
+            height: 280px;
             border-radius: 50%;
-            pointer-events: none;
-            z-index: 1;
-            animation: gentlePulse 3s infinite ease-in-out;
-            
-            /* Основное свечение — насыщенное тёплое */
-            background: radial-gradient(circle at center, 
-                rgba(255, 160, 70, 0.45) 0%,
-                rgba(255, 120, 40, 0.3) 15%,
-                rgba(220, 80, 30, 0.18) 30%,
-                rgba(180, 60, 20, 0.08) 50%,
-                rgba(140, 40, 10, 0.03) 70%,
-                transparent 95%);
-            
-            /* Мягкое внешнее свечение */
+            background: radial-gradient(circle at 35% 35%, 
+                rgba(40, 40, 50, 0.9) 0%,
+                rgba(25, 25, 35, 0.85) 40%,
+                rgba(15, 15, 25, 0.9) 70%,
+                rgba(8, 8, 15, 0.95) 100%);
             box-shadow: 
-                0 0 100px rgba(255, 120, 40, 0.4),
-                0 0 50px rgba(255, 100, 30, 0.3),
-                inset 0 0 40px rgba(255, 140, 50, 0.25);
+                0 5px 20px rgba(0, 0, 0, 0.5),
+                inset 0 1px 0 rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(120, 100, 80, 0.4);
+            z-index: 1;
+            pointer-events: none;
+            transition: all 0.2s ease;
         }
-        
-        /* Яркое ядро в центре */
-        .dome-core {
+
+        /* ЛЁГКОЕ СВЕЧЕНИЕ ПО КРАЮ (едва заметное) */
+        .sphere::after {
+            content: '';
             position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 50%;
-            height: 50%;
+            top: 5px;
+            left: 5px;
+            right: 5px;
+            bottom: 5px;
             border-radius: 50%;
-            background: radial-gradient(circle, 
-                rgba(255, 180, 90, 0.5) 0%,
-                rgba(255, 140, 50, 0.25) 40%,
-                transparent 80%);
-            filter: blur(20px);
-            animation: corePulse 2s infinite alternate;
-        }
-        
-        /* Тёплые язычки/полосы как от нагретого металла */
-        .dome-stripes {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            background: repeating-radial-gradient(circle at 30% 40%, 
-                rgba(255, 160, 60, 0.15) 0px,
-                rgba(255, 120, 40, 0.08) 20px,
-                rgba(200, 80, 30, 0.05) 40px,
-                transparent 60px);
-            animation: stripesRotate 10s infinite linear;
-        }
-        
-        /* Тёплое облако вокруг */
-        .dome-aura {
-            position: absolute;
-            top: -20%;
-            left: -20%;
-            width: 140%;
-            height: 140%;
-            border-radius: 50%;
-            background: radial-gradient(circle at 30% 40%, 
-                rgba(255, 140, 50, 0.2) 0%,
-                rgba(200, 90, 30, 0.08) 40%,
-                transparent 80%);
-            filter: blur(30px);
-            animation: auraBreath 3s infinite alternate;
-        }
-        
-        /* Мерцающие искры внутри купола */
-        .dome-sparkles {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            background: radial-gradient(circle at 60% 30%, 
-                rgba(255, 200, 100, 0.2) 0%,
+            background: radial-gradient(circle at 30% 30%, 
+                rgba(200, 170, 120, 0.1) 0%,
                 transparent 70%);
-            animation: sparklesMove 5s infinite alternate;
+            pointer-events: none;
         }
 
-        @keyframes gentlePulse {
-            0% { transform: scale(1); opacity: 0.85; }
-            50% { transform: scale(1.03); opacity: 1; }
-            100% { transform: scale(1); opacity: 0.85; }
-        }
-        
-        @keyframes corePulse {
-            0% { opacity: 0.5; transform: translate(-50%, -50%) scale(0.9); }
-            100% { opacity: 1; transform: translate(-50%, -50%) scale(1.1); }
-        }
-        
-        @keyframes stripesRotate {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        
-        @keyframes auraBreath {
-            0% { opacity: 0.4; transform: scale(0.95); }
-            100% { opacity: 0.8; transform: scale(1.08); }
-        }
-        
-        @keyframes sparklesMove {
-            0% { opacity: 0.3; transform: translate(0, 0); }
-            100% { opacity: 0.7; transform: translate(10%, 5%); }
-        }
-
-        /* Зона тапа — свеча зажигания */
+        /* Зона тапа — свеча ПОВЕРХ сферы */
         .spark-plug-wrapper {
             position: relative;
             z-index: 10;
@@ -171,7 +90,7 @@
             justify-content: center;
             cursor: pointer;
             width: 80%;
-            max-width: 260px;
+            max-width: 220px;
         }
 
         .spark-plug {
@@ -179,13 +98,13 @@
             height: auto;
             display: block;
             transition: transform 0.07s cubic-bezier(0.2, 0.9, 0.4, 1.1);
-            filter: drop-shadow(0 8px 18px rgba(0, 0, 0, 0.5));
+            filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.5));
             position: relative;
             z-index: 2;
         }
 
         .spark-plug:active {
-            transform: scale(0.92);
+            transform: scale(0.94);
         }
 
         /* Контейнер осколков */
@@ -200,17 +119,17 @@
             overflow: hidden;
         }
 
-        /* Белые осколки */
+        /* Осколки (белые кусочки) */
         .debris {
             position: absolute;
-            width: 8px;
-            height: 8px;
+            width: 7px;
+            height: 7px;
             background: white;
             border-radius: 2px;
-            box-shadow: 0 0 6px rgba(255, 255, 255, 0.9);
+            box-shadow: 0 0 5px rgba(255, 255, 255, 0.8);
             pointer-events: none;
             opacity: 0.95;
-            animation: fragmentFly 0.65s ease-out forwards;
+            animation: fragmentFly 0.6s ease-out forwards;
         }
 
         .debris.rounded {
@@ -219,12 +138,12 @@
         .debris.shard {
             border-radius: 1px;
             transform: rotate(45deg);
-            width: 6px;
-            height: 12px;
+            width: 5px;
+            height: 10px;
         }
         .debris.tiny {
-            width: 5px;
-            height: 5px;
+            width: 4px;
+            height: 4px;
         }
 
         @keyframes fragmentFly {
@@ -236,33 +155,29 @@
                 opacity: 1;
             }
             100% {
-                transform: translate(var(--dx, 60px), var(--dy, -80px)) scale(0.15) rotate(240deg);
+                transform: translate(var(--dx, 60px), var(--dy, -70px)) scale(0.2) rotate(200deg);
                 opacity: 0;
             }
         }
 
+        /* Адаптация под телефоны */
         @media (max-width: 600px) {
-            .dome {
-                width: 360px;
-                height: 360px;
+            .sphere {
+                width: 220px;
+                height: 220px;
             }
             .spark-plug-wrapper {
-                max-width: 200px;
+                max-width: 170px;
             }
         }
     </style>
 </head>
 <body>
 <div class="game-container">
-    <!-- ЯРКИЙ ТЁПЛЫЙ КУПОЛ -->
-    <div class="dome">
-        <div class="dome-aura"></div>
-        <div class="dome-core"></div>
-        <div class="dome-stripes"></div>
-        <div class="dome-sparkles"></div>
-    </div>
+    <!-- ТЁМНАЯ КОМПАКТНАЯ СФЕРА (под свечу) -->
+    <div class="sphere"></div>
 
-    <!-- СВЕЧА -->
+    <!-- СВЕЧА ПОВЕРХ -->
     <div class="spark-plug-wrapper" id="tapZone">
         <img src="IMG_0884-photo.png" alt="Свеча зажигания" class="spark-plug" id="sparkPlug">
     </div>
@@ -276,7 +191,7 @@
     const debrisContainer = document.getElementById('debrisContainer');
     
     function createDebris(x, y) {
-        const debrisCount = Math.floor(Math.random() * 3) + 1;
+        const debrisCount = Math.floor(Math.random() * 3) + 1; // 1-3 осколка
         
         for (let i = 0; i < debrisCount; i++) {
             const debris = document.createElement('div');
@@ -288,29 +203,29 @@
             else debris.classList.add('tiny');
             
             const angle = (Math.random() - 0.5) * Math.PI * 1.5 - Math.PI / 3;
-            const speed = 55 + Math.random() * 75;
+            const speed = 55 + Math.random() * 70;
             const dx = Math.cos(angle) * speed * (Math.random() * 0.8 + 0.6);
             const dy = Math.sin(angle) * speed * 0.9 - 40;
             
             debris.style.setProperty('--dx', dx + 'px');
             debris.style.setProperty('--dy', dy + 'px');
-            debris.style.left = (x - 8 + (Math.random() - 0.5) * 28) + 'px';
-            debris.style.top = (y - 8 + (Math.random() - 0.5) * 24) + 'px';
+            debris.style.left = (x - 7 + (Math.random() - 0.5) * 26) + 'px';
+            debris.style.top = (y - 7 + (Math.random() - 0.5) * 22) + 'px';
             
             const brightness = 200 + Math.random() * 55;
             debris.style.backgroundColor = `rgb(${brightness}, ${brightness - 15}, 230)`;
             
             debrisContainer.appendChild(debris);
-            setTimeout(() => debris.remove(), 650);
+            setTimeout(() => debris.remove(), 600);
         }
     }
     
     function animateTap() {
-        sparkPlug.style.transform = 'scale(0.92)';
+        sparkPlug.style.transform = 'scale(0.94)';
         setTimeout(() => {
             sparkPlug.style.transform = 'scale(1)';
         }, 100);
-        if (window.navigator && window.navigator.vibrate) navigator.vibrate(20);
+        if (window.navigator && window.navigator.vibrate) navigator.vibrate(15);
     }
     
     function onTap(event) {
@@ -328,19 +243,20 @@
         
         createDebris(clientX, clientY);
         
+        // Маленькая искра для эффекта
         const spark = document.createElement('div');
-        spark.innerHTML = '✨';
+        spark.innerHTML = '⚡';
         spark.style.position = 'fixed';
         spark.style.left = (clientX - 8) + 'px';
         spark.style.top = (clientY - 8) + 'px';
-        spark.style.fontSize = '1rem';
-        spark.style.opacity = '0.6';
+        spark.style.fontSize = '0.9rem';
+        spark.style.opacity = '0.5';
         spark.style.pointerEvents = 'none';
         spark.style.zIndex = '1000';
         spark.style.transition = 'all 0.2s ease';
         document.body.appendChild(spark);
         setTimeout(() => { spark.style.transform = 'translateY(-15px)'; spark.style.opacity = '0'; }, 10);
-        setTimeout(() => spark.remove(), 250);
+        setTimeout(() => spark.remove(), 200);
     }
     
     tapZone.addEventListener('click', onTap);
@@ -350,7 +266,7 @@
         onTap(touch);
     });
     
-    console.log('🔥 Яркий тёплый купол активирован');
+    console.log('✅ Тёмная сфера + свеча сверху');
 </script>
 </body>
 </html>
