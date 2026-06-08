@@ -47,6 +47,7 @@
             pointer-events: none;
         }
 
+        /* Верхняя панель */
         .stats-panel {
             position: absolute;
             top: 45px;
@@ -98,6 +99,7 @@
             background: rgba(255, 180, 60, 0.4);
         }
 
+        /* Ежедневный бонус */
         .daily-bonus-btn {
             position: absolute;
             top: 130px;
@@ -134,11 +136,121 @@
             color: #aaa;
         }
 
-        .daily-bonus-btn.disabled {
-            opacity: 0.6;
-            pointer-events: none;
+        /* ===== ШТОРКА (свайп-панель) ===== */
+        .drawer-handle {
+            position: absolute;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 8px;
+            height: 80px;
+            background: linear-gradient(135deg, #ffaa44, #cc8800);
+            border-radius: 20px 0 0 20px;
+            z-index: 40;
+            cursor: pointer;
+            box-shadow: -2px 0 10px rgba(0,0,0,0.3);
+            transition: 0.1s;
         }
 
+        .drawer-handle:active {
+            opacity: 0.7;
+        }
+
+        /* Сама шторка */
+        .drawer {
+            position: absolute;
+            top: 0;
+            right: -320px;
+            width: 280px;
+            height: 100%;
+            background: rgba(10, 10, 15, 0.95);
+            backdrop-filter: blur(16px);
+            border-left: 1px solid rgba(255, 180, 60, 0.5);
+            box-shadow: -5px 0 25px rgba(0, 0, 0, 0.5);
+            z-index: 50;
+            transition: right 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            padding: 20px 16px;
+        }
+
+        .drawer.open {
+            right: 0;
+        }
+
+        /* Заголовок шторки */
+        .drawer-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid rgba(255, 180, 60, 0.3);
+        }
+
+        .drawer-title {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #ffcc66;
+            letter-spacing: 1px;
+        }
+
+        .drawer-close {
+            font-size: 1.8rem;
+            cursor: pointer;
+            color: #ffaa66;
+            transition: 0.1s;
+            line-height: 1;
+        }
+
+        .drawer-close:active {
+            transform: scale(0.9);
+        }
+
+        /* Контент шторки (пока заглушка) */
+        .drawer-content {
+            flex: 1;
+            color: #ccc;
+            font-size: 0.9rem;
+            text-align: center;
+            padding: 20px 0;
+        }
+
+        .upgrade-placeholder {
+            background: rgba(255, 200, 100, 0.1);
+            border-radius: 20px;
+            padding: 20px;
+            margin: 10px 0;
+            border: 1px dashed rgba(255, 200, 100, 0.4);
+        }
+
+        /* Подсказка "смахни" (видна только когда шторка закрыта) */
+        .swipe-hint {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(4px);
+            padding: 8px 12px;
+            border-radius: 30px;
+            font-size: 0.7rem;
+            color: #ffaa66;
+            border: 1px solid rgba(255,170,100,0.5);
+            pointer-events: none;
+            z-index: 41;
+            white-space: nowrap;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+
+        .swipe-hint::before {
+            content: '👈';
+            margin-right: 5px;
+        }
+
+        /* Флоаты и остальное */
         .floating-message-container {
             position: absolute;
             top: 120px;
@@ -167,22 +279,10 @@
         }
 
         @keyframes fadeUp {
-            0% {
-                opacity: 0;
-                transform: translateY(10px);
-            }
-            15% {
-                opacity: 1;
-                transform: translateY(0);
-            }
-            85% {
-                opacity: 1;
-                transform: translateY(0);
-            }
-            100% {
-                opacity: 0;
-                transform: translateY(-20px);
-            }
+            0% { opacity: 0; transform: translateY(10px); }
+            15% { opacity: 1; transform: translateY(0); }
+            85% { opacity: 1; transform: translateY(0); }
+            100% { opacity: 0; transform: translateY(-20px); }
         }
 
         .content-center {
@@ -200,16 +300,9 @@
             width: 320px;
             height: 320px;
             border-radius: 50%;
-            background: radial-gradient(circle at 35% 35%, 
-                rgba(30, 30, 45, 0.55) 0%,
-                rgba(25, 25, 40, 0.65) 30%,
-                rgba(20, 20, 35, 0.85) 60%,
-                rgba(15, 15, 28, 0.95) 85%,
-                rgba(10, 10, 20, 1) 100%);
-            box-shadow: 
-                0 5px 20px rgba(0, 0, 0, 0.5),
-                inset 0 1px 0 rgba(255, 255, 255, 0.08);
-            border: 1px solid rgba(120, 100, 80, 0.4);
+            background: radial-gradient(circle at 35% 35%, rgba(30,30,45,0.55) 0%, rgba(25,25,40,0.65) 30%, rgba(20,20,35,0.85) 60%, rgba(15,15,28,0.95) 85%, rgba(10,10,20,1) 100%);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.08);
+            border: 1px solid rgba(120,100,80,0.4);
             pointer-events: none;
         }
 
@@ -221,9 +314,7 @@
             right: 5px;
             bottom: 5px;
             border-radius: 50%;
-            background: radial-gradient(circle at 30% 30%, 
-                rgba(200, 170, 120, 0.08) 0%,
-                transparent 70%);
+            background: radial-gradient(circle at 30% 30%, rgba(200,170,120,0.08) 0%, transparent 70%);
             pointer-events: none;
         }
 
@@ -273,96 +364,70 @@
             animation: fragmentFly 0.6s ease-out forwards;
         }
 
-        .debris.rounded {
-            border-radius: 50%;
-        }
-        .debris.shard {
-            border-radius: 1px;
-            transform: rotate(45deg);
-            width: 5px;
-            height: 10px;
-        }
-        .debris.tiny {
-            width: 4px;
-            height: 4px;
-        }
+        .debris.rounded { border-radius: 50%; }
+        .debris.shard { border-radius: 1px; transform: rotate(45deg); width: 5px; height: 10px; }
+        .debris.tiny { width: 4px; height: 4px; }
 
         @keyframes fragmentFly {
-            0% {
-                transform: translate(0, 0) scale(1) rotate(0deg);
-                opacity: 1;
-            }
-            30% {
-                opacity: 1;
-            }
-            100% {
-                transform: translate(var(--dx, 60px), var(--dy, -70px)) scale(0.2) rotate(200deg);
-                opacity: 0;
-            }
+            0% { transform: translate(0,0) scale(1) rotate(0deg); opacity: 1; }
+            30% { opacity: 1; }
+            100% { transform: translate(var(--dx,60px), var(--dy,-70px)) scale(0.2) rotate(200deg); opacity: 0; }
         }
 
         @media (max-width: 600px) {
-            .sphere {
-                width: 260px;
-                height: 260px;
-            }
-            .spark-plug-wrapper {
-                max-width: 240px;
-            }
-            .content-center {
-                transform: translateY(43%);
-            }
-            .stat-value {
-                font-size: 1.2rem;
-            }
-            .stat-label {
-                font-size: 0.65rem;
-            }
-            .stats-panel {
-                padding: 10px 18px;
-                top: 35px;
-            }
-            .floating-message-container {
-                top: 105px;
-            }
-            .daily-bonus-btn {
-                top: 115px;
-                right: 12px;
-                padding: 5px 12px;
-            }
-            .daily-bonus-icon {
-                font-size: 1.2rem;
-            }
-            .daily-bonus-text {
-                font-size: 0.65rem;
-            }
+            .sphere { width: 260px; height: 260px; }
+            .spark-plug-wrapper { max-width: 240px; }
+            .content-center { transform: translateY(43%); }
+            .stat-value { font-size: 1.2rem; }
+            .stat-label { font-size: 0.65rem; }
+            .stats-panel { padding: 10px 18px; top: 35px; }
+            .floating-message-container { top: 105px; }
+            .daily-bonus-btn { top: 115px; right: 12px; padding: 5px 12px; }
+            .drawer { width: 260px; right: -280px; }
+            .swipe-hint { right: 8px; font-size: 0.6rem; padding: 5px 10px; }
+            .drawer-handle { height: 60px; }
         }
     </style>
 </head>
 <body>
 <div class="game-container">
+    <!-- Статистика -->
     <div class="stats-panel">
-        <div class="stat-item">
-            <div class="stat-label">УРОВЕНЬ</div>
-            <div class="stat-value" id="levelValue">1</div>
-        </div>
+        <div class="stat-item"><div class="stat-label">УРОВЕНЬ</div><div class="stat-value" id="levelValue">1</div></div>
         <div class="stat-divider"></div>
-        <div class="stat-item">
-            <div class="stat-label">ДЕТАЛЕЙ</div>
-            <div class="stat-value" id="partsValue">0</div>
-        </div>
+        <div class="stat-item"><div class="stat-label">ДЕТАЛЕЙ</div><div class="stat-value" id="partsValue">0</div></div>
         <div class="stat-divider"></div>
-        <div class="stat-item">
-            <div class="stat-label">ДОХОД/ЧАС</div>
-            <div class="stat-value" id="incomeValue">0</div>
-        </div>
+        <div class="stat-item"><div class="stat-label">ДОХОД/ЧАС</div><div class="stat-value" id="incomeValue">0</div></div>
     </div>
 
+    <!-- Ежедневный бонус -->
     <div class="daily-bonus-btn" id="dailyBonusBtn">
         <span class="daily-bonus-icon">🎁</span>
-        <div>
-            <div class="daily-bonus-text" id="dailyBonusText">ЕЖЕДНЕВНЫЙ БОНУС</div>
-            <div class="daily-bonus-timer" id="dailyBonusTimer"></div>
+        <div><div class="daily-bonus-text" id="dailyBonusText">ЕЖЕДНЕВНЫЙ БОНУС</div><div class="daily-bonus-timer" id="dailyBonusTimer"></div></div>
+    </div>
+
+    <!-- Подсказка "смахни" -->
+    <div class="swipe-hint" id="swipeHint">смахни</div>
+
+    <!-- Свайп-хэндл (зацепка) -->
+    <div class="drawer-handle" id="drawerHandle"></div>
+
+    <!-- Шторка (выезжающая панель) -->
+    <div class="drawer" id="drawer">
+        <div class="drawer-header">
+            <span class="drawer-title">📈 ПАССИВНЫЙ ДОХОД</span>
+            <span class="drawer-close" id="drawerClose">✕</span>
+        </div>
+        <div class="drawer-content">
+            <div class="upgrade-placeholder">
+                ⚙️ УЛУЧШЕНИЯ ПОЯВЯТСЯ СКОРО ⚙️<br><br>
+                Здесь можно будет купить:<br>
+                🔧 +1 дет/сек<br>
+                ⚡ +5 дет/сек<br>
+                🚀 +10 дет/сек<br><br>
+                <span style="font-size:0.75rem; opacity:0.6;">листай вниз — контент будет</span>
+            </div>
+            <div style="height: 200px;"></div> <!-- просто для скролла -->
         </div>
     </div>
 
@@ -378,6 +443,7 @@
 </div>
 
 <script>
+    // ---- ИГРОВАЯ ЛОГИКА (та же, что и была) ----
     const tapZone = document.getElementById('tapZone');
     const debrisContainer = document.getElementById('debrisContainer');
     const messageContainer = document.getElementById('messageContainer');
@@ -388,20 +454,15 @@
     let parts = 0;
     let level = 1;
     let incomePerSecond = 0;
-    
     let lastBonusTimestamp = 0;
     let bonusAvailable = true;
-    
     const MAX_LEVEL = 30;
     
     const levelValueEl = document.getElementById('levelValue');
     const partsValueEl = document.getElementById('partsValue');
     const incomeValueEl = document.getElementById('incomeValue');
     
-    // ФИКСИРОВАННЫЙ БОНУС 500
-    function getBonusAmount() {
-        return 500;
-    }
+    function getBonusAmount() { return 500; }
     
     function formatTimeLeft(ms) {
         const hours = Math.floor(ms / (1000 * 60 * 60));
@@ -415,7 +476,6 @@
     function updateBonusUI() {
         const now = Date.now();
         const hours24 = 24 * 60 * 60 * 1000;
-        
         if (lastBonusTimestamp === 0 || now - lastBonusTimestamp >= hours24) {
             bonusAvailable = true;
             dailyBonusBtn.classList.remove('disabled');
@@ -433,12 +493,10 @@
     function claimBonus() {
         const now = Date.now();
         const hours24 = 24 * 60 * 60 * 1000;
-        
         if (lastBonusTimestamp !== 0 && now - lastBonusTimestamp < hours24) {
             showFloatingMessage('❌ Бонус уже получен!', '#FF8888');
             return false;
         }
-        
         const bonus = getBonusAmount();
         addParts(bonus);
         lastBonusTimestamp = now;
@@ -453,9 +511,7 @@
         if (currentLevel === 1) return 1000;
         if (currentLevel === 2) return 5000;
         let required = 7000;
-        for (let i = 4; i <= currentLevel; i++) {
-            required += 2000;
-        }
+        for (let i = 4; i <= currentLevel; i++) required += 2000;
         return required;
     }
     
@@ -463,9 +519,7 @@
         if (targetLevel <= 1) return 0;
         if (targetLevel > MAX_LEVEL) return Infinity;
         let total = 0;
-        for (let lvl = 1; lvl < targetLevel; lvl++) {
-            total += getRequiredForNextLevel(lvl);
-        }
+        for (let lvl = 1; lvl < targetLevel; lvl++) total += getRequiredForNextLevel(lvl);
         return total;
     }
     
@@ -481,25 +535,17 @@
     
     function checkLevelUp() {
         if (level >= MAX_LEVEL) return;
-        
         let newLevel = level;
         while (newLevel < MAX_LEVEL) {
             const totalForNext = getTotalRequiredForLevel(newLevel + 1);
-            if (parts >= totalForNext) {
-                newLevel++;
-            } else {
-                break;
-            }
+            if (parts >= totalForNext) newLevel++;
+            else break;
         }
-        
         if (newLevel > level) {
             level = newLevel;
             updateUI();
             showFloatingMessage(`⬆️ УРОВЕНЬ ${level}!`, '#FFAA44');
-            
-            if (level === MAX_LEVEL) {
-                showFloatingMessage(`🏆 МАКСИМАЛЬНЫЙ УРОВЕНЬ!`, '#FFAA44');
-            }
+            if (level === MAX_LEVEL) showFloatingMessage(`🏆 МАКСИМАЛЬНЫЙ УРОВЕНЬ!`, '#FFAA44');
             saveGame();
         }
     }
@@ -528,20 +574,16 @@
             if (shape < 0.33) debris.classList.add('rounded');
             else if (shape < 0.66) debris.classList.add('shard');
             else debris.classList.add('tiny');
-            
             const angle = (Math.random() - 0.5) * Math.PI * 1.5 - Math.PI / 3;
             const speed = 55 + Math.random() * 70;
             const dx = Math.cos(angle) * speed * (Math.random() * 0.8 + 0.6);
             const dy = Math.sin(angle) * speed * 0.9 - 40;
-            
             debris.style.setProperty('--dx', dx + 'px');
             debris.style.setProperty('--dy', dy + 'px');
             debris.style.left = (x - 7 + (Math.random() - 0.5) * 26) + 'px';
             debris.style.top = (y - 7 + (Math.random() - 0.5) * 22) + 'px';
-            
             const brightness = 200 + Math.random() * 55;
             debris.style.backgroundColor = `rgb(${brightness}, ${brightness - 15}, 230)`;
-            
             debrisContainer.appendChild(debris);
             setTimeout(() => debris.remove(), 600);
         }
@@ -557,7 +599,6 @@
         animateTap();
         addParts(1);
         createDebris(clientX, clientY);
-        
         const spark = document.createElement('div');
         spark.innerHTML = '⚡';
         spark.style.position = 'fixed';
@@ -569,28 +610,18 @@
         spark.style.zIndex = '1000';
         spark.style.transition = 'all 0.2s ease';
         document.body.appendChild(spark);
-        setTimeout(() => {
-            spark.style.transform = 'translateY(-15px)';
-            spark.style.opacity = '0';
-        }, 10);
+        setTimeout(() => { spark.style.transform = 'translateY(-15px)'; spark.style.opacity = '0'; }, 10);
         setTimeout(() => spark.remove(), 200);
     }
     
     tapZone.addEventListener('click', (e) => handleTap(e.clientX, e.clientY));
     tapZone.addEventListener('touchstart', (e) => {
         e.preventDefault();
-        for (let i = 0; i < e.touches.length; i++) {
-            handleTap(e.touches[i].clientX, e.touches[i].clientY);
-        }
+        for (let i = 0; i < e.touches.length; i++) handleTap(e.touches[i].clientX, e.touches[i].clientY);
     });
-    
     dailyBonusBtn.addEventListener('click', () => claimBonus());
     
-    function saveGame() {
-        const save = { parts, level, incomePerSecond, lastBonusTimestamp };
-        localStorage.setItem('MotoTapSave', JSON.stringify(save));
-    }
-    
+    function saveGame() { localStorage.setItem('MotoTapSave', JSON.stringify({ parts, level, incomePerSecond, lastBonusTimestamp })); }
     function loadGame() {
         const saved = localStorage.getItem('MotoTapSave');
         if (saved) {
@@ -609,14 +640,74 @@
     
     setInterval(() => updateBonusUI(), 1000);
     setInterval(() => saveGame(), 5000);
-    
-    setInterval(() => {
-        if (incomePerSecond > 0) {
-            addParts(incomePerSecond);
-        }
-    }, 1000);
-    
+    setInterval(() => { if (incomePerSecond > 0) addParts(incomePerSecond); }, 1000);
     loadGame();
+    
+    // ========== ЛОГИКА ШТОРКИ (свайп) ==========
+    const drawer = document.getElementById('drawer');
+    const drawerHandle = document.getElementById('drawerHandle');
+    const drawerClose = document.getElementById('drawerClose');
+    const swipeHint = document.getElementById('swipeHint');
+    
+    let startX = 0;
+    let isDragging = false;
+    
+    function openDrawer() {
+        drawer.classList.add('open');
+        swipeHint.style.opacity = '0';
+        setTimeout(() => { swipeHint.style.display = 'none'; }, 200);
+    }
+    
+    function closeDrawer() {
+        drawer.classList.remove('open');
+        swipeHint.style.display = 'flex';
+        setTimeout(() => { swipeHint.style.opacity = '1'; }, 50);
+    }
+    
+    // Обработка свайпа (мышь + тач)
+    drawerHandle.addEventListener('mousedown', (e) => {
+        startX = e.clientX;
+        isDragging = true;
+        document.body.style.userSelect = 'none';
+    });
+    
+    drawerHandle.addEventListener('touchstart', (e) => {
+        startX = e.touches[0].clientX;
+        isDragging = true;
+        e.preventDefault();
+    });
+    
+    window.addEventListener('mousemove', (e) => {
+        if (!isDragging) return;
+        const deltaX = e.clientX - startX;
+        if (deltaX < -20) { // сдвиг влево
+            openDrawer();
+            isDragging = false;
+        }
+    });
+    
+    window.addEventListener('touchmove', (e) => {
+        if (!isDragging) return;
+        const deltaX = e.touches[0].clientX - startX;
+        if (deltaX < -20) {
+            openDrawer();
+            isDragging = false;
+            e.preventDefault();
+        }
+    });
+    
+    window.addEventListener('mouseup', () => { isDragging = false; });
+    window.addEventListener('touchend', () => { isDragging = false; });
+    
+    drawerClose.addEventListener('click', closeDrawer);
+    
+    // На случай, если кто-то кликнет по хэндлу (тоже откроем)
+    drawerHandle.addEventListener('click', (e) => {
+        if (!drawer.classList.contains('open')) openDrawer();
+        e.stopPropagation();
+    });
+    
+    console.log('✅ Шторка готова. Смахни влево от жёлтой полоски!');
 </script>
 </body>
 </html>
