@@ -31,6 +31,7 @@
             background-position: center;
             background-repeat: no-repeat;
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
         }
@@ -46,6 +47,60 @@
             pointer-events: none;
         }
 
+        /* === ВЕРХНЯЯ ПАНЕЛЬ (длинный узкий прямоугольник) === */
+        .stats-panel {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+            max-width: 500px;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(12px);
+            border-radius: 60px;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            z-index: 20;
+            border: 1px solid rgba(255, 180, 60, 0.4);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .stat-item {
+            flex: 1;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .stat-label {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: #ffaa66;
+            font-weight: bold;
+        }
+
+        .stat-value {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #FFD966;
+            text-shadow: 0 1px 0 #7a5c00;
+            line-height: 1;
+        }
+
+        /* Разделители между блоками */
+        .stat-divider {
+            width: 1px;
+            height: 35px;
+            background: rgba(255, 180, 60, 0.3);
+        }
+
+        /* Центральный контент (сфера + свеча) */
         .content-center {
             position: relative;
             z-index: 5;
@@ -173,11 +228,39 @@
             .content-center {
                 transform: translateY(43%);
             }
+            .stat-value {
+                font-size: 1rem;
+            }
+            .stat-label {
+                font-size: 0.6rem;
+            }
+            .stats-panel {
+                padding: 8px 15px;
+                top: 12px;
+            }
         }
     </style>
 </head>
 <body>
 <div class="game-container">
+    <!-- ВЕРХНЯЯ ПАНЕЛЬ СТАТИСТИКИ -->
+    <div class="stats-panel">
+        <div class="stat-item">
+            <div class="stat-label">УРОВЕНЬ</div>
+            <div class="stat-value" id="levelValue">1</div>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-item">
+            <div class="stat-label">ДЕТАЛЕЙ</div>
+            <div class="stat-value" id="partsValue">0</div>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-item">
+            <div class="stat-label">ДОХОД/ЧАС</div>
+            <div class="stat-value" id="incomeValue">0</div>
+        </div>
+    </div>
+
     <div class="content-center">
         <div class="sphere"></div>
         <div class="spark-plug-wrapper" id="tapZone">
@@ -191,8 +274,69 @@
     const tapZone = document.getElementById('tapZone');
     const debrisContainer = document.getElementById('debrisContainer');
     
-    let tapCount = 0;
+    // Игровые переменные
+    let parts = 0;           // накоплено деталей
+    let level = 1;           // уровень (будет влиять на доход)
+    let tapPower = 1;        // деталей за один тап (будет расти с уровнем)
     
+    // Доход в час (виртуальный)
+    let incomePerSecond = 0;  // пассивный доход (пока 0, потом добавим)
+    
+    // Элементы UI
+    const levelValueEl = document.getElementById('levelValue');
+    const partsValueEl = document.getElementById('partsValue');
+    const incomeValueEl = document.getElementById('incomeValue');
+    
+    // Функция обновления UI
+    function updateUI() {
+        partsValueEl.innerText = Math.floor(parts);
+        levelValueEl.innerText = level;
+        // Доход в час = доход в секунду * 3600
+        const incomePerHour = Math.floor(incomePerSecond * 3600);
+        incomeValueEl.innerText = incomePerHour.toLocaleString();
+    }
+    
+    // Функция добавления деталей
+    function addParts(amount) {
+        parts += amount;
+        updateUI();
+        checkLevelUp(); // проверяем, не пора ли повысить уровень
+    }
+    
+    // Проверка повышения уровня (простая формула)
+    function checkLevelUp() {
+        const neededForNextLevel = level * 100; // для 1 уровня нужно 100 деталей, для 2 - 200 и т.д.
+        if (parts >= neededForNextLevel) {
+            level++;
+            // При повышении уровня увеличиваем силу тапа
+            tapPower = 1 + (level - 1) * 0.5; // +0.5 за каждый уровень
+            tapPower = Math.floor(tapPower);
+            updateUI();
+            showFloatingText(`⬆️ УРОВЕНЬ ${level}!`, '#FFD966');
+        }
+    }
+    
+    // Всплывающее сообщение
+    function showFloatingText(text, color) {
+        const div = document.createElement('div');
+        div.innerText = text;
+        div.style.position = 'fixed';
+        div.style.bottom = '40%';
+        div.style.left = '50%';
+        div.style.transform = 'translateX(-50%)';
+        div.style.backgroundColor = 'rgba(0,0,0,0.8)';
+        div.style.color = color;
+        div.style.padding = '8px 20px';
+        div.style.borderRadius = '40px';
+        div.style.fontSize = '1rem';
+        div.style.fontWeight = 'bold';
+        div.style.zIndex = '9999';
+        div.style.whiteSpace = 'nowrap';
+        document.body.appendChild(div);
+        setTimeout(() => div.remove(), 1200);
+    }
+    
+    // Осколки
     function createDebris(x, y) {
         const debrisCount = Math.floor(Math.random() * 3) + 1;
         
@@ -223,6 +367,7 @@
         }
     }
     
+    // Анимация нажатия
     function animateTap() {
         tapZone.classList.add('tap-active');
         setTimeout(() => {
@@ -231,10 +376,13 @@
         if (window.navigator && window.navigator.vibrate) navigator.vibrate(15);
     }
     
+    // Обработка тапа
     function handleTap(clientX, clientY) {
         animateTap();
+        addParts(tapPower);
         createDebris(clientX, clientY);
         
+        // Искра
         const spark = document.createElement('div');
         spark.innerHTML = '⚡';
         spark.style.position = 'fixed';
@@ -248,10 +396,9 @@
         document.body.appendChild(spark);
         setTimeout(() => { spark.style.transform = 'translateY(-15px)'; spark.style.opacity = '0'; }, 10);
         setTimeout(() => spark.remove(), 200);
-        
-        tapCount++;
     }
     
+    // События тапа
     tapZone.addEventListener('click', (e) => {
         handleTap(e.clientX, e.clientY);
     });
@@ -264,6 +411,42 @@
             handleTap(touch.clientX, touch.clientY);
         }
     });
+    
+    // Сохранение/загрузка
+    function saveGame() {
+        const save = { parts, level, tapPower, incomePerSecond };
+        localStorage.setItem('MotoTapSave', JSON.stringify(save));
+    }
+    
+    function loadGame() {
+        const saved = localStorage.getItem('MotoTapSave');
+        if (saved) {
+            try {
+                const data = JSON.parse(saved);
+                parts = data.parts || 0;
+                level = data.level || 1;
+                tapPower = data.tapPower || 1;
+                incomePerSecond = data.incomePerSecond || 0;
+                updateUI();
+            } catch(e) {}
+        }
+        updateUI();
+    }
+    
+    // Автосохранение каждые 5 секунд
+    setInterval(() => saveGame(), 5000);
+    
+    // Пассивный доход (пока 0, но система готова)
+    setInterval(() => {
+        if (incomePerSecond > 0) {
+            addParts(incomePerSecond);
+        }
+    }, 1000);
+    
+    // Загружаем игру
+    loadGame();
+    
+    console.log('✅ Верхняя панель добавлена: уровень, детали, доход/час');
 </script>
 </body>
 </html>
