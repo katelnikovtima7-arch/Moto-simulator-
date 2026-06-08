@@ -134,7 +134,7 @@
             color: #aaa;
         }
 
-        /* ХЭНДЛ ШТОРКИ С ТВОЕЙ СТРЕЛКОЙ */
+        /* ХЭНДЛ ШТОРКИ — ТЁМНЫЙ, ЧТОБЫ СТРЕЛКА БЫЛА ВИДНА */
         .drawer-handle {
             position: absolute;
             right: 0;
@@ -142,15 +142,16 @@
             transform: translateY(-50%);
             width: 28px;
             height: 180px;
-            background: linear-gradient(135deg, #ffaa44, #cc8800);
+            background: linear-gradient(135deg, #8B6914, #5C4A0E);
             border-radius: 20px 0 0 20px;
             z-index: 40;
             cursor: pointer;
-            box-shadow: -3px 0 15px rgba(0,0,0,0.4);
+            box-shadow: -3px 0 15px rgba(0,0,0,0.5);
             transition: 0.1s;
             display: flex;
             align-items: center;
             justify-content: center;
+            border: 1px solid rgba(255, 200, 100, 0.3);
         }
 
         .drawer-handle:active {
@@ -162,7 +163,7 @@
             width: 24px;
             height: auto;
             display: block;
-            filter: drop-shadow(0 1px 1px rgba(0,0,0,0.3));
+            filter: drop-shadow(0 1px 1px rgba(0,0,0,0.5));
         }
 
         /* Сама шторка */
@@ -372,7 +373,6 @@
 </head>
 <body>
 <div class="game-container">
-    <!-- Статистика -->
     <div class="stats-panel">
         <div class="stat-item"><div class="stat-label">УРОВЕНЬ</div><div class="stat-value" id="levelValue">1</div></div>
         <div class="stat-divider"></div>
@@ -381,18 +381,16 @@
         <div class="stat-item"><div class="stat-label">ДОХОД/ЧАС</div><div class="stat-value" id="incomeValue">0</div></div>
     </div>
 
-    <!-- Ежедневный бонус -->
     <div class="daily-bonus-btn" id="dailyBonusBtn">
         <span class="daily-bonus-icon">🎁</span>
         <div><div class="daily-bonus-text" id="dailyBonusText">ЕЖЕДНЕВНЫЙ БОНУС</div><div class="daily-bonus-timer" id="dailyBonusTimer"></div></div>
     </div>
 
-    <!-- ХЭНДЛ ШТОРКИ С ТВОЕЙ СТРЕЛКОЙ -->
+    <!-- ХЭНДЛ ШТОРКИ (тёмный, со стрелкой) -->
     <div class="drawer-handle" id="drawerHandle">
         <img src="IMG_0889-photos.png" alt="смахни" class="handle-arrow">
     </div>
 
-    <!-- Шторка -->
     <div class="drawer" id="drawer">
         <div class="drawer-header">
             <span class="drawer-title">📈 ПАССИВНЫЙ ДОХОД</span>
@@ -423,7 +421,7 @@
 </div>
 
 <script>
-    // ---- ИГРОВАЯ ЛОГИКА (БЕЗ ИЗМЕНЕНИЙ) ----
+    // ---- ИГРОВАЯ ЛОГИКА ----
     const tapZone = document.getElementById('tapZone');
     const debrisContainer = document.getElementById('debrisContainer');
     const messageContainer = document.getElementById('messageContainer');
