@@ -47,7 +47,7 @@
             pointer-events: none;
         }
 
-        /* ВЕРХНЯЯ ПАНЕЛЬ — ПОНИЖЕ И ПОЖИРНЕЕ */
+        /* ВЕРХНЯЯ ПАНЕЛЬ */
         .stats-panel {
             position: absolute;
             top: 45px;
@@ -99,7 +99,49 @@
             background: rgba(255, 180, 60, 0.4);
         }
 
-        /* Контейнер для всплывающих сообщений (под панелью) */
+        /* Кнопка ежедневного бонуса */
+        .daily-bonus-btn {
+            position: absolute;
+            top: 130px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 200, 80, 0.6);
+            border-radius: 50px;
+            padding: 8px 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            z-index: 25;
+            cursor: pointer;
+            transition: transform 0.1s ease;
+        }
+
+        .daily-bonus-btn:active {
+            transform: scale(0.95);
+        }
+
+        .daily-bonus-icon {
+            font-size: 1.5rem;
+        }
+
+        .daily-bonus-text {
+            font-size: 0.75rem;
+            font-weight: bold;
+            color: #FFD966;
+        }
+
+        .daily-bonus-timer {
+            font-size: 0.7rem;
+            color: #aaa;
+        }
+
+        .daily-bonus-btn.disabled {
+            opacity: 0.6;
+            pointer-events: none;
+        }
+
+        /* Контейнер для всплывающих сообщений */
         .floating-message-container {
             position: absolute;
             top: 120px;
@@ -286,9 +328,16 @@
             .floating-message-container {
                 top: 105px;
             }
-            .floating-message {
-                font-size: 0.9rem;
-                padding: 6px 18px;
+            .daily-bonus-btn {
+                top: 115px;
+                right: 12px;
+                padding: 5px 12px;
+            }
+            .daily-bonus-icon {
+                font-size: 1.2rem;
+            }
+            .daily-bonus-text {
+                font-size: 0.65rem;
             }
         }
     </style>
@@ -312,6 +361,15 @@
         </div>
     </div>
 
+    <!-- Кнопка ежедневного бонуса -->
+    <div class="daily-bonus-btn" id="dailyBonusBtn">
+        <span class="daily-bonus-icon">🎁</span>
+        <div>
+            <div class="daily-bonus-text" id="dailyBonusText">ЗАБРАТЬ БОНУС</div>
+            <div class="daily-bonus-timer" id="dailyBonusTimer"></div>
+        </div>
+    </div>
+
     <div class="floating-message-container" id="messageContainer"></div>
 
     <div class="content-center">
@@ -327,10 +385,17 @@
     const tapZone = document.getElementById('tapZone');
     const debrisContainer = document.getElementById('debrisContainer');
     const messageContainer = document.getElementById('messageContainer');
+    const dailyBonusBtn = document.getElementById('dailyBonusBtn');
+    const dailyBonusText = document.getElementById('dailyBonusText');
+    const dailyBonusTimer = document.getElementById('dailyBonusTimer');
     
     let parts = 0;
     let level = 1;
     let incomePerSecond = 0;
+    
+    // Данные ежедневного бонуса
+    let lastBonusTimestamp = 0;
+    let bonusAvailable = true;
     
     const MAX_LEVEL = 30;
     
@@ -338,7 +403,59 @@
     const partsValueEl = document.getElementById('partsValue');
     const incomeValueEl = document.getElementById('incomeValue');
     
-    // Требования для уровней
+    // Расчёт бонуса в зависимости от уровня (база 100 + 50 * уровень)
+    function getBonusAmount() {
+        return 100 + (level - 1) * 50;
+    }
+    
+    // Форматирование оставшегося времени
+    function formatTimeLeft(ms) {
+        const hours = Math.floor(ms / (1000 * 60 * 60));
+        const minutes = Math.floor((ms % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((ms % (1000 * 60)) / 1000);
+        if (hours > 0) return `${hours}ч ${minutes}м`;
+        if (minutes > 0) return `${minutes}м ${seconds}с`;
+        return `${seconds}с`;
+    }
+    
+    // Обновление состояния кнопки бонуса
+    function updateBonusUI() {
+        const now = Date.now();
+        const hours24 = 24 * 60 * 60 * 1000;
+        
+        if (lastBonusTimestamp === 0 || now - lastBonusTimestamp >= hours24) {
+            bonusAvailable = true;
+            dailyBonusBtn.classList.remove('disabled');
+            dailyBonusText.innerText = '🎁 ЗАБРАТЬ БОНУС';
+            dailyBonusTimer.innerText = `${getBonusAmount()} деталей!`;
+        } else {
+            bonusAvailable = false;
+            dailyBonusBtn.classList.add('disabled');
+            const timeLeft = hours24 - (now - lastBonusTimestamp);
+            dailyBonusText.innerText = 'БОНУС ЧЕРЕЗ';
+            dailyBonusTimer.innerText = formatTimeLeft(timeLeft);
+        }
+    }
+    
+    // Получение бонуса
+    function claimBonus() {
+        const now = Date.now();
+        const hours24 = 24 * 60 * 60 * 1000;
+        
+        if (lastBonusTimestamp !== 0 && now - lastBonusTimestamp < hours24) {
+            showFloatingMessage('❌ Бонус уже получен!', '#FF8888');
+            return false;
+        }
+        
+        const bonus = getBonusAmount();
+        addParts(bonus);
+        lastBonusTimestamp = now;
+        saveGame();
+        updateBonusUI();
+        showFloatingMessage(`🎁 +${bonus} ДЕТАЛЕЙ!`, '#FFD966');
+        return true;
+    }
+    
     function getRequiredForNextLevel(currentLevel) {
         if (currentLevel >= MAX_LEVEL) return Infinity;
         if (currentLevel === 1) return 1000;
@@ -391,6 +508,7 @@
             if (level === MAX_LEVEL) {
                 showFloatingMessage(`🏆 МАКСИМАЛЬНЫЙ УРОВЕНЬ!`, '#FFAA44');
             }
+            saveGame();
         }
     }
     
@@ -399,6 +517,7 @@
         levelValueEl.innerText = level;
         const incomePerHour = Math.floor(incomePerSecond * 3600);
         incomeValueEl.innerText = incomePerHour.toLocaleString();
+        updateBonusUI();
     }
     
     function addParts(amount) {
@@ -444,7 +563,7 @@
     
     function handleTap(clientX, clientY) {
         animateTap();
-        addParts(1);  // всегда +1 деталь за тап
+        addParts(1);
         createDebris(clientX, clientY);
         
         const spark = document.createElement('div');
@@ -473,8 +592,10 @@
         }
     });
     
+    dailyBonusBtn.addEventListener('click', () => claimBonus());
+    
     function saveGame() {
-        const save = { parts, level, incomePerSecond };
+        const save = { parts, level, incomePerSecond, lastBonusTimestamp };
         localStorage.setItem('MotoTapSave', JSON.stringify(save));
     }
     
@@ -487,12 +608,15 @@
                 level = data.level || 1;
                 if (level > MAX_LEVEL) level = MAX_LEVEL;
                 incomePerSecond = data.incomePerSecond || 0;
+                lastBonusTimestamp = data.lastBonusTimestamp || 0;
                 updateUI();
             } catch(e) {}
         }
         updateUI();
     }
     
+    // Таймер для обновления UI бонуса
+    setInterval(() => updateBonusUI(), 1000);
     setInterval(() => saveGame(), 5000);
     
     setInterval(() => {
