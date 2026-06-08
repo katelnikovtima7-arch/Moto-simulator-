@@ -47,7 +47,6 @@
             pointer-events: none;
         }
 
-        /* ВЕРХНЯЯ ПАНЕЛЬ */
         .stats-panel {
             position: absolute;
             top: 45px;
@@ -99,7 +98,6 @@
             background: rgba(255, 180, 60, 0.4);
         }
 
-        /* Кнопка ежедневного бонуса */
         .daily-bonus-btn {
             position: absolute;
             top: 130px;
@@ -141,7 +139,6 @@
             pointer-events: none;
         }
 
-        /* Контейнер для всплывающих сообщений */
         .floating-message-container {
             position: absolute;
             top: 120px;
@@ -361,11 +358,10 @@
         </div>
     </div>
 
-    <!-- Кнопка ежедневного бонуса -->
     <div class="daily-bonus-btn" id="dailyBonusBtn">
         <span class="daily-bonus-icon">🎁</span>
         <div>
-            <div class="daily-bonus-text" id="dailyBonusText">ЗАБРАТЬ БОНУС</div>
+            <div class="daily-bonus-text" id="dailyBonusText">ЕЖЕДНЕВНЫЙ БОНУС</div>
             <div class="daily-bonus-timer" id="dailyBonusTimer"></div>
         </div>
     </div>
@@ -393,7 +389,6 @@
     let level = 1;
     let incomePerSecond = 0;
     
-    // Данные ежедневного бонуса
     let lastBonusTimestamp = 0;
     let bonusAvailable = true;
     
@@ -403,12 +398,11 @@
     const partsValueEl = document.getElementById('partsValue');
     const incomeValueEl = document.getElementById('incomeValue');
     
-    // Расчёт бонуса в зависимости от уровня (база 100 + 50 * уровень)
+    // ФИКСИРОВАННЫЙ БОНУС 500
     function getBonusAmount() {
-        return 100 + (level - 1) * 50;
+        return 500;
     }
     
-    // Форматирование оставшегося времени
     function formatTimeLeft(ms) {
         const hours = Math.floor(ms / (1000 * 60 * 60));
         const minutes = Math.floor((ms % (1000 * 60 * 60)) / (1000 * 60));
@@ -418,7 +412,6 @@
         return `${seconds}с`;
     }
     
-    // Обновление состояния кнопки бонуса
     function updateBonusUI() {
         const now = Date.now();
         const hours24 = 24 * 60 * 60 * 1000;
@@ -426,18 +419,17 @@
         if (lastBonusTimestamp === 0 || now - lastBonusTimestamp >= hours24) {
             bonusAvailable = true;
             dailyBonusBtn.classList.remove('disabled');
-            dailyBonusText.innerText = '🎁 ЗАБРАТЬ БОНУС';
+            dailyBonusText.innerText = 'ЕЖЕДНЕВНЫЙ БОНУС';
             dailyBonusTimer.innerText = `${getBonusAmount()} деталей!`;
         } else {
             bonusAvailable = false;
             dailyBonusBtn.classList.add('disabled');
             const timeLeft = hours24 - (now - lastBonusTimestamp);
-            dailyBonusText.innerText = 'БОНУС ЧЕРЕЗ';
+            dailyBonusText.innerText = 'СЛЕДУЮЩИЙ БОНУС';
             dailyBonusTimer.innerText = formatTimeLeft(timeLeft);
         }
     }
     
-    // Получение бонуса
     function claimBonus() {
         const now = Date.now();
         const hours24 = 24 * 60 * 60 * 1000;
@@ -615,7 +607,6 @@
         updateUI();
     }
     
-    // Таймер для обновления UI бонуса
     setInterval(() => updateBonusUI(), 1000);
     setInterval(() => saveGame(), 5000);
     
