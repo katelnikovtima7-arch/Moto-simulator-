@@ -46,7 +46,7 @@
             pointer-events: none;
         }
 
-        /* Центрируем и ОПУСКАЕМ ЕЩЁ НИЖЕ */
+        /* Центрируем и ОПУСКАЕМ МАКСИМАЛЬНО НИЗКО */
         .content-center {
             position: relative;
             z-index: 5;
@@ -54,7 +54,7 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            transform: translateY(32%); /* Опустил ещё ниже */
+            transform: translateY(55%); /* Очень низко */
         }
 
         /* ТЁМНАЯ СФЕРА */
@@ -177,7 +177,7 @@
                 max-width: 240px;
             }
             .content-center {
-                transform: translateY(35%); /* На телефоне ещё ниже */
+                transform: translateY(60%); /* На телефоне ещё ниже */
             }
         }
     </style>
@@ -273,7 +273,7 @@
         onTap(touch);
     });
     
-    console.log('✅ Свеча и сфера опущены на 32% (ПК) и 35% (телефон)');
+    console.log('✅ Максимально низкое положение');
 </script>
 </body>
 </html>
