@@ -112,15 +112,6 @@
             flex: 1;
             color: #1f2a0e;
         }
-        .error-message {
-            background: rgba(0,0,0,0.8);
-            color: #ff8888;
-            padding: 10px;
-            border-radius: 20px;
-            text-align: center;
-            font-size: 0.8rem;
-            margin-top: 10px;
-        }
         @media (max-width: 600px) {
             .counter-number { font-size: 2.2rem; }
             .bike-image { max-width: 280px; }
@@ -138,7 +129,7 @@
 
         <div class="bike-wrapper">
             <div class="bike-tap" id="tapZone">
-                <img class="bike-image" id="bikeImg" alt="Мотоцикл">
+                <img class="bike-image" id="bikeImg" alt="Мотоцикл" src="IMG_0878.webp">
             </div>
         </div>
 
@@ -146,7 +137,6 @@
             <div class="future-button">🏪 МАГАЗИН (скоро)</div>
             <div class="future-button">🏆 НАГРАДЫ (скоро)</div>
         </div>
-        <div id="errorMsg" class="error-message" style="display:none;"></div>
     </div>
 </div>
 
@@ -155,51 +145,11 @@
     const partsCounter = document.getElementById('partsCounter');
     const tapZone = document.getElementById('tapZone');
     const bikeImg = document.getElementById('bikeImg');
-    const errorMsg = document.getElementById('errorMsg');
 
-    // ПЫТАЕМСЯ ЗАГРУЗИТЬ МОТОЦИКЛ — СПИСОК ВОЗМОЖНЫХ ИМЁН
-    const possibleNames = [
-        'IMG_0877-no-bg-preview-carve.photos.png',
-        'IMG_0877-no-bg-preview-carve.photos.PNG',
-        'IMG_0877-no-bg-preview-carve.photos.png.png', // на всякий случай
-        'IMG_0877-no-bg-preview-carve.photos.jpg',
-        'IMG_0877-no-bg-preview-carve.photos.jpeg',
-        'motorbike.png',
-        'bike.png',
-        'moto.png'
-    ];
-    
-    let imageLoaded = false;
-    
-    function tryLoadImage(index) {
-        if (index >= possibleNames.length) {
-            // ничего не загрузилось — показываем ошибку и эмодзи вместо мотоцикла
-            bikeImg.style.display = 'none';
-            tapZone.innerHTML = '<div style="font-size: 5rem; text-align: center;">🏍️<br><span style="font-size:1rem;">(картинка не найдена)</span><br><span style="font-size:0.7rem;">проверь имя файла</span></div>';
-            errorMsg.style.display = 'block';
-            errorMsg.innerHTML = '⚠️ Файл мотоцикла не загрузился!<br>Ожидаемые имена: ' + possibleNames.join(', ') + '<br><br>👉 Переименуй свой PNG в: <b>IMG_0877-no-bg-preview-carve.photos.png</b>';
-            return;
-        }
-        
-        const img = new Image();
-        img.onload = function() {
-            // Картинка загрузилась!
-            bikeImg.src = possibleNames[index];
-            bikeImg.style.display = 'block';
-            imageLoaded = true;
-            errorMsg.style.display = 'none';
-            console.log('✅ Загружено:', possibleNames[index]);
-        };
-        img.onerror = function() {
-            // пробуем следующее имя
-            tryLoadImage(index + 1);
-        };
-        img.src = possibleNames[index];
-    }
-    
-    // Запускаем поиск картинки
-    tryLoadImage(0);
-    
+    // Проверка загрузки картинки (для отладки)
+    bikeImg.onload = () => console.log('✅ Мотоцикл загружен!');
+    bikeImg.onerror = () => console.error('❌ Не загрузился мотоцикл. Проверь имя файла: IMG_0878.webp');
+
     function updateUI() {
         partsCounter.innerText = Math.floor(parts);
         saveGame();
