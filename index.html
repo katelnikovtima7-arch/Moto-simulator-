@@ -53,7 +53,7 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            transform: translateY(50%);
+            transform: translateY(32%);
         }
 
         .sphere {
@@ -72,7 +72,6 @@
                 inset 0 1px 0 rgba(255, 255, 255, 0.08);
             border: 1px solid rgba(120, 100, 80, 0.4);
             pointer-events: none;
-            transition: all 0.2s ease;
         }
 
         .sphere::after {
@@ -96,8 +95,7 @@
             justify-content: center;
             cursor: pointer;
             width: 80%;
-            max-width: 320px;
-            min-height: 320px;
+            max-width: 300px;
             transition: transform 0.07s cubic-bezier(0.2, 0.9, 0.4, 1.1);
         }
 
@@ -106,12 +104,11 @@
             height: auto;
             display: block;
             filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.5));
-            position: relative;
             pointer-events: none;
         }
 
         .spark-plug-wrapper.tap-active {
-            transform: scale(0.96);
+            transform: scale(0.94);
         }
 
         .debris-container {
@@ -171,11 +168,10 @@
                 height: 260px;
             }
             .spark-plug-wrapper {
-                max-width: 260px;
-                min-height: 260px;
+                max-width: 240px;
             }
             .content-center {
-                transform: translateY(55%);
+                transform: translateY(35%);
             }
         }
     </style>
@@ -185,7 +181,7 @@
     <div class="content-center">
         <div class="sphere"></div>
         <div class="spark-plug-wrapper" id="tapZone">
-            <img src="IMG_0884-photo.png" alt="Свеча зажигания" class="spark-plug" id="sparkPlug">
+            <img src="IMG_0884-photo.png" alt="Свеча зажигания" class="spark-plug">
         </div>
     </div>
     <div class="debris-container" id="debrisContainer"></div>
@@ -270,7 +266,7 @@
         }
     });
     
-    console.log('✅ Положение поднято до комфортного уровня');
+    console.log('✅ Положение вернул к тому, которое тебе нравилось');
 </script>
 </body>
 </html>
