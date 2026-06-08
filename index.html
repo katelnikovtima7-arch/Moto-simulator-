@@ -223,7 +223,7 @@
             padding: 10px 0;
         }
 
-        /* КАРТОЧКА — ТЕПЕРЬ ПРЯМОУГОЛЬНИК С БОЛЬШИМ ФОТО */
+        /* КАРТОЧКА ТОВАРА */
         .upgrade-card {
             background: rgba(255, 200, 100, 0.1);
             border-radius: 24px;
@@ -234,12 +234,23 @@
             flex-direction: column;
             align-items: center;
             gap: 12px;
+            transition: 0.2s;
+            cursor: pointer;
         }
 
-        .upgrade-image {
-            width: 100%;
-            display: flex;
-            justify-content: center;
+        .upgrade-card:active {
+            transform: scale(0.98);
+        }
+
+        .upgrade-card.purchased {
+            background: rgba(100, 200, 100, 0.15);
+            border-color: #88ff88;
+            cursor: default;
+            opacity: 0.9;
+        }
+
+        .upgrade-card.purchased:active {
+            transform: none;
         }
 
         .upgrade-image img {
@@ -249,6 +260,10 @@
             border-radius: 16px;
             border: 2px solid #ffaa66;
             box-shadow: 0 0 15px rgba(0,0,0,0.5);
+        }
+
+        .upgrade-card.purchased .upgrade-image img {
+            border-color: #88ff88;
         }
 
         .upgrade-description {
@@ -268,6 +283,18 @@
             padding: 6px 20px;
             border-radius: 40px;
             display: inline-block;
+        }
+
+        .upgrade-status {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #88ff88;
+            background: rgba(0,0,0,0.5);
+            padding: 6px 20px;
+            border-radius: 40px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
         }
 
         .floating-message-container {
@@ -408,6 +435,7 @@
             .upgrade-price { font-size: 1.4rem; }
             .upgrade-description { font-size: 0.8rem; }
             .upgrade-image img { width: 140px; }
+            .upgrade-status { font-size: 1rem; }
         }
     </style>
 </head>
@@ -436,15 +464,18 @@
             <span class="drawer-close" id="drawerClose">✕</span>
         </div>
         <div class="drawer-content">
-            <div class="upgrade-card">
+            <div class="upgrade-card" id="yarikCard">
                 <div class="upgrade-image">
                     <img src="IMG_0890.jpeg" alt="Школьник Ярик">
                 </div>
                 <div class="upgrade-description">
                     Школьник Ярик мутит на металлоприёмке — 400 запчастей в час!
                 </div>
-                <div class="upgrade-price">
+                <div id="yarikPriceBlock" class="upgrade-price">
                     1500 🔩
+                </div>
+                <div id="yarikStatusBlock" class="upgrade-status" style="display: none;">
+                    ✅ АКТИВНО
                 </div>
             </div>
         </div>
@@ -462,7 +493,7 @@
 </div>
 
 <script>
-    // ---- ИГРОВАЯ ЛОГИКА (БЕЗ ИЗМЕНЕНИЙ) ----
+    // ---- ИГРОВАЯ ЛОГИКА ----
     const tapZone = document.getElementById('tapZone');
     const debrisContainer = document.getElementById('debrisContainer');
     const messageContainer = document.getElementById('messageContainer');
@@ -477,9 +508,17 @@
     let bonusAvailable = true;
     const MAX_LEVEL = 30;
     
+    // Флаг покупки пассивного дохода
+    let passivePurchased = false;
+    
     const levelValueEl = document.getElementById('levelValue');
     const partsValueEl = document.getElementById('partsValue');
     const incomeValueEl = document.getElementById('incomeValue');
+    
+    // Элементы карточки
+    const yarikCard = document.getElementById('yarikCard');
+    const yarikPriceBlock = document.getElementById('yarikPriceBlock');
+    const yarikStatusBlock = document.getElementById('yarikStatusBlock');
     
     function getBonusAmount() { return 500; }
     
@@ -575,6 +614,17 @@
         const incomePerHour = Math.floor(incomePerSecond * 3600);
         incomeValueEl.innerText = incomePerHour.toLocaleString();
         updateBonusUI();
+        
+        // Обновляем внешний вид карточки
+        if (passivePurchased) {
+            yarikCard.classList.add('purchased');
+            yarikPriceBlock.style.display = 'none';
+            yarikStatusBlock.style.display = 'inline-flex';
+        } else {
+            yarikCard.classList.remove('purchased');
+            yarikPriceBlock.style.display = 'inline-block';
+            yarikStatusBlock.style.display = 'none';
+        }
     }
     
     function addParts(amount) {
@@ -583,6 +633,33 @@
         checkLevelUp();
         saveGame();
     }
+    
+    // ПОКУПКА ПАССИВНОГО ДОХОДА
+    function buyPassiveIncome() {
+        if (passivePurchased) {
+            showFloatingMessage('❌ Уже куплено!', '#FF8888');
+            return;
+        }
+        
+        const cost = 1500;
+        if (parts >= cost) {
+            parts -= cost;
+            passivePurchased = true;
+            incomePerSecond += 400 / 3600; // 400 деталей в час = 0.1111 дет/сек
+            updateUI();
+            showFloatingMessage('✅ Ярик теперь работает на тебя! +400 дет/час', '#88FF88');
+            saveGame();
+        } else {
+            showFloatingMessage(`❌ Не хватает деталей! Нужно ${cost}`, '#FF8888');
+        }
+    }
+    
+    yarikCard.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (!passivePurchased) {
+            buyPassiveIncome();
+        }
+    });
     
     function createDebris(x, y) {
         const debrisCount = Math.floor(Math.random() * 3) + 1;
@@ -640,7 +717,11 @@
     });
     dailyBonusBtn.addEventListener('click', () => claimBonus());
     
-    function saveGame() { localStorage.setItem('MotoTapSave', JSON.stringify({ parts, level, incomePerSecond, lastBonusTimestamp })); }
+    function saveGame() {
+        const save = { parts, level, incomePerSecond, lastBonusTimestamp, passivePurchased };
+        localStorage.setItem('MotoTapSave', JSON.stringify(save));
+    }
+    
     function loadGame() {
         const saved = localStorage.getItem('MotoTapSave');
         if (saved) {
@@ -651,6 +732,7 @@
                 if (level > MAX_LEVEL) level = MAX_LEVEL;
                 incomePerSecond = data.incomePerSecond || 0;
                 lastBonusTimestamp = data.lastBonusTimestamp || 0;
+                passivePurchased = data.passivePurchased || false;
                 updateUI();
             } catch(e) {}
         }
@@ -659,7 +741,14 @@
     
     setInterval(() => updateBonusUI(), 1000);
     setInterval(() => saveGame(), 5000);
-    setInterval(() => { if (incomePerSecond > 0) addParts(incomePerSecond); }, 1000);
+    
+    // Пассивный доход раз в секунду
+    setInterval(() => {
+        if (incomePerSecond > 0) {
+            addParts(incomePerSecond);
+        }
+    }, 1000);
+    
     loadGame();
     
     // ========== ЛОГИКА ШТОРКИ ==========
