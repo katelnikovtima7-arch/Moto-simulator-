@@ -134,14 +134,14 @@
             color: #aaa;
         }
 
-        /* ===== НОВАЯ ШТОРКА (УДЛИНЁННАЯ И УШИРЕННАЯ) ===== */
+        /* ХЭНДЛ ШТОРКИ С ТВОЕЙ СТРЕЛКОЙ */
         .drawer-handle {
             position: absolute;
             right: 0;
             top: 50%;
             transform: translateY(-50%);
-            width: 28px;          /* Шире */
-            height: 180px;        /* Длиннее */
+            width: 28px;
+            height: 180px;
             background: linear-gradient(135deg, #ffaa44, #cc8800);
             border-radius: 20px 0 0 20px;
             z-index: 40;
@@ -158,13 +158,11 @@
             transform: translateY(-50%) scale(0.97);
         }
 
-        /* Стрелка внутри хэндла */
         .handle-arrow {
-            font-size: 2rem;
-            font-weight: bold;
-            color: #2a1a00;
-            text-shadow: 0 1px 0 rgba(255,255,200,0.5);
-            transform: translateX(-3px);
+            width: 24px;
+            height: auto;
+            display: block;
+            filter: drop-shadow(0 1px 1px rgba(0,0,0,0.3));
         }
 
         /* Сама шторка */
@@ -368,7 +366,7 @@
             .daily-bonus-btn { top: 115px; right: 12px; padding: 5px 12px; }
             .drawer { width: 260px; right: -280px; }
             .drawer-handle { width: 24px; height: 140px; }
-            .handle-arrow { font-size: 1.6rem; }
+            .handle-arrow { width: 20px; }
         }
     </style>
 </head>
@@ -389,9 +387,9 @@
         <div><div class="daily-bonus-text" id="dailyBonusText">ЕЖЕДНЕВНЫЙ БОНУС</div><div class="daily-bonus-timer" id="dailyBonusTimer"></div></div>
     </div>
 
-    <!-- ХЭНДЛ ШТОРКИ (с развёрнутой стрелкой) -->
+    <!-- ХЭНДЛ ШТОРКИ С ТВОЕЙ СТРЕЛКОЙ -->
     <div class="drawer-handle" id="drawerHandle">
-        <div class="handle-arrow">◀◀</div>
+        <img src="IMG_0889-photos.png" alt="смахни" class="handle-arrow">
     </div>
 
     <!-- Шторка -->
