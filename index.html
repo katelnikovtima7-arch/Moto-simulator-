@@ -53,7 +53,7 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            transform: translateY(32%);
+            transform: translateY(40%);
         }
 
         .sphere {
@@ -171,7 +171,7 @@
                 max-width: 240px;
             }
             .content-center {
-                transform: translateY(35%);
+                transform: translateY(43%);
             }
         }
     </style>
@@ -250,7 +250,6 @@
         setTimeout(() => spark.remove(), 200);
         
         tapCount++;
-        console.log('Тапов:', tapCount);
     }
     
     tapZone.addEventListener('click', (e) => {
@@ -265,8 +264,6 @@
             handleTap(touch.clientX, touch.clientY);
         }
     });
-    
-    console.log('✅ Положение вернул к тому, которое тебе нравилось');
 </script>
 </body>
 </html>
