@@ -134,7 +134,7 @@
             color: #aaa;
         }
 
-        /* ХЭНДЛ ШТОРКИ — ТЁМНЫЙ, ЧТОБЫ СТРЕЛКА БЫЛА ВИДНА */
+        /* ХЭНДЛ ШТОРКИ */
         .drawer-handle {
             position: absolute;
             right: 0;
@@ -166,7 +166,7 @@
             filter: drop-shadow(0 1px 1px rgba(0,0,0,0.5));
         }
 
-        /* Сама шторка */
+        /* Шторка */
         .drawer {
             position: absolute;
             top: 0;
@@ -225,12 +225,51 @@
             padding: 10px 0;
         }
 
-        .upgrade-placeholder {
+        /* КАРТОЧКА ТОВАРА — фото + описание + цена */
+        .upgrade-card {
             background: rgba(255, 200, 100, 0.1);
             border-radius: 24px;
-            padding: 24px 16px;
+            padding: 16px;
             margin: 10px 0;
-            border: 1px dashed rgba(255, 200, 100, 0.5);
+            border: 1px solid rgba(255, 200, 100, 0.4);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .upgrade-image {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+        }
+
+        .upgrade-image img {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 50%;
+            border: 2px solid #ffaa66;
+            box-shadow: 0 0 10px rgba(0,0,0,0.5);
+        }
+
+        .upgrade-description {
+            font-size: 0.9rem;
+            font-weight: normal;
+            color: #ffdd99;
+            text-align: center;
+            line-height: 1.4;
+        }
+
+        .upgrade-price {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #FFD966;
+            text-shadow: 0 1px 0 #7a5c00;
+            background: rgba(0,0,0,0.5);
+            padding: 6px 20px;
+            border-radius: 40px;
+            display: inline-block;
         }
 
         .floating-message-container {
@@ -368,6 +407,9 @@
             .drawer { width: 260px; right: -280px; }
             .drawer-handle { width: 24px; height: 140px; }
             .handle-arrow { width: 20px; }
+            .upgrade-price { font-size: 1.4rem; }
+            .upgrade-description { font-size: 0.8rem; }
+            .upgrade-image img { width: 80px; height: 80px; }
         }
     </style>
 </head>
@@ -386,7 +428,6 @@
         <div><div class="daily-bonus-text" id="dailyBonusText">ЕЖЕДНЕВНЫЙ БОНУС</div><div class="daily-bonus-timer" id="dailyBonusTimer"></div></div>
     </div>
 
-    <!-- ХЭНДЛ ШТОРКИ (тёмный, со стрелкой) -->
     <div class="drawer-handle" id="drawerHandle">
         <img src="IMG_0889-photos.png" alt="смахни" class="handle-arrow">
     </div>
@@ -397,15 +438,19 @@
             <span class="drawer-close" id="drawerClose">✕</span>
         </div>
         <div class="drawer-content">
-            <div class="upgrade-placeholder">
-                ⚙️ УЛУЧШЕНИЯ ПОЯВЯТСЯ СКОРО ⚙️<br><br>
-                Здесь можно будет купить:<br>
-                🔧 +1 дет/сек<br>
-                ⚡ +5 дет/сек<br>
-                🚀 +10 дет/сек<br><br>
-                <span style="font-size:0.75rem; opacity:0.6;">листай вниз — контент будет</span>
+            <!-- КАРТОЧКА ШКОЛЬНИКА -->
+            <div class="upgrade-card">
+                <div class="upgrade-image">
+                    <img src="IMG_0890.jpeg" alt="Школьник Ярик">
+                </div>
+                <div class="upgrade-description">
+                    Школьник Ярик мутит на металлоприёмке — 400 запчастей в час!
+                </div>
+                <div class="upgrade-price">
+                    1500 🔩
+                </div>
             </div>
-            <div style="height: 200px;"></div>
+            <!-- позже добавим другие улучшения -->
         </div>
     </div>
 
@@ -421,7 +466,7 @@
 </div>
 
 <script>
-    // ---- ИГРОВАЯ ЛОГИКА ----
+    // ---- ИГРОВАЯ ЛОГИКА (БЕЗ ИЗМЕНЕНИЙ) ----
     const tapZone = document.getElementById('tapZone');
     const debrisContainer = document.getElementById('debrisContainer');
     const messageContainer = document.getElementById('messageContainer');
