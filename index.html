@@ -168,8 +168,8 @@
         .drawer {
             position: absolute;
             top: 0;
-            right: -340px;
-            width: 300px;
+            right: -360px;
+            width: 320px;
             height: 100%;
             background: rgba(10, 10, 15, 0.96);
             backdrop-filter: blur(16px);
@@ -221,19 +221,21 @@
             font-size: 0.95rem;
             text-align: center;
             padding: 10px 0;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
         }
 
         /* КАРТОЧКА ТОВАРА */
         .upgrade-card {
             background: rgba(255, 200, 100, 0.1);
             border-radius: 24px;
-            padding: 20px 16px;
-            margin: 10px 0;
+            padding: 16px;
             border: 1px solid rgba(255, 200, 100, 0.4);
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 12px;
+            gap: 10px;
             transition: 0.2s;
             cursor: pointer;
         }
@@ -254,47 +256,53 @@
         }
 
         .upgrade-image img {
-            width: 180px;
-            height: auto;
+            width: 100px;
+            height: 100px;
             object-fit: cover;
-            border-radius: 16px;
+            border-radius: 50%;
             border: 2px solid #ffaa66;
-            box-shadow: 0 0 15px rgba(0,0,0,0.5);
+            box-shadow: 0 0 10px rgba(0,0,0,0.5);
         }
 
         .upgrade-card.purchased .upgrade-image img {
             border-color: #88ff88;
         }
 
+        .upgrade-name {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #ffcc66;
+        }
+
         .upgrade-description {
-            font-size: 0.9rem;
+            font-size: 0.8rem;
             font-weight: normal;
             color: #ffdd99;
             text-align: center;
-            line-height: 1.4;
+            line-height: 1.3;
         }
 
         .upgrade-price {
-            font-size: 1.8rem;
+            font-size: 1.4rem;
             font-weight: bold;
             color: #FFD966;
             text-shadow: 0 1px 0 #7a5c00;
             background: rgba(0,0,0,0.5);
-            padding: 6px 20px;
+            padding: 4px 16px;
             border-radius: 40px;
             display: inline-block;
         }
 
         .upgrade-status {
-            font-size: 1.2rem;
+            font-size: 1rem;
             font-weight: bold;
             color: #88ff88;
             background: rgba(0,0,0,0.5);
-            padding: 6px 20px;
+            padding: 4px 16px;
             border-radius: 40px;
             display: inline-flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
         }
 
         .floating-message-container {
@@ -429,13 +437,13 @@
             .stats-panel { padding: 10px 18px; top: 35px; }
             .floating-message-container { top: 105px; }
             .daily-bonus-btn { top: 115px; right: 12px; padding: 5px 12px; }
-            .drawer { width: 260px; right: -280px; }
+            .drawer { width: 280px; right: -300px; }
             .drawer-handle { width: 24px; height: 140px; }
             .handle-arrow { width: 20px; }
-            .upgrade-price { font-size: 1.4rem; }
-            .upgrade-description { font-size: 0.8rem; }
-            .upgrade-image img { width: 140px; }
-            .upgrade-status { font-size: 1rem; }
+            .upgrade-price { font-size: 1.2rem; }
+            .upgrade-description { font-size: 0.7rem; }
+            .upgrade-image img { width: 80px; height: 80px; }
+            .upgrade-name { font-size: 1rem; }
         }
     </style>
 </head>
@@ -464,10 +472,12 @@
             <span class="drawer-close" id="drawerClose">✕</span>
         </div>
         <div class="drawer-content">
+            <!-- ЯРИК -->
             <div class="upgrade-card" id="yarikCard">
                 <div class="upgrade-image">
                     <img src="IMG_0890.jpeg" alt="Школьник Ярик">
                 </div>
+                <div class="upgrade-name">Школьник Ярик</div>
                 <div class="upgrade-description">
                     Школьник Ярик мутит на металлоприёмке — 400 запчастей в час!
                 </div>
@@ -475,6 +485,23 @@
                     1500 🔩
                 </div>
                 <div id="yarikStatusBlock" class="upgrade-status" style="display: none;">
+                    ✅ АКТИВНО
+                </div>
+            </div>
+
+            <!-- СТАСЯН -->
+            <div class="upgrade-card" id="stasyanCard">
+                <div class="upgrade-image">
+                    <img src="IMG_0895.jpeg" alt="Стасян">
+                </div>
+                <div class="upgrade-name">Стасян</div>
+                <div class="upgrade-description">
+                    Стасян с детства изучал темки по заработку из тик тока, но теперь в свои 15 лет живёт на сдаче деталей
+                </div>
+                <div id="stasyanPriceBlock" class="upgrade-price">
+                    4500 🔩
+                </div>
+                <div id="stasyanStatusBlock" class="upgrade-status" style="display: none;">
                     ✅ АКТИВНО
                 </div>
             </div>
@@ -508,17 +535,32 @@
     let bonusAvailable = true;
     const MAX_LEVEL = 30;
     
-    // Флаг покупки пассивного дохода
-    let passivePurchased = false;
+    // Флаги покупок пассивного дохода
+    let yarikPurchased = false;
+    let stasyanPurchased = false;
     
     const levelValueEl = document.getElementById('levelValue');
     const partsValueEl = document.getElementById('partsValue');
     const incomeValueEl = document.getElementById('incomeValue');
     
-    // Элементы карточки
+    // Элементы карточки Ярика
     const yarikCard = document.getElementById('yarikCard');
     const yarikPriceBlock = document.getElementById('yarikPriceBlock');
     const yarikStatusBlock = document.getElementById('yarikStatusBlock');
+    
+    // Элементы карточки Стасяна
+    const stasyanCard = document.getElementById('stasyanCard');
+    const stasyanPriceBlock = document.getElementById('stasyanPriceBlock');
+    const stasyanStatusBlock = document.getElementById('stasyanStatusBlock');
+    
+    // Функция пересчёта пассивного дохода
+    function updatePassiveIncome() {
+        let newIncomePerSecond = 0;
+        if (yarikPurchased) newIncomePerSecond += 400 / 3600;
+        if (stasyanPurchased) newIncomePerSecond += 1000 / 3600;
+        incomePerSecond = newIncomePerSecond;
+        updateUI();
+    }
     
     function getBonusAmount() { return 500; }
     
@@ -615,8 +657,8 @@
         incomeValueEl.innerText = incomePerHour.toLocaleString();
         updateBonusUI();
         
-        // Обновляем внешний вид карточки
-        if (passivePurchased) {
+        // Обновляем внешний вид карточек
+        if (yarikPurchased) {
             yarikCard.classList.add('purchased');
             yarikPriceBlock.style.display = 'none';
             yarikStatusBlock.style.display = 'inline-flex';
@@ -624,6 +666,16 @@
             yarikCard.classList.remove('purchased');
             yarikPriceBlock.style.display = 'inline-block';
             yarikStatusBlock.style.display = 'none';
+        }
+        
+        if (stasyanPurchased) {
+            stasyanCard.classList.add('purchased');
+            stasyanPriceBlock.style.display = 'none';
+            stasyanStatusBlock.style.display = 'inline-flex';
+        } else {
+            stasyanCard.classList.remove('purchased');
+            stasyanPriceBlock.style.display = 'inline-block';
+            stasyanStatusBlock.style.display = 'none';
         }
     }
     
@@ -634,20 +686,38 @@
         saveGame();
     }
     
-    // ПОКУПКА ПАССИВНОГО ДОХОДА
-    function buyPassiveIncome() {
-        if (passivePurchased) {
-            showFloatingMessage('❌ Уже куплено!', '#FF8888');
+    // ПОКУПКА ЯРИКА
+    function buyYarik() {
+        if (yarikPurchased) {
+            showFloatingMessage('❌ Ярик уже работает!', '#FF8888');
             return;
         }
         
         const cost = 1500;
         if (parts >= cost) {
             parts -= cost;
-            passivePurchased = true;
-            incomePerSecond += 400 / 3600; // 400 деталей в час = 0.1111 дет/сек
-            updateUI();
-            showFloatingMessage('✅ Ярик теперь работает на тебя! +400 дет/час', '#88FF88');
+            yarikPurchased = true;
+            updatePassiveIncome();
+            showFloatingMessage('✅ Ярик теперь на металлоприёмке! +400 дет/час', '#88FF88');
+            saveGame();
+        } else {
+            showFloatingMessage(`❌ Не хватает деталей! Нужно ${cost}`, '#FF8888');
+        }
+    }
+    
+    // ПОКУПКА СТАСЯНА
+    function buyStasyan() {
+        if (stasyanPurchased) {
+            showFloatingMessage('❌ Стасян уже в деле!', '#FF8888');
+            return;
+        }
+        
+        const cost = 4500;
+        if (parts >= cost) {
+            parts -= cost;
+            stasyanPurchased = true;
+            updatePassiveIncome();
+            showFloatingMessage('✅ Стасян сливает темки! +1000 дет/час', '#88FF88');
             saveGame();
         } else {
             showFloatingMessage(`❌ Не хватает деталей! Нужно ${cost}`, '#FF8888');
@@ -656,9 +726,12 @@
     
     yarikCard.addEventListener('click', (e) => {
         e.stopPropagation();
-        if (!passivePurchased) {
-            buyPassiveIncome();
-        }
+        if (!yarikPurchased) buyYarik();
+    });
+    
+    stasyanCard.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (!stasyanPurchased) buyStasyan();
     });
     
     function createDebris(x, y) {
@@ -718,7 +791,7 @@
     dailyBonusBtn.addEventListener('click', () => claimBonus());
     
     function saveGame() {
-        const save = { parts, level, incomePerSecond, lastBonusTimestamp, passivePurchased };
+        const save = { parts, level, incomePerSecond, lastBonusTimestamp, yarikPurchased, stasyanPurchased };
         localStorage.setItem('MotoTapSave', JSON.stringify(save));
     }
     
@@ -732,7 +805,9 @@
                 if (level > MAX_LEVEL) level = MAX_LEVEL;
                 incomePerSecond = data.incomePerSecond || 0;
                 lastBonusTimestamp = data.lastBonusTimestamp || 0;
-                passivePurchased = data.passivePurchased || false;
+                yarikPurchased = data.yarikPurchased || false;
+                stasyanPurchased = data.stasyanPurchased || false;
+                updatePassiveIncome();
                 updateUI();
             } catch(e) {}
         }
