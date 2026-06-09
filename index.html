@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>MotoTap — Гараж / Улица</title>
+    <title>MotoTap — Чиним мотоцикл</title>
     <style>
         * {
             margin: 0;
@@ -116,6 +116,25 @@
         .garage-icon { font-size: 2rem; }
         .garage-text { font-size: 1.3rem; font-weight: bold; color: #FFD966; letter-spacing: 1px; }
 
+        /* Контейнер для мотоцикла на улице */
+        .street-bike {
+            position: absolute;
+            bottom: 30%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 70%;
+            max-width: 350px;
+            z-index: 15;
+            display: none;
+            pointer-events: none;
+        }
+        .street-bike img {
+            width: 100%;
+            height: auto;
+            display: block;
+            filter: drop-shadow(0 8px 20px rgba(0,0,0,0.4));
+        }
+
         /* Кнопка бонуса справа */
         .right-buttons {
             position: absolute;
@@ -202,7 +221,7 @@
         .upgrade-price { font-size: 1.4rem; font-weight: bold; color: #FFD966; background: rgba(0,0,0,0.5); padding: 4px 16px; border-radius: 40px; display: inline-block; }
         .upgrade-status { font-size: 1rem; font-weight: bold; color: #88ff88; background: rgba(0,0,0,0.5); padding: 4px 16px; border-radius: 40px; display: inline-flex; align-items: center; gap: 6px; }
 
-        /* Центральный контент (свеча и сфера) */
+        /* Центральный контент в гараже (свеча и сфера) */
         .content-center {
             position: relative;
             z-index: 5;
@@ -307,6 +326,7 @@
             .garage-btn { top: 80px; padding: 12px 24px; }
             .garage-icon { font-size: 1.5rem; }
             .garage-text { font-size: 1rem; }
+            .street-bike { bottom: 25%; width: 80%; max-width: 260px; }
             .drawer { width: 280px; right: -300px; }
             .drawer-handle { width: 24px; height: 140px; }
             .handle-arrow { width: 20px; }
@@ -324,7 +344,7 @@
         <div class="stat-item"><div class="stat-label">ДОХОД/ЧАС</div><div class="stat-value" id="incomeValue">0</div></div>
     </div>
 
-    <!-- Кнопка выхода на улицу (в гараже — слева вверху, как бонус) -->
+    <!-- Кнопка выхода на улицу (в гараже — слева вверху) -->
     <div class="left-buttons">
         <div class="street-btn" id="streetBtn">
             <span class="street-icon">🌲</span>
@@ -332,10 +352,15 @@
         </div>
     </div>
 
-    <!-- Кнопка возврата в гараж (на улице — большая, высокая, по центру вверху) -->
+    <!-- Кнопка возврата в гараж (на улице — большая, по центру вверху) -->
     <div class="garage-btn" id="garageBtn" style="display: none;">
         <span class="garage-icon">🔧</span>
         <span class="garage-text">Вернуться в гараж</span>
+    </div>
+
+    <!-- Мотоцикл на улице (пока скрыт) -->
+    <div class="street-bike" id="streetBike">
+        <img src="IMG_0901-photos.png" alt="Сломанный мотоцикл">
     </div>
 
     <!-- Кнопка бонуса справа -->
@@ -368,7 +393,7 @@
         </div>
     </div>
 
-    <!-- Центральный контент (свеча + сфера) -->
+    <!-- Центральный контент в гараже (свеча + сфера) -->
     <div class="content-center" id="contentCenter">
         <div class="sphere"></div>
         <div class="spark-plug-wrapper" id="tapZone"><img src="IMG_0884-photo.png" alt="Свеча зажигания" class="spark-plug"></div>
@@ -379,10 +404,11 @@
 </div>
 
 <script>
-    // Переключение фона и видимости элементов (БЕЗ ТЕКСТОВЫХ СООБЩЕНИЙ)
+    // Переключение фона и видимости элементов
     const gameContainer = document.getElementById('gameContainer');
     const streetBtn = document.getElementById('streetBtn');
     const garageBtn = document.getElementById('garageBtn');
+    const streetBike = document.getElementById('streetBike');
     const statsPanel = document.getElementById('statsPanel');
     const rightButtons = document.getElementById('rightButtons');
     const drawerHandle = document.getElementById('drawerHandle');
@@ -391,7 +417,7 @@
 
     function goToStreet() {
         gameContainer.style.backgroundImage = "url('IMG_0899.jpeg')";
-        // Прячем всё, что связано с игрой
+        // Прячем всё, что связано с гаражом
         statsPanel.style.opacity = '0';
         statsPanel.style.visibility = 'hidden';
         rightButtons.style.opacity = '0';
@@ -400,6 +426,8 @@
         drawerHandle.style.visibility = 'hidden';
         contentCenter.style.opacity = '0';
         contentCenter.style.visibility = 'hidden';
+        // Показываем мотоцикл на улице
+        streetBike.style.display = 'block';
         // Закрываем шторку, если она открыта
         drawer.classList.remove('open');
         // Меняем кнопки
@@ -409,7 +437,7 @@
 
     function goToGarage() {
         gameContainer.style.backgroundImage = "url('IMG_0881.png')";
-        // Показываем всё обратно
+        // Показываем всё, что связано с гаражом
         statsPanel.style.opacity = '1';
         statsPanel.style.visibility = 'visible';
         rightButtons.style.opacity = '1';
@@ -418,6 +446,8 @@
         drawerHandle.style.visibility = 'visible';
         contentCenter.style.opacity = '1';
         contentCenter.style.visibility = 'visible';
+        // Прячем мотоцикл на улице
+        streetBike.style.display = 'none';
         // Меняем кнопки
         garageBtn.style.display = 'none';
         streetBtn.style.display = 'flex';
