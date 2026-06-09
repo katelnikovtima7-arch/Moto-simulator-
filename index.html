@@ -30,6 +30,7 @@
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
+            transition: background-image 0.3s ease;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -45,6 +46,115 @@
             height: 100%;
             background: rgba(0, 0, 0, 0.2);
             pointer-events: none;
+            transition: background 0.3s ease;
+        }
+
+        /* Кнопка слева (улица) */
+        .left-buttons {
+            position: absolute;
+            top: 130px;
+            left: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            z-index: 30;
+        }
+
+        /* Кнопка выхода на улицу (белая) */
+        .street-btn {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(4px);
+            border: 1px solid rgba(255, 255, 255, 0.9);
+            border-radius: 50px;
+            padding: 10px 18px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            transition: transform 0.1s ease;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+        }
+
+        .street-btn:active {
+            transform: scale(0.95);
+        }
+
+        .street-icon {
+            font-size: 1.4rem;
+        }
+
+        .street-text {
+            font-size: 0.85rem;
+            font-weight: bold;
+            color: #222;
+        }
+
+        /* Кнопка вернуться в гараж */
+        .garage-btn {
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 200, 80, 0.6);
+            border-radius: 50px;
+            padding: 10px 18px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            transition: transform 0.1s ease;
+        }
+
+        .garage-btn:active {
+            transform: scale(0.95);
+        }
+
+        .garage-icon {
+            font-size: 1.3rem;
+        }
+
+        .garage-text {
+            font-size: 0.85rem;
+            font-weight: bold;
+            color: #FFD966;
+        }
+
+        /* Кнопка ежедневного бонуса (справа) */
+        .right-buttons {
+            position: absolute;
+            top: 130px;
+            right: 20px;
+            z-index: 30;
+        }
+
+        .daily-bonus-btn {
+            background: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 200, 80, 0.6);
+            border-radius: 50px;
+            padding: 8px 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: transform 0.1s ease;
+        }
+
+        .daily-bonus-btn:active {
+            transform: scale(0.95);
+        }
+
+        .daily-bonus-icon {
+            font-size: 1.5rem;
+        }
+
+        .daily-bonus-text {
+            font-size: 0.75rem;
+            font-weight: bold;
+            color: #FFD966;
+        }
+
+        .daily-bonus-timer {
+            font-size: 0.7rem;
+            color: #aaa;
         }
 
         .stats-panel {
@@ -96,42 +206,6 @@
             width: 2px;
             height: 45px;
             background: rgba(255, 180, 60, 0.4);
-        }
-
-        .daily-bonus-btn {
-            position: absolute;
-            top: 130px;
-            right: 20px;
-            background: rgba(0, 0, 0, 0.75);
-            backdrop-filter: blur(8px);
-            border: 1px solid rgba(255, 200, 80, 0.6);
-            border-radius: 50px;
-            padding: 8px 16px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            z-index: 25;
-            cursor: pointer;
-            transition: transform 0.1s ease;
-        }
-
-        .daily-bonus-btn:active {
-            transform: scale(0.95);
-        }
-
-        .daily-bonus-icon {
-            font-size: 1.5rem;
-        }
-
-        .daily-bonus-text {
-            font-size: 0.75rem;
-            font-weight: bold;
-            color: #FFD966;
-        }
-
-        .daily-bonus-timer {
-            font-size: 0.7rem;
-            color: #aaa;
         }
 
         .drawer-handle {
@@ -226,7 +300,6 @@
             gap: 20px;
         }
 
-        /* КАРТОЧКА ТОВАРА */
         .upgrade-card {
             background: rgba(255, 200, 100, 0.1);
             border-radius: 24px;
@@ -436,7 +509,12 @@
             .stat-label { font-size: 0.65rem; }
             .stats-panel { padding: 10px 18px; top: 35px; }
             .floating-message-container { top: 105px; }
-            .daily-bonus-btn { top: 115px; right: 12px; padding: 5px 12px; }
+            .right-buttons { top: 115px; right: 12px; }
+            .left-buttons { top: 115px; left: 12px; }
+            .daily-bonus-btn { padding: 5px 12px; }
+            .street-btn { padding: 6px 14px; }
+            .garage-btn { padding: 6px 14px; }
+            .street-text, .garage-text { font-size: 0.7rem; }
             .drawer { width: 280px; right: -300px; }
             .drawer-handle { width: 24px; height: 140px; }
             .handle-arrow { width: 20px; }
@@ -448,7 +526,7 @@
     </style>
 </head>
 <body>
-<div class="game-container">
+<div class="game-container" id="gameContainer">
     <div class="stats-panel">
         <div class="stat-item"><div class="stat-label">УРОВЕНЬ</div><div class="stat-value" id="levelValue">1</div></div>
         <div class="stat-divider"></div>
@@ -457,9 +535,27 @@
         <div class="stat-item"><div class="stat-label">ДОХОД/ЧАС</div><div class="stat-value" id="incomeValue">0</div></div>
     </div>
 
-    <div class="daily-bonus-btn" id="dailyBonusBtn">
-        <span class="daily-bonus-icon">🎁</span>
-        <div><div class="daily-bonus-text" id="dailyBonusText">ЕЖЕДНЕВНЫЙ БОНУС</div><div class="daily-bonus-timer" id="dailyBonusTimer"></div></div>
+    <!-- Кнопки слева -->
+    <div class="left-buttons" id="leftButtons">
+        <div class="street-btn" id="streetBtn">
+            <span class="street-icon">🏍️</span>
+            <span class="street-text">Выйти на улицу</span>
+        </div>
+        <div class="garage-btn" id="garageBtn" style="display: none;">
+            <span class="garage-icon">🔧</span>
+            <span class="garage-text">Вернуться в гараж</span>
+        </div>
+    </div>
+
+    <!-- Кнопки справа -->
+    <div class="right-buttons">
+        <div class="daily-bonus-btn" id="dailyBonusBtn">
+            <span class="daily-bonus-icon">🎁</span>
+            <div>
+                <div class="daily-bonus-text" id="dailyBonusText">ЕЖЕДНЕВНЫЙ БОНУС</div>
+                <div class="daily-bonus-timer" id="dailyBonusTimer"></div>
+            </div>
+        </div>
     </div>
 
     <div class="drawer-handle" id="drawerHandle">
@@ -472,38 +568,23 @@
             <span class="drawer-close" id="drawerClose">✕</span>
         </div>
         <div class="drawer-content">
-            <!-- ЯРИК -->
             <div class="upgrade-card" id="yarikCard">
                 <div class="upgrade-image">
                     <img src="IMG_0890.jpeg" alt="Школьник Ярик">
                 </div>
                 <div class="upgrade-name">Школьник Ярик</div>
-                <div class="upgrade-description">
-                    Школьник Ярик мутит на металлоприёмке — 400 запчастей в час!
-                </div>
-                <div id="yarikPriceBlock" class="upgrade-price">
-                    1500 🔩
-                </div>
-                <div id="yarikStatusBlock" class="upgrade-status" style="display: none;">
-                    ✅ АКТИВНО
-                </div>
+                <div class="upgrade-description">Школьник Ярик мутит на металлоприёмке — 400 запчастей в час!</div>
+                <div id="yarikPriceBlock" class="upgrade-price">1500 🔩</div>
+                <div id="yarikStatusBlock" class="upgrade-status" style="display: none;">✅ АКТИВНО</div>
             </div>
-
-            <!-- СТАСЯН -->
             <div class="upgrade-card" id="stasyanCard">
                 <div class="upgrade-image">
                     <img src="IMG_0895.jpeg" alt="Стасян">
                 </div>
                 <div class="upgrade-name">Стасян</div>
-                <div class="upgrade-description">
-                    Стасян с детства изучал темки по заработку из тик тока, но теперь в свои 15 лет живёт на сдаче деталей
-                </div>
-                <div id="stasyanPriceBlock" class="upgrade-price">
-                    4500 🔩
-                </div>
-                <div id="stasyanStatusBlock" class="upgrade-status" style="display: none;">
-                    ✅ АКТИВНО
-                </div>
+                <div class="upgrade-description">Стасян с детства изучал темки по заработку из тик тока, но теперь в свои 15 лет живёт на сдаче деталей</div>
+                <div id="stasyanPriceBlock" class="upgrade-price">4500 🔩</div>
+                <div id="stasyanStatusBlock" class="upgrade-status" style="display: none;">✅ АКТИВНО</div>
             </div>
         </div>
     </div>
@@ -520,7 +601,30 @@
 </div>
 
 <script>
-    // ---- ИГРОВАЯ ЛОГИКА ----
+    // ---- ИГРОВАЯ ЛОГИКА (та же) ----
+    const gameContainer = document.getElementById('gameContainer');
+    const streetBtn = document.getElementById('streetBtn');
+    const garageBtn = document.getElementById('garageBtn');
+    
+    // Функции переключения фона
+    function goToStreet() {
+        gameContainer.style.backgroundImage = "url('IMG_0899.jpeg')";
+        streetBtn.style.display = 'none';
+        garageBtn.style.display = 'flex';
+        showFloatingMessage('🏍️ Ты выехал на улицу!', '#88AAFF');
+    }
+    
+    function goToGarage() {
+        gameContainer.style.backgroundImage = "url('IMG_0881.png')";
+        garageBtn.style.display = 'none';
+        streetBtn.style.display = 'flex';
+        showFloatingMessage('🔧 Добро пожаловать в гараж!', '#FFAA66');
+    }
+    
+    streetBtn.addEventListener('click', goToStreet);
+    garageBtn.addEventListener('click', goToGarage);
+    
+    // --- ВСЯ ОСТАЛЬНАЯ ЛОГИКА (без изменений) ---
     const tapZone = document.getElementById('tapZone');
     const debrisContainer = document.getElementById('debrisContainer');
     const messageContainer = document.getElementById('messageContainer');
@@ -535,7 +639,6 @@
     let bonusAvailable = true;
     const MAX_LEVEL = 30;
     
-    // Флаги покупок пассивного дохода
     let yarikPurchased = false;
     let stasyanPurchased = false;
     
@@ -543,17 +646,14 @@
     const partsValueEl = document.getElementById('partsValue');
     const incomeValueEl = document.getElementById('incomeValue');
     
-    // Элементы карточки Ярика
     const yarikCard = document.getElementById('yarikCard');
     const yarikPriceBlock = document.getElementById('yarikPriceBlock');
     const yarikStatusBlock = document.getElementById('yarikStatusBlock');
     
-    // Элементы карточки Стасяна
     const stasyanCard = document.getElementById('stasyanCard');
     const stasyanPriceBlock = document.getElementById('stasyanPriceBlock');
     const stasyanStatusBlock = document.getElementById('stasyanStatusBlock');
     
-    // Функция пересчёта пассивного дохода
     function updatePassiveIncome() {
         let newIncomePerSecond = 0;
         if (yarikPurchased) newIncomePerSecond += 400 / 3600;
@@ -657,7 +757,6 @@
         incomeValueEl.innerText = incomePerHour.toLocaleString();
         updateBonusUI();
         
-        // Обновляем внешний вид карточек
         if (yarikPurchased) {
             yarikCard.classList.add('purchased');
             yarikPriceBlock.style.display = 'none';
@@ -686,13 +785,11 @@
         saveGame();
     }
     
-    // ПОКУПКА ЯРИКА
     function buyYarik() {
         if (yarikPurchased) {
             showFloatingMessage('❌ Ярик уже работает!', '#FF8888');
             return;
         }
-        
         const cost = 1500;
         if (parts >= cost) {
             parts -= cost;
@@ -705,13 +802,11 @@
         }
     }
     
-    // ПОКУПКА СТАСЯНА
     function buyStasyan() {
         if (stasyanPurchased) {
             showFloatingMessage('❌ Стасян уже в деле!', '#FF8888');
             return;
         }
-        
         const cost = 4500;
         if (parts >= cost) {
             parts -= cost;
@@ -806,82 +901,4 @@
                 incomePerSecond = data.incomePerSecond || 0;
                 lastBonusTimestamp = data.lastBonusTimestamp || 0;
                 yarikPurchased = data.yarikPurchased || false;
-                stasyanPurchased = data.stasyanPurchased || false;
-                updatePassiveIncome();
-                updateUI();
-            } catch(e) {}
-        }
-        updateUI();
-    }
-    
-    setInterval(() => updateBonusUI(), 1000);
-    setInterval(() => saveGame(), 5000);
-    
-    // Пассивный доход раз в секунду
-    setInterval(() => {
-        if (incomePerSecond > 0) {
-            addParts(incomePerSecond);
-        }
-    }, 1000);
-    
-    loadGame();
-    
-    // ========== ЛОГИКА ШТОРКИ ==========
-    const drawer = document.getElementById('drawer');
-    const drawerHandle = document.getElementById('drawerHandle');
-    const drawerClose = document.getElementById('drawerClose');
-    
-    let startX = 0;
-    let isDragging = false;
-    
-    function openDrawer() {
-        drawer.classList.add('open');
-    }
-    
-    function closeDrawer() {
-        drawer.classList.remove('open');
-    }
-    
-    drawerHandle.addEventListener('mousedown', (e) => {
-        startX = e.clientX;
-        isDragging = true;
-        document.body.style.userSelect = 'none';
-    });
-    
-    drawerHandle.addEventListener('touchstart', (e) => {
-        startX = e.touches[0].clientX;
-        isDragging = true;
-        e.preventDefault();
-    });
-    
-    window.addEventListener('mousemove', (e) => {
-        if (!isDragging) return;
-        const deltaX = e.clientX - startX;
-        if (deltaX < -20) {
-            openDrawer();
-            isDragging = false;
-        }
-    });
-    
-    window.addEventListener('touchmove', (e) => {
-        if (!isDragging) return;
-        const deltaX = e.touches[0].clientX - startX;
-        if (deltaX < -20) {
-            openDrawer();
-            isDragging = false;
-            e.preventDefault();
-        }
-    });
-    
-    window.addEventListener('mouseup', () => { isDragging = false; });
-    window.addEventListener('touchend', () => { isDragging = false; });
-    
-    drawerClose.addEventListener('click', closeDrawer);
-    
-    drawerHandle.addEventListener('click', (e) => {
-        if (!drawer.classList.contains('open')) openDrawer();
-        e.stopPropagation();
-    });
-</script>
-</body>
-</html>
+               
