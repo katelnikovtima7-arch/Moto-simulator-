@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>MotoTap — Гараж</title>
+    <title>MotoTap — Гараж / Улица</title>
     <style>
         * {
             margin: 0;
@@ -63,35 +63,14 @@
             z-index: 20;
             border: 1px solid rgba(255, 180, 60, 0.6);
             box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+            transition: opacity 0.3s ease, visibility 0.3s ease;
         }
-        .stat-item {
-            flex: 1;
-            text-align: center;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 6px;
-        }
-        .stat-label {
-            font-size: 0.8rem;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            color: #ffaa66;
-            font-weight: bold;
-        }
-        .stat-value {
-            font-size: 1.6rem;
-            font-weight: bold;
-            color: #FFD966;
-            text-shadow: 0 2px 0 #7a5c00;
-            line-height: 1;
-        }
-        .stat-divider {
-            width: 2px;
-            height: 45px;
-            background: rgba(255, 180, 60, 0.4);
-        }
-        /* Левая кнопка — улица */
+        .stat-item { flex: 1; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 6px; }
+        .stat-label { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 2px; color: #ffaa66; font-weight: bold; }
+        .stat-value { font-size: 1.6rem; font-weight: bold; color: #FFD966; text-shadow: 0 2px 0 #7a5c00; line-height: 1; }
+        .stat-divider { width: 2px; height: 45px; background: rgba(255, 180, 60, 0.4); }
+
+        /* Левая кнопка */
         .left-buttons {
             position: absolute;
             top: 130px;
@@ -117,6 +96,7 @@
         .street-btn:active { transform: scale(0.95); }
         .street-icon { font-size: 1.4rem; }
         .street-text { font-size: 0.85rem; font-weight: bold; color: #222; }
+
         .garage-btn {
             background: rgba(0, 0, 0, 0.75);
             backdrop-filter: blur(8px);
@@ -132,12 +112,14 @@
         .garage-btn:active { transform: scale(0.95); }
         .garage-icon { font-size: 1.3rem; }
         .garage-text { font-size: 0.85rem; font-weight: bold; color: #FFD966; }
+
         /* Правая кнопка — бонус */
         .right-buttons {
             position: absolute;
             top: 130px;
             right: 20px;
             z-index: 30;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
         }
         .daily-bonus-btn {
             background: rgba(0, 0, 0, 0.75);
@@ -155,6 +137,7 @@
         .daily-bonus-icon { font-size: 1.5rem; }
         .daily-bonus-text { font-size: 0.75rem; font-weight: bold; color: #FFD966; }
         .daily-bonus-timer { font-size: 0.7rem; color: #aaa; }
+
         /* Шторка */
         .drawer-handle {
             position: absolute;
@@ -172,6 +155,7 @@
             align-items: center;
             justify-content: center;
             border: 1px solid rgba(255,200,100,0.3);
+            transition: opacity 0.3s ease, visibility 0.3s ease;
         }
         .handle-arrow { width: 24px; height: auto; display: block; filter: drop-shadow(0 1px 1px rgba(0,0,0,0.5)); }
         .drawer {
@@ -191,22 +175,11 @@
             padding: 20px 16px;
         }
         .drawer.open { right: 0; }
-        .drawer-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 24px;
-            padding-bottom: 12px;
-            border-bottom: 1px solid rgba(255,180,60,0.4);
-        }
+        .drawer-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; padding-bottom: 12px; border-bottom: 1px solid rgba(255,180,60,0.4); }
         .drawer-title { font-size: 1.4rem; font-weight: bold; color: #ffcc66; }
         .drawer-close { font-size: 2rem; cursor: pointer; color: #ffaa66; }
-        .drawer-content {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
+        .drawer-content { flex: 1; display: flex; flex-direction: column; gap: 20px; }
+
         /* Карточки улучшений */
         .upgrade-card {
             background: rgba(255,200,100,0.1);
@@ -219,22 +192,47 @@
             gap: 10px;
             cursor: pointer;
         }
-        .upgrade-card.purchased {
-            background: rgba(100,200,100,0.15);
-            border-color: #88ff88;
-            cursor: default;
-        }
-        .upgrade-image img {
-            width: 100px;
-            height: 100px;
-            object-fit: cover;
-            border-radius: 50%;
-            border: 2px solid #ffaa66;
-        }
+        .upgrade-card.purchased { background: rgba(100,200,100,0.15); border-color: #88ff88; cursor: default; }
+        .upgrade-image img { width: 100px; height: 100px; object-fit: cover; border-radius: 50%; border: 2px solid #ffaa66; }
         .upgrade-name { font-size: 1.2rem; font-weight: bold; color: #ffcc66; }
         .upgrade-description { font-size: 0.8rem; color: #ffdd99; text-align: center; }
         .upgrade-price { font-size: 1.4rem; font-weight: bold; color: #FFD966; background: rgba(0,0,0,0.5); padding: 4px 16px; border-radius: 40px; display: inline-block; }
         .upgrade-status { font-size: 1rem; font-weight: bold; color: #88ff88; background: rgba(0,0,0,0.5); padding: 4px 16px; border-radius: 40px; display: inline-flex; align-items: center; gap: 6px; }
+
+        /* Центральный контент (свеча и сфера) */
+        .content-center {
+            position: relative;
+            z-index: 5;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transform: translateY(40%);
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+        .sphere {
+            position: absolute;
+            width: 320px;
+            height: 320px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 35% 35%, rgba(30,30,45,0.55) 0%, rgba(25,25,40,0.65) 30%, rgba(20,20,35,0.85) 60%, rgba(15,15,28,0.95) 85%, rgba(10,10,20,1) 100%);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.08);
+            border: 1px solid rgba(120,100,80,0.4);
+            pointer-events: none;
+        }
+        .spark-plug-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            width: 80%;
+            max-width: 300px;
+            transition: transform 0.07s cubic-bezier(0.2,0.9,0.4,1.1);
+        }
+        .spark-plug { width: 100%; height: auto; display: block; filter: drop-shadow(0 6px 12px rgba(0,0,0,0.5)); pointer-events: none; }
+        .spark-plug-wrapper.tap-active { transform: scale(0.94); }
+
         /* Всплывающие сообщения */
         .floating-message-container {
             position: absolute;
@@ -265,44 +263,7 @@
             85% { opacity: 1; transform: translateY(0); }
             100% { opacity: 0; transform: translateY(-20px); }
         }
-        /* Свеча и сфера */
-        .content-center {
-            position: relative;
-            z-index: 5;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            transform: translateY(40%);
-        }
-        .sphere {
-            position: absolute;
-            width: 320px;
-            height: 320px;
-            border-radius: 50%;
-            background: radial-gradient(circle at 35% 35%, rgba(30,30,45,0.55) 0%, rgba(25,25,40,0.65) 30%, rgba(20,20,35,0.85) 60%, rgba(15,15,28,0.95) 85%, rgba(10,10,20,1) 100%);
-            box-shadow: 0 5px 20px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.08);
-            border: 1px solid rgba(120,100,80,0.4);
-            pointer-events: none;
-        }
-        .spark-plug-wrapper {
-            position: relative;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            width: 80%;
-            max-width: 300px;
-            transition: transform 0.07s cubic-bezier(0.2,0.9,0.4,1.1);
-        }
-        .spark-plug {
-            width: 100%;
-            height: auto;
-            display: block;
-            filter: drop-shadow(0 6px 12px rgba(0,0,0,0.5));
-            pointer-events: none;
-        }
-        .spark-plug-wrapper.tap-active { transform: scale(0.94); }
+
         /* Осколки */
         .debris-container {
             position: fixed;
@@ -331,6 +292,7 @@
             0% { transform: translate(0,0) scale(1) rotate(0deg); opacity: 1; }
             100% { transform: translate(var(--dx,60px), var(--dy,-70px)) scale(0.2) rotate(200deg); opacity: 0; }
         }
+
         @media (max-width: 600px) {
             .sphere { width: 260px; height: 260px; }
             .spark-plug-wrapper { max-width: 240px; }
@@ -347,7 +309,8 @@
 </head>
 <body>
 <div class="game-container" id="gameContainer">
-    <div class="stats-panel">
+    <!-- Верхняя панель -->
+    <div class="stats-panel" id="statsPanel">
         <div class="stat-item"><div class="stat-label">УРОВЕНЬ</div><div class="stat-value" id="levelValue">1</div></div>
         <div class="stat-divider"></div>
         <div class="stat-item"><div class="stat-label">ДЕТАЛЕЙ</div><div class="stat-value" id="partsValue">0</div></div>
@@ -355,18 +318,21 @@
         <div class="stat-item"><div class="stat-label">ДОХОД/ЧАС</div><div class="stat-value" id="incomeValue">0</div></div>
     </div>
 
+    <!-- Кнопки слева -->
     <div class="left-buttons">
         <div class="street-btn" id="streetBtn"><span class="street-icon">🏍️</span><span class="street-text">Выйти на улицу</span></div>
         <div class="garage-btn" id="garageBtn" style="display: none;"><span class="garage-icon">🔧</span><span class="garage-text">Вернуться в гараж</span></div>
     </div>
 
-    <div class="right-buttons">
+    <!-- Кнопка бонуса справа -->
+    <div class="right-buttons" id="rightButtons">
         <div class="daily-bonus-btn" id="dailyBonusBtn">
             <span class="daily-bonus-icon">🎁</span>
             <div><div class="daily-bonus-text" id="dailyBonusText">ЕЖЕДНЕВНЫЙ БОНУС</div><div class="daily-bonus-timer" id="dailyBonusTimer"></div></div>
         </div>
     </div>
 
+    <!-- Шторка -->
     <div class="drawer-handle" id="drawerHandle"><img src="IMG_0889-photos.png" alt="смахни" class="handle-arrow"></div>
     <div class="drawer" id="drawer">
         <div class="drawer-header"><span class="drawer-title">📈 ПАССИВНЫЙ ДОХОД</span><span class="drawer-close" id="drawerClose">✕</span></div>
@@ -388,37 +354,83 @@
         </div>
     </div>
 
-    <div class="floating-message-container" id="messageContainer"></div>
-    <div class="content-center">
+    <!-- Центральный контент (свеча + сфера) -->
+    <div class="content-center" id="contentCenter">
         <div class="sphere"></div>
         <div class="spark-plug-wrapper" id="tapZone"><img src="IMG_0884-photo.png" alt="Свеча зажигания" class="spark-plug"></div>
     </div>
+
+    <div class="floating-message-container" id="messageContainer"></div>
     <div class="debris-container" id="debrisContainer"></div>
 </div>
 
 <script>
-    // Переключение фона
+    // Переключение фона и видимости элементов
     const gameContainer = document.getElementById('gameContainer');
     const streetBtn = document.getElementById('streetBtn');
     const garageBtn = document.getElementById('garageBtn');
-    function goToStreet() { gameContainer.style.backgroundImage = "url('IMG_0899.jpeg')"; streetBtn.style.display = 'none'; garageBtn.style.display = 'flex'; showFloatingMessage('🏍️ Ты выехал на улицу!', '#88AAFF'); }
-    function goToGarage() { gameContainer.style.backgroundImage = "url('IMG_0881.png')"; garageBtn.style.display = 'none'; streetBtn.style.display = 'flex'; showFloatingMessage('🔧 Добро пожаловать в гараж!', '#FFAA66'); }
+    const statsPanel = document.getElementById('statsPanel');
+    const rightButtons = document.getElementById('rightButtons');
+    const drawerHandle = document.getElementById('drawerHandle');
+    const contentCenter = document.getElementById('contentCenter');
+    const drawer = document.getElementById('drawer');
+    const drawerClose = document.getElementById('drawerClose');
+
+    function goToStreet() {
+        gameContainer.style.backgroundImage = "url('IMG_0899.jpeg')";
+        // Прячем всё, что связано с игрой
+        statsPanel.style.opacity = '0';
+        statsPanel.style.visibility = 'hidden';
+        rightButtons.style.opacity = '0';
+        rightButtons.style.visibility = 'hidden';
+        drawerHandle.style.opacity = '0';
+        drawerHandle.style.visibility = 'hidden';
+        contentCenter.style.opacity = '0';
+        contentCenter.style.visibility = 'hidden';
+        // Закрываем шторку, если она открыта
+        drawer.classList.remove('open');
+        // Меняем кнопки
+        streetBtn.style.display = 'none';
+        garageBtn.style.display = 'flex';
+        showFloatingMessage('🏍️ Ты вышел на улицу! Возвращайся в гараж, чтобы продолжить', '#88AAFF');
+    }
+
+    function goToGarage() {
+        gameContainer.style.backgroundImage = "url('IMG_0881.png')";
+        // Показываем всё обратно
+        statsPanel.style.opacity = '1';
+        statsPanel.style.visibility = 'visible';
+        rightButtons.style.opacity = '1';
+        rightButtons.style.visibility = 'visible';
+        drawerHandle.style.opacity = '1';
+        drawerHandle.style.visibility = 'visible';
+        contentCenter.style.opacity = '1';
+        contentCenter.style.visibility = 'visible';
+        // Меняем кнопки
+        garageBtn.style.display = 'none';
+        streetBtn.style.display = 'flex';
+        showFloatingMessage('🔧 Добро пожаловать в гараж! Продолжай тапать', '#FFAA66');
+    }
+
     streetBtn.addEventListener('click', goToStreet);
     garageBtn.addEventListener('click', goToGarage);
 
-    // Игровая логика
+    // --- ИГРОВАЯ ЛОГИКА (полная, как работала раньше) ---
     const tapZone = document.getElementById('tapZone');
     const debrisContainer = document.getElementById('debrisContainer');
     const messageContainer = document.getElementById('messageContainer');
     const dailyBonusBtn = document.getElementById('dailyBonusBtn');
     const dailyBonusText = document.getElementById('dailyBonusText');
     const dailyBonusTimer = document.getElementById('dailyBonusTimer');
+
     let parts = 0, level = 1, incomePerSecond = 0, lastBonusTimestamp = 0;
     const MAX_LEVEL = 30;
     let yarikPurchased = false, stasyanPurchased = false;
+
     const levelValueEl = document.getElementById('levelValue');
     const partsValueEl = document.getElementById('partsValue');
     const incomeValueEl = document.getElementById('incomeValue');
+
     const yarikCard = document.getElementById('yarikCard'), yarikPriceBlock = document.getElementById('yarikPriceBlock'), yarikStatusBlock = document.getElementById('yarikStatusBlock');
     const stasyanCard = document.getElementById('stasyanCard'), stasyanPriceBlock = document.getElementById('stasyanPriceBlock'), stasyanStatusBlock = document.getElementById('stasyanStatusBlock');
 
@@ -451,17 +463,16 @@
     loadGame();
 
     // Логика шторки
-    const drawer=document.getElementById('drawer'), drawerHandle=document.getElementById('drawerHandle'), drawerClose=document.getElementById('drawerClose');
     let startX=0, isDragging=false;
-    function openDrawer() { drawer.classList.add('open'); }
-    function closeDrawer() { drawer.classList.remove('open'); }
+    function openDrawer() { if(drawer.classList) drawer.classList.add('open'); }
+    function closeDrawerFunc() { drawer.classList.remove('open'); }
     drawerHandle.addEventListener('mousedown',(e)=>{ startX=e.clientX; isDragging=true; document.body.style.userSelect='none'; });
     drawerHandle.addEventListener('touchstart',(e)=>{ startX=e.touches[0].clientX; isDragging=true; e.preventDefault(); });
     window.addEventListener('mousemove',(e)=>{ if(!isDragging) return; if(e.clientX-startX<-20) { openDrawer(); isDragging=false; } });
     window.addEventListener('touchmove',(e)=>{ if(!isDragging) return; if(e.touches[0].clientX-startX<-20) { openDrawer(); isDragging=false; e.preventDefault(); } });
     window.addEventListener('mouseup',()=>{ isDragging=false; });
     window.addEventListener('touchend',()=>{ isDragging=false; });
-    drawerClose.addEventListener('click',closeDrawer);
+    drawerClose.addEventListener('click',closeDrawerFunc);
     drawerHandle.addEventListener('click',()=>{ if(!drawer.classList.contains('open')) openDrawer(); });
 </script>
 </body>
