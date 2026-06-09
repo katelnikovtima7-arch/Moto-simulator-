@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>MotoTap — Свеча зажигания</title>
+    <title>MotoTap — Гараж</title>
     <style>
         * {
             margin: 0;
@@ -12,16 +12,14 @@
             user-select: none;
             -webkit-tap-highlight-color: transparent;
         }
-
         body {
             width: 100%;
             min-height: 100vh;
             background: #000;
             overflow: hidden;
             position: fixed;
-            font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+            font-family: 'Segoe UI', system-ui, sans-serif;
         }
-
         .game-container {
             position: relative;
             width: 100%;
@@ -36,7 +34,6 @@
             align-items: center;
             justify-content: center;
         }
-
         .game-container::before {
             content: '';
             position: absolute;
@@ -46,117 +43,8 @@
             height: 100%;
             background: rgba(0, 0, 0, 0.2);
             pointer-events: none;
-            transition: background 0.3s ease;
         }
-
-        /* Кнопка слева (улица) */
-        .left-buttons {
-            position: absolute;
-            top: 130px;
-            left: 20px;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            z-index: 30;
-        }
-
-        /* Кнопка выхода на улицу (белая) */
-        .street-btn {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(4px);
-            border: 1px solid rgba(255, 255, 255, 0.9);
-            border-radius: 50px;
-            padding: 10px 18px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            cursor: pointer;
-            transition: transform 0.1s ease;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.15);
-        }
-
-        .street-btn:active {
-            transform: scale(0.95);
-        }
-
-        .street-icon {
-            font-size: 1.4rem;
-        }
-
-        .street-text {
-            font-size: 0.85rem;
-            font-weight: bold;
-            color: #222;
-        }
-
-        /* Кнопка вернуться в гараж */
-        .garage-btn {
-            background: rgba(0, 0, 0, 0.8);
-            backdrop-filter: blur(8px);
-            border: 1px solid rgba(255, 200, 80, 0.6);
-            border-radius: 50px;
-            padding: 10px 18px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            cursor: pointer;
-            transition: transform 0.1s ease;
-        }
-
-        .garage-btn:active {
-            transform: scale(0.95);
-        }
-
-        .garage-icon {
-            font-size: 1.3rem;
-        }
-
-        .garage-text {
-            font-size: 0.85rem;
-            font-weight: bold;
-            color: #FFD966;
-        }
-
-        /* Кнопка ежедневного бонуса (справа) */
-        .right-buttons {
-            position: absolute;
-            top: 130px;
-            right: 20px;
-            z-index: 30;
-        }
-
-        .daily-bonus-btn {
-            background: rgba(0, 0, 0, 0.75);
-            backdrop-filter: blur(8px);
-            border: 1px solid rgba(255, 200, 80, 0.6);
-            border-radius: 50px;
-            padding: 8px 16px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            cursor: pointer;
-            transition: transform 0.1s ease;
-        }
-
-        .daily-bonus-btn:active {
-            transform: scale(0.95);
-        }
-
-        .daily-bonus-icon {
-            font-size: 1.5rem;
-        }
-
-        .daily-bonus-text {
-            font-size: 0.75rem;
-            font-weight: bold;
-            color: #FFD966;
-        }
-
-        .daily-bonus-timer {
-            font-size: 0.7rem;
-            color: #aaa;
-        }
-
+        /* Верхняя панель */
         .stats-panel {
             position: absolute;
             top: 45px;
@@ -176,7 +64,6 @@
             border: 1px solid rgba(255, 180, 60, 0.6);
             box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
         }
-
         .stat-item {
             flex: 1;
             text-align: center;
@@ -185,7 +72,6 @@
             align-items: center;
             gap: 6px;
         }
-
         .stat-label {
             font-size: 0.8rem;
             text-transform: uppercase;
@@ -193,7 +79,6 @@
             color: #ffaa66;
             font-weight: bold;
         }
-
         .stat-value {
             font-size: 1.6rem;
             font-weight: bold;
@@ -201,13 +86,101 @@
             text-shadow: 0 2px 0 #7a5c00;
             line-height: 1;
         }
-
         .stat-divider {
             width: 2px;
             height: 45px;
             background: rgba(255, 180, 60, 0.4);
         }
-
+        /* Блок левых кнопок */
+        .left-buttons {
+            position: absolute;
+            top: 130px;
+            left: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            z-index: 30;
+        }
+        /* Кнопка выхода на улицу (белая, красивая) */
+        .street-btn {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(4px);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            border-radius: 50px;
+            padding: 10px 18px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            transition: transform 0.1s ease;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+        .street-btn:active {
+            transform: scale(0.95);
+        }
+        .street-icon {
+            font-size: 1.4rem;
+        }
+        .street-text {
+            font-size: 0.85rem;
+            font-weight: bold;
+            color: #222;
+        }
+        /* Кнопка возврата в гараж */
+        .garage-btn {
+            background: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 200, 80, 0.6);
+            border-radius: 50px;
+            padding: 10px 18px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            transition: transform 0.1s ease;
+        }
+        .garage-btn:active {
+            transform: scale(0.95);
+        }
+        .garage-icon {
+            font-size: 1.3rem;
+        }
+        .garage-text {
+            font-size: 0.85rem;
+            font-weight: bold;
+            color: #FFD966;
+        }
+        /* Ежедневный бонус (справа) */
+        .right-buttons {
+            position: absolute;
+            top: 130px;
+            right: 20px;
+            z-index: 30;
+        }
+        .daily-bonus-btn {
+            background: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 200, 80, 0.6);
+            border-radius: 50px;
+            padding: 8px 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: transform 0.1s ease;
+        }
+        .daily-bonus-btn:active { transform: scale(0.95); }
+        .daily-bonus-icon { font-size: 1.5rem; }
+        .daily-bonus-text {
+            font-size: 0.75rem;
+            font-weight: bold;
+            color: #FFD966;
+        }
+        .daily-bonus-timer {
+            font-size: 0.7rem;
+            color: #aaa;
+        }
+        /* Шторка */
         .drawer-handle {
             position: absolute;
             right: 0;
@@ -226,19 +199,16 @@
             justify-content: center;
             border: 1px solid rgba(255, 200, 100, 0.3);
         }
-
         .drawer-handle:active {
             opacity: 0.8;
             transform: translateY(-50%) scale(0.97);
         }
-
         .handle-arrow {
             width: 24px;
             height: auto;
             display: block;
             filter: drop-shadow(0 1px 1px rgba(0,0,0,0.5));
         }
-
         .drawer {
             position: absolute;
             top: 0;
@@ -256,11 +226,7 @@
             overflow-y: auto;
             padding: 20px 16px;
         }
-
-        .drawer.open {
-            right: 0;
-        }
-
+        .drawer.open { right: 0; }
         .drawer-header {
             display: flex;
             justify-content: space-between;
@@ -269,14 +235,12 @@
             padding-bottom: 12px;
             border-bottom: 1px solid rgba(255, 180, 60, 0.4);
         }
-
         .drawer-title {
             font-size: 1.4rem;
             font-weight: bold;
             color: #ffcc66;
             letter-spacing: 1px;
         }
-
         .drawer-close {
             font-size: 2rem;
             cursor: pointer;
@@ -284,11 +248,7 @@
             transition: 0.1s;
             line-height: 1;
         }
-
-        .drawer-close:active {
-            transform: scale(0.9);
-        }
-
+        .drawer-close:active { transform: scale(0.9); }
         .drawer-content {
             flex: 1;
             color: #ddd;
@@ -299,7 +259,7 @@
             flex-direction: column;
             gap: 20px;
         }
-
+        /* Карточки улучшений */
         .upgrade-card {
             background: rgba(255, 200, 100, 0.1);
             border-radius: 24px;
@@ -312,22 +272,14 @@
             transition: 0.2s;
             cursor: pointer;
         }
-
-        .upgrade-card:active {
-            transform: scale(0.98);
-        }
-
+        .upgrade-card:active { transform: scale(0.98); }
         .upgrade-card.purchased {
             background: rgba(100, 200, 100, 0.15);
             border-color: #88ff88;
             cursor: default;
             opacity: 0.9;
         }
-
-        .upgrade-card.purchased:active {
-            transform: none;
-        }
-
+        .upgrade-card.purchased:active { transform: none; }
         .upgrade-image img {
             width: 100px;
             height: 100px;
@@ -336,17 +288,12 @@
             border: 2px solid #ffaa66;
             box-shadow: 0 0 10px rgba(0,0,0,0.5);
         }
-
-        .upgrade-card.purchased .upgrade-image img {
-            border-color: #88ff88;
-        }
-
+        .upgrade-card.purchased .upgrade-image img { border-color: #88ff88; }
         .upgrade-name {
             font-size: 1.2rem;
             font-weight: bold;
             color: #ffcc66;
         }
-
         .upgrade-description {
             font-size: 0.8rem;
             font-weight: normal;
@@ -354,7 +301,6 @@
             text-align: center;
             line-height: 1.3;
         }
-
         .upgrade-price {
             font-size: 1.4rem;
             font-weight: bold;
@@ -365,7 +311,6 @@
             border-radius: 40px;
             display: inline-block;
         }
-
         .upgrade-status {
             font-size: 1rem;
             font-weight: bold;
@@ -377,7 +322,7 @@
             align-items: center;
             gap: 6px;
         }
-
+        /* Всплывающие сообщения */
         .floating-message-container {
             position: absolute;
             top: 120px;
@@ -389,7 +334,6 @@
             display: flex;
             justify-content: center;
         }
-
         .floating-message {
             background: rgba(0, 0, 0, 0.85);
             backdrop-filter: blur(8px);
@@ -404,14 +348,13 @@
             white-space: nowrap;
             box-shadow: 0 4px 15px rgba(0,0,0,0.3);
         }
-
         @keyframes fadeUp {
             0% { opacity: 0; transform: translateY(10px); }
             15% { opacity: 1; transform: translateY(0); }
             85% { opacity: 1; transform: translateY(0); }
             100% { opacity: 0; transform: translateY(-20px); }
         }
-
+        /* Центральный контент (свеча и сфера) */
         .content-center {
             position: relative;
             z-index: 5;
@@ -421,7 +364,6 @@
             justify-content: center;
             transform: translateY(40%);
         }
-
         .sphere {
             position: absolute;
             width: 320px;
@@ -432,7 +374,6 @@
             border: 1px solid rgba(120,100,80,0.4);
             pointer-events: none;
         }
-
         .sphere::after {
             content: '';
             position: absolute;
@@ -444,7 +385,6 @@
             background: radial-gradient(circle at 30% 30%, rgba(200,170,120,0.08) 0%, transparent 70%);
             pointer-events: none;
         }
-
         .spark-plug-wrapper {
             position: relative;
             display: flex;
@@ -455,7 +395,6 @@
             max-width: 300px;
             transition: transform 0.07s cubic-bezier(0.2, 0.9, 0.4, 1.1);
         }
-
         .spark-plug {
             width: 100%;
             height: auto;
@@ -463,11 +402,8 @@
             filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.5));
             pointer-events: none;
         }
-
-        .spark-plug-wrapper.tap-active {
-            transform: scale(0.94);
-        }
-
+        .spark-plug-wrapper.tap-active { transform: scale(0.94); }
+        /* Осколки */
         .debris-container {
             position: fixed;
             top: 0;
@@ -478,7 +414,6 @@
             z-index: 2000;
             overflow: hidden;
         }
-
         .debris {
             position: absolute;
             width: 7px;
@@ -490,17 +425,15 @@
             opacity: 0.95;
             animation: fragmentFly 0.6s ease-out forwards;
         }
-
         .debris.rounded { border-radius: 50%; }
         .debris.shard { border-radius: 1px; transform: rotate(45deg); width: 5px; height: 10px; }
         .debris.tiny { width: 4px; height: 4px; }
-
         @keyframes fragmentFly {
             0% { transform: translate(0,0) scale(1) rotate(0deg); opacity: 1; }
             30% { opacity: 1; }
             100% { transform: translate(var(--dx,60px), var(--dy,-70px)) scale(0.2) rotate(200deg); opacity: 0; }
         }
-
+        /* Адаптация под телефоны */
         @media (max-width: 600px) {
             .sphere { width: 260px; height: 260px; }
             .spark-plug-wrapper { max-width: 240px; }
@@ -512,8 +445,7 @@
             .right-buttons { top: 115px; right: 12px; }
             .left-buttons { top: 115px; left: 12px; }
             .daily-bonus-btn { padding: 5px 12px; }
-            .street-btn { padding: 6px 14px; }
-            .garage-btn { padding: 6px 14px; }
+            .street-btn, .garage-btn { padding: 6px 14px; }
             .street-text, .garage-text { font-size: 0.7rem; }
             .drawer { width: 280px; right: -300px; }
             .drawer-handle { width: 24px; height: 140px; }
@@ -527,6 +459,7 @@
 </head>
 <body>
 <div class="game-container" id="gameContainer">
+    <!-- Верхняя панель -->
     <div class="stats-panel">
         <div class="stat-item"><div class="stat-label">УРОВЕНЬ</div><div class="stat-value" id="levelValue">1</div></div>
         <div class="stat-divider"></div>
@@ -536,7 +469,7 @@
     </div>
 
     <!-- Кнопки слева -->
-    <div class="left-buttons" id="leftButtons">
+    <div class="left-buttons">
         <div class="street-btn" id="streetBtn">
             <span class="street-icon">🏍️</span>
             <span class="street-text">Выйти на улицу</span>
@@ -558,10 +491,10 @@
         </div>
     </div>
 
+    <!-- Шторка -->
     <div class="drawer-handle" id="drawerHandle">
         <img src="IMG_0889-photos.png" alt="смахни" class="handle-arrow">
     </div>
-
     <div class="drawer" id="drawer">
         <div class="drawer-header">
             <span class="drawer-title">📈 ПАССИВНЫЙ ДОХОД</span>
@@ -569,18 +502,14 @@
         </div>
         <div class="drawer-content">
             <div class="upgrade-card" id="yarikCard">
-                <div class="upgrade-image">
-                    <img src="IMG_0890.jpeg" alt="Школьник Ярик">
-                </div>
+                <div class="upgrade-image"><img src="IMG_0890.jpeg" alt="Школьник Ярик"></div>
                 <div class="upgrade-name">Школьник Ярик</div>
                 <div class="upgrade-description">Школьник Ярик мутит на металлоприёмке — 400 запчастей в час!</div>
                 <div id="yarikPriceBlock" class="upgrade-price">1500 🔩</div>
                 <div id="yarikStatusBlock" class="upgrade-status" style="display: none;">✅ АКТИВНО</div>
             </div>
             <div class="upgrade-card" id="stasyanCard">
-                <div class="upgrade-image">
-                    <img src="IMG_0895.jpeg" alt="Стасян">
-                </div>
+                <div class="upgrade-image"><img src="IMG_0895.jpeg" alt="Стасян"></div>
                 <div class="upgrade-name">Стасян</div>
                 <div class="upgrade-description">Стасян с детства изучал темки по заработку из тик тока, но теперь в свои 15 лет живёт на сдаче деталей</div>
                 <div id="stasyanPriceBlock" class="upgrade-price">4500 🔩</div>
@@ -601,59 +530,55 @@
 </div>
 
 <script>
-    // ---- ИГРОВАЯ ЛОГИКА (та же) ----
+    // ---------- ПЕРЕКЛЮЧЕНИЕ ФОНА ----------
     const gameContainer = document.getElementById('gameContainer');
     const streetBtn = document.getElementById('streetBtn');
     const garageBtn = document.getElementById('garageBtn');
-    
-    // Функции переключения фона
+
     function goToStreet() {
         gameContainer.style.backgroundImage = "url('IMG_0899.jpeg')";
         streetBtn.style.display = 'none';
         garageBtn.style.display = 'flex';
         showFloatingMessage('🏍️ Ты выехал на улицу!', '#88AAFF');
     }
-    
+
     function goToGarage() {
         gameContainer.style.backgroundImage = "url('IMG_0881.png')";
         garageBtn.style.display = 'none';
         streetBtn.style.display = 'flex';
         showFloatingMessage('🔧 Добро пожаловать в гараж!', '#FFAA66');
     }
-    
+
     streetBtn.addEventListener('click', goToStreet);
     garageBtn.addEventListener('click', goToGarage);
-    
-    // --- ВСЯ ОСТАЛЬНАЯ ЛОГИКА (без изменений) ---
+
+    // ---------- ОСТАЛЬНАЯ ЛОГИКА ИГРЫ ----------
     const tapZone = document.getElementById('tapZone');
     const debrisContainer = document.getElementById('debrisContainer');
     const messageContainer = document.getElementById('messageContainer');
     const dailyBonusBtn = document.getElementById('dailyBonusBtn');
     const dailyBonusText = document.getElementById('dailyBonusText');
     const dailyBonusTimer = document.getElementById('dailyBonusTimer');
-    
+
     let parts = 0;
     let level = 1;
     let incomePerSecond = 0;
     let lastBonusTimestamp = 0;
-    let bonusAvailable = true;
     const MAX_LEVEL = 30;
-    
     let yarikPurchased = false;
     let stasyanPurchased = false;
-    
+
     const levelValueEl = document.getElementById('levelValue');
     const partsValueEl = document.getElementById('partsValue');
     const incomeValueEl = document.getElementById('incomeValue');
-    
+
     const yarikCard = document.getElementById('yarikCard');
     const yarikPriceBlock = document.getElementById('yarikPriceBlock');
     const yarikStatusBlock = document.getElementById('yarikStatusBlock');
-    
     const stasyanCard = document.getElementById('stasyanCard');
     const stasyanPriceBlock = document.getElementById('stasyanPriceBlock');
     const stasyanStatusBlock = document.getElementById('stasyanStatusBlock');
-    
+
     function updatePassiveIncome() {
         let newIncomePerSecond = 0;
         if (yarikPurchased) newIncomePerSecond += 400 / 3600;
@@ -661,9 +586,8 @@
         incomePerSecond = newIncomePerSecond;
         updateUI();
     }
-    
+
     function getBonusAmount() { return 500; }
-    
     function formatTimeLeft(ms) {
         const hours = Math.floor(ms / (1000 * 60 * 60));
         const minutes = Math.floor((ms % (1000 * 60 * 60)) / (1000 * 60));
@@ -672,24 +596,22 @@
         if (minutes > 0) return `${minutes}м ${seconds}с`;
         return `${seconds}с`;
     }
-    
+
     function updateBonusUI() {
         const now = Date.now();
         const hours24 = 24 * 60 * 60 * 1000;
         if (lastBonusTimestamp === 0 || now - lastBonusTimestamp >= hours24) {
-            bonusAvailable = true;
             dailyBonusBtn.classList.remove('disabled');
             dailyBonusText.innerText = 'ЕЖЕДНЕВНЫЙ БОНУС';
             dailyBonusTimer.innerText = `${getBonusAmount()} деталей!`;
         } else {
-            bonusAvailable = false;
             dailyBonusBtn.classList.add('disabled');
             const timeLeft = hours24 - (now - lastBonusTimestamp);
             dailyBonusText.innerText = 'СЛЕДУЮЩИЙ БОНУС';
             dailyBonusTimer.innerText = formatTimeLeft(timeLeft);
         }
     }
-    
+
     function claimBonus() {
         const now = Date.now();
         const hours24 = 24 * 60 * 60 * 1000;
@@ -705,7 +627,7 @@
         showFloatingMessage(`🎁 +${bonus} ДЕТАЛЕЙ!`, '#FFD966');
         return true;
     }
-    
+
     function getRequiredForNextLevel(currentLevel) {
         if (currentLevel >= MAX_LEVEL) return Infinity;
         if (currentLevel === 1) return 1000;
@@ -714,7 +636,6 @@
         for (let i = 4; i <= currentLevel; i++) required += 2000;
         return required;
     }
-    
     function getTotalRequiredForLevel(targetLevel) {
         if (targetLevel <= 1) return 0;
         if (targetLevel > MAX_LEVEL) return Infinity;
@@ -722,7 +643,7 @@
         for (let lvl = 1; lvl < targetLevel; lvl++) total += getRequiredForNextLevel(lvl);
         return total;
     }
-    
+
     function showFloatingMessage(text, color = '#FFD966') {
         const msg = document.createElement('div');
         msg.className = 'floating-message';
@@ -732,7 +653,7 @@
         messageContainer.appendChild(msg);
         setTimeout(() => msg.remove(), 1200);
     }
-    
+
     function checkLevelUp() {
         if (level >= MAX_LEVEL) return;
         let newLevel = level;
@@ -749,14 +670,14 @@
             saveGame();
         }
     }
-    
+
     function updateUI() {
         partsValueEl.innerText = Math.floor(parts);
         levelValueEl.innerText = level;
         const incomePerHour = Math.floor(incomePerSecond * 3600);
         incomeValueEl.innerText = incomePerHour.toLocaleString();
         updateBonusUI();
-        
+
         if (yarikPurchased) {
             yarikCard.classList.add('purchased');
             yarikPriceBlock.style.display = 'none';
@@ -766,7 +687,6 @@
             yarikPriceBlock.style.display = 'inline-block';
             yarikStatusBlock.style.display = 'none';
         }
-        
         if (stasyanPurchased) {
             stasyanCard.classList.add('purchased');
             stasyanPriceBlock.style.display = 'none';
@@ -777,19 +697,16 @@
             stasyanStatusBlock.style.display = 'none';
         }
     }
-    
+
     function addParts(amount) {
         parts += amount;
         updateUI();
         checkLevelUp();
         saveGame();
     }
-    
+
     function buyYarik() {
-        if (yarikPurchased) {
-            showFloatingMessage('❌ Ярик уже работает!', '#FF8888');
-            return;
-        }
+        if (yarikPurchased) { showFloatingMessage('❌ Ярик уже работает!', '#FF8888'); return; }
         const cost = 1500;
         if (parts >= cost) {
             parts -= cost;
@@ -797,16 +714,10 @@
             updatePassiveIncome();
             showFloatingMessage('✅ Ярик теперь на металлоприёмке! +400 дет/час', '#88FF88');
             saveGame();
-        } else {
-            showFloatingMessage(`❌ Не хватает деталей! Нужно ${cost}`, '#FF8888');
-        }
+        } else { showFloatingMessage(`❌ Не хватает деталей! Нужно ${cost}`, '#FF8888'); }
     }
-    
     function buyStasyan() {
-        if (stasyanPurchased) {
-            showFloatingMessage('❌ Стасян уже в деле!', '#FF8888');
-            return;
-        }
+        if (stasyanPurchased) { showFloatingMessage('❌ Стасян уже в деле!', '#FF8888'); return; }
         const cost = 4500;
         if (parts >= cost) {
             parts -= cost;
@@ -814,21 +725,12 @@
             updatePassiveIncome();
             showFloatingMessage('✅ Стасян сливает темки! +1000 дет/час', '#88FF88');
             saveGame();
-        } else {
-            showFloatingMessage(`❌ Не хватает деталей! Нужно ${cost}`, '#FF8888');
-        }
+        } else { showFloatingMessage(`❌ Не хватает деталей! Нужно ${cost}`, '#FF8888'); }
     }
-    
-    yarikCard.addEventListener('click', (e) => {
-        e.stopPropagation();
-        if (!yarikPurchased) buyYarik();
-    });
-    
-    stasyanCard.addEventListener('click', (e) => {
-        e.stopPropagation();
-        if (!stasyanPurchased) buyStasyan();
-    });
-    
+
+    yarikCard.addEventListener('click', (e) => { e.stopPropagation(); if (!yarikPurchased) buyYarik(); });
+    stasyanCard.addEventListener('click', (e) => { e.stopPropagation(); if (!stasyanPurchased) buyStasyan(); });
+
     function createDebris(x, y) {
         const debrisCount = Math.floor(Math.random() * 3) + 1;
         for (let i = 0; i < debrisCount; i++) {
@@ -852,13 +754,13 @@
             setTimeout(() => debris.remove(), 600);
         }
     }
-    
+
     function animateTap() {
         tapZone.classList.add('tap-active');
         setTimeout(() => tapZone.classList.remove('tap-active'), 100);
         if (window.navigator && window.navigator.vibrate) navigator.vibrate(15);
     }
-    
+
     function handleTap(clientX, clientY) {
         animateTap();
         addParts(1);
@@ -877,19 +779,18 @@
         setTimeout(() => { spark.style.transform = 'translateY(-15px)'; spark.style.opacity = '0'; }, 10);
         setTimeout(() => spark.remove(), 200);
     }
-    
+
     tapZone.addEventListener('click', (e) => handleTap(e.clientX, e.clientY));
     tapZone.addEventListener('touchstart', (e) => {
         e.preventDefault();
         for (let i = 0; i < e.touches.length; i++) handleTap(e.touches[i].clientX, e.touches[i].clientY);
     });
     dailyBonusBtn.addEventListener('click', () => claimBonus());
-    
+
     function saveGame() {
         const save = { parts, level, incomePerSecond, lastBonusTimestamp, yarikPurchased, stasyanPurchased };
         localStorage.setItem('MotoTapSave', JSON.stringify(save));
     }
-    
     function loadGame() {
         const saved = localStorage.getItem('MotoTapSave');
         if (saved) {
@@ -901,4 +802,14 @@
                 incomePerSecond = data.incomePerSecond || 0;
                 lastBonusTimestamp = data.lastBonusTimestamp || 0;
                 yarikPurchased = data.yarikPurchased || false;
-               
+                stasyanPurchased = data.stasyanPurchased || false;
+                updatePassiveIncome();
+                updateUI();
+            } catch(e) {}
+        }
+        updateUI();
+    }
+
+    setInterval(() => updateBonusUI(), 1000);
+    setInterval(() => saveGame(), 5000);
+    setInterval(() => { if (incomePerSecond > 0) addParts(income
