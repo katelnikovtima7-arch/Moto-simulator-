@@ -5,397 +5,92 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>MotoTap — Чиним мотоцикл</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            user-select: none;
-            -webkit-tap-highlight-color: transparent;
-        }
-        body {
-            width: 100%;
-            min-height: 100vh;
-            background: #000;
-            overflow: hidden;
-            position: fixed;
-            font-family: 'Segoe UI', system-ui, sans-serif;
-        }
-        .game-container {
-            position: relative;
-            width: 100%;
-            height: 100vh;
-            background-image: url('IMG_0881.png');
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            transition: background-image 0.3s ease;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-        }
-        .game-container::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.2);
-            pointer-events: none;
-        }
-        /* Верхняя панель */
-        .stats-panel {
-            position: absolute;
-            top: 45px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 90%;
-            max-width: 500px;
-            background: rgba(0, 0, 0, 0.8);
-            backdrop-filter: blur(12px);
-            border-radius: 60px;
-            padding: 14px 24px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 20px;
-            z-index: 20;
-            border: 1px solid rgba(255, 180, 60, 0.6);
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
-            transition: opacity 0.3s ease, visibility 0.3s ease;
-        }
-        .stat-item { flex: 1; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 6px; }
-        .stat-label { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 2px; color: #ffaa66; font-weight: bold; }
-        .stat-value { font-size: 1.6rem; font-weight: bold; color: #FFD966; text-shadow: 0 2px 0 #7a5c00; line-height: 1; }
-        .stat-divider { width: 2px; height: 45px; background: rgba(255, 180, 60, 0.4); }
-
-        /* Кнопка в гараже (слева вверху) */
-        .left-buttons {
-            position: absolute;
-            top: 130px;
-            left: 20px;
-            z-index: 30;
-        }
-        .street-btn {
-            background: rgba(0, 0, 0, 0.75);
-            backdrop-filter: blur(8px);
-            border: 1px solid rgba(255, 200, 80, 0.6);
-            border-radius: 50px;
-            padding: 8px 16px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            cursor: pointer;
-            transition: transform 0.1s ease;
-        }
-        .street-btn:active { transform: scale(0.95); }
-        .street-icon { font-size: 1.3rem; }
-        .street-text { font-size: 0.75rem; font-weight: bold; color: #FFD966; }
-
-        /* Кнопка на улице (большая, по центру вверху) — только эффект нажатия */
-        .garage-btn {
-            position: absolute;
-            top: 100px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: rgba(0, 0, 0, 0.85);
-            backdrop-filter: blur(8px);
-            border: 2px solid rgba(255, 200, 80, 0.9);
-            border-radius: 60px;
-            padding: 18px 36px;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            cursor: pointer;
-            transition: transform 0.1s ease;
-            z-index: 30;
-            white-space: nowrap;
-        }
-        .garage-btn:active { transform: scale(0.95); }
-        .garage-icon { font-size: 2rem; }
-        .garage-text { font-size: 1.3rem; font-weight: bold; color: #FFD966; letter-spacing: 1px; }
-
-        /* Мотоцикл на улице */
-        .street-bike {
-            position: absolute;
-            bottom: 40%;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 85%;
-            max-width: 500px;
-            z-index: 15;
-            display: none;
-            pointer-events: none;
-        }
-        .street-bike img {
-            width: 100%;
-            height: auto;
-            display: block;
-            filter: drop-shadow(0 8px 20px rgba(0,0,0,0.4));
-        }
-
-        /* ВЫДВИНУТАЯ ШТОРКА НА УЛИЦЕ (всегда открыта, можно листать) */
-        .street-drawer {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            height: 45%;
-            background: rgba(10, 10, 15, 0.95);
-            backdrop-filter: blur(16px);
-            border-top: 2px solid rgba(255, 180, 60, 0.6);
-            border-radius: 30px 30px 0 0;
-            z-index: 50;
-            display: none;
-            flex-direction: column;
-            overflow-y: auto;
-            padding: 20px 16px;
-            transition: transform 0.2s ease;
-        }
-        .street-drawer::-webkit-scrollbar { width: 4px; }
-        .street-drawer::-webkit-scrollbar-track { background: rgba(255,255,255,0.1); border-radius: 10px; }
-        .street-drawer::-webkit-scrollbar-thumb { background: #ffaa66; border-radius: 10px; }
-        .street-drawer-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            padding-bottom: 12px;
-            border-bottom: 1px solid rgba(255, 180, 60, 0.4);
-        }
-        .street-drawer-title {
-            font-size: 1.3rem;
-            font-weight: bold;
-            color: #ffcc66;
-        }
-        .street-drawer-content {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            padding-bottom: 20px;
-        }
-        .shop-placeholder {
-            background: rgba(255,200,100,0.1);
-            border-radius: 20px;
-            padding: 20px;
-            text-align: center;
-            color: #ffdd99;
-            border: 1px dashed rgba(255,200,100,0.4);
-        }
-
-        /* Кнопка бонуса справа */
-        .right-buttons {
-            position: absolute;
-            top: 130px;
-            right: 20px;
-            z-index: 30;
-            transition: opacity 0.3s ease, visibility 0.3s ease;
-        }
-        .daily-bonus-btn {
-            background: rgba(0, 0, 0, 0.75);
-            backdrop-filter: blur(8px);
-            border: 1px solid rgba(255, 200, 80, 0.6);
-            border-radius: 50px;
-            padding: 8px 16px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            cursor: pointer;
-            transition: transform 0.1s ease;
-        }
-        .daily-bonus-btn:active { transform: scale(0.95); }
-        .daily-bonus-icon { font-size: 1.5rem; }
-        .daily-bonus-text { font-size: 0.75rem; font-weight: bold; color: #FFD966; }
-        .daily-bonus-timer { font-size: 0.7rem; color: #aaa; }
-
-        /* Шторка в гараже (свайп) */
-        .garage-drawer-handle {
-            position: absolute;
-            right: 0;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 28px;
-            height: 180px;
-            background: linear-gradient(135deg, #8B6914, #5C4A0E);
-            border-radius: 20px 0 0 20px;
-            z-index: 40;
-            cursor: pointer;
-            box-shadow: -3px 0 15px rgba(0,0,0,0.5);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border: 1px solid rgba(255,200,100,0.3);
-            transition: opacity 0.3s ease, visibility 0.3s ease;
-        }
-        .garage-drawer-handle:active { opacity: 0.8; transform: translateY(-50%) scale(0.97); }
-        .handle-arrow { width: 24px; height: auto; display: block; filter: drop-shadow(0 1px 1px rgba(0,0,0,0.5)); }
-        .garage-drawer {
-            position: absolute;
-            top: 0;
-            right: -360px;
-            width: 320px;
-            height: 100%;
-            background: rgba(10,10,15,0.96);
-            backdrop-filter: blur(16px);
-            border-left: 2px solid rgba(255,180,60,0.6);
-            z-index: 50;
-            transition: right 0.3s cubic-bezier(0.2,0.9,0.4,1.1);
-            display: flex;
-            flex-direction: column;
-            overflow-y: auto;
-            padding: 20px 16px;
-        }
-        .garage-drawer.open { right: 0; }
-        .garage-drawer-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 24px;
-            padding-bottom: 12px;
-            border-bottom: 1px solid rgba(255,180,60,0.4);
-        }
-        .garage-drawer-title { font-size: 1.4rem; font-weight: bold; color: #ffcc66; }
-        .garage-drawer-close { font-size: 2rem; cursor: pointer; color: #ffaa66; }
-        .garage-drawer-content { flex: 1; display: flex; flex-direction: column; gap: 20px; }
-
-        /* Карточки улучшений в гараже */
-        .upgrade-card {
-            background: rgba(255,200,100,0.1);
-            border-radius: 24px;
-            padding: 16px;
-            border: 1px solid rgba(255,200,100,0.4);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 10px;
-            cursor: pointer;
-        }
-        .upgrade-card.purchased { background: rgba(100,200,100,0.15); border-color: #88ff88; cursor: default; }
-        .upgrade-image img { width: 100px; height: 100px; object-fit: cover; border-radius: 50%; border: 2px solid #ffaa66; }
-        .upgrade-name { font-size: 1.2rem; font-weight: bold; color: #ffcc66; }
-        .upgrade-description { font-size: 0.8rem; color: #ffdd99; text-align: center; }
-        .upgrade-price { font-size: 1.4rem; font-weight: bold; color: #FFD966; background: rgba(0,0,0,0.5); padding: 4px 16px; border-radius: 40px; display: inline-block; }
-        .upgrade-status { font-size: 1rem; font-weight: bold; color: #88ff88; background: rgba(0,0,0,0.5); padding: 4px 16px; border-radius: 40px; display: inline-flex; align-items: center; gap: 6px; }
-
-        /* Центральный контент в гараже (свеча и сфера) */
-        .content-center {
-            position: relative;
-            z-index: 5;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            transform: translateY(40%);
-            transition: opacity 0.3s ease, visibility 0.3s ease;
-        }
-        .sphere {
-            position: absolute;
-            width: 320px;
-            height: 320px;
-            border-radius: 50%;
-            background: radial-gradient(circle at 35% 35%, rgba(30,30,45,0.55) 0%, rgba(25,25,40,0.65) 30%, rgba(20,20,35,0.85) 60%, rgba(15,15,28,0.95) 85%, rgba(10,10,20,1) 100%);
-            box-shadow: 0 5px 20px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.08);
-            border: 1px solid rgba(120,100,80,0.4);
-            pointer-events: none;
-        }
-        .spark-plug-wrapper {
-            position: relative;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            width: 80%;
-            max-width: 300px;
-            transition: transform 0.07s cubic-bezier(0.2,0.9,0.4,1.1);
-        }
-        .spark-plug { width: 100%; height: auto; display: block; filter: drop-shadow(0 6px 12px rgba(0,0,0,0.5)); pointer-events: none; }
-        .spark-plug-wrapper.tap-active { transform: scale(0.94); }
-
-        /* Всплывающие сообщения */
-        .floating-message-container {
-            position: absolute;
-            top: 120px;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 25;
-            pointer-events: none;
-            width: 100%;
-            display: flex;
-            justify-content: center;
-        }
-        .floating-message {
-            background: rgba(0,0,0,0.85);
-            backdrop-filter: blur(8px);
-            color: #FFD966;
-            padding: 8px 24px;
-            border-radius: 60px;
-            font-size: 1.2rem;
-            font-weight: bold;
-            border: 1px solid rgba(255,200,80,0.5);
-            animation: fadeUp 1.2s ease-out forwards;
-            white-space: nowrap;
-        }
-        @keyframes fadeUp {
-            0% { opacity: 0; transform: translateY(10px); }
-            15% { opacity: 1; transform: translateY(0); }
-            85% { opacity: 1; transform: translateY(0); }
-            100% { opacity: 0; transform: translateY(-20px); }
-        }
-
-        /* Осколки */
-        .debris-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 2000;
-            overflow: hidden;
-        }
-        .debris {
-            position: absolute;
-            width: 7px;
-            height: 7px;
-            background: white;
-            border-radius: 2px;
-            box-shadow: 0 0 5px rgba(255,255,255,0.8);
-            opacity: 0.95;
-            animation: fragmentFly 0.6s ease-out forwards;
-        }
-        .debris.rounded { border-radius: 50%; }
-        .debris.shard { border-radius: 1px; transform: rotate(45deg); width: 5px; height: 10px; }
-        .debris.tiny { width: 4px; height: 4px; }
-        @keyframes fragmentFly {
-            0% { transform: translate(0,0) scale(1) rotate(0deg); opacity: 1; }
-            100% { transform: translate(var(--dx,60px), var(--dy,-70px)) scale(0.2) rotate(200deg); opacity: 0; }
-        }
-
-        @media (max-width: 600px) {
-            .sphere { width: 260px; height: 260px; }
-            .spark-plug-wrapper { max-width: 240px; }
-            .content-center { transform: translateY(43%); }
-            .stat-value { font-size: 1.2rem; }
-            .stats-panel { padding: 10px 18px; top: 35px; }
-            .left-buttons { top: 115px; left: 12px; }
-            .right-buttons { top: 115px; right: 12px; }
-            .garage-btn { top: 80px; padding: 12px 24px; }
-            .garage-icon { font-size: 1.5rem; }
-            .garage-text { font-size: 1rem; }
-            .street-bike { bottom: 35%; width: 90%; max-width: 320px; }
-            .street-drawer { height: 50%; }
-            .street-drawer-title { font-size: 1.1rem; }
-            .garage-drawer { width: 280px; right: -300px; }
-            .garage-drawer-handle { width: 24px; height: 140px; }
-            .handle-arrow { width: 20px; }
+        *{margin:0;padding:0;box-sizing:border-box;user-select:none;-webkit-tap-highlight-color:transparent}
+        body{width:100%;min-height:100vh;background:#000;overflow:hidden;position:fixed;font-family:'Segoe UI',system-ui,sans-serif}
+        .game-container{position:relative;width:100%;height:100vh;background-image:url('IMG_0881.png');background-size:cover;background-position:center;background-repeat:no-repeat;transition:background-image 0.3s ease;display:flex;flex-direction:column;align-items:center;justify-content:center}
+        .game-container::before{content:'';position:absolute;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.2);pointer-events:none}
+        .stats-panel{position:absolute;top:45px;left:50%;transform:translateX(-50%);width:90%;max-width:500px;background:rgba(0,0,0,0.8);backdrop-filter:blur(12px);border-radius:60px;padding:14px 24px;display:flex;justify-content:space-between;align-items:center;gap:20px;z-index:20;border:1px solid rgba(255,180,60,0.6);box-shadow:0 6px 20px rgba(0,0,0,0.4);transition:opacity 0.3s ease,visibility 0.3s ease}
+        .stat-item{flex:1;text-align:center;display:flex;flex-direction:column;align-items:center;gap:6px}
+        .stat-label{font-size:0.8rem;text-transform:uppercase;letter-spacing:2px;color:#ffaa66;font-weight:bold}
+        .stat-value{font-size:1.6rem;font-weight:bold;color:#FFD966;text-shadow:0 2px 0 #7a5c00;line-height:1}
+        .stat-divider{width:2px;height:45px;background:rgba(255,180,60,0.4)}
+        .left-buttons{position:absolute;top:130px;left:20px;z-index:30}
+        .street-btn{background:rgba(0,0,0,0.75);backdrop-filter:blur(8px);border:1px solid rgba(255,200,80,0.6);border-radius:50px;padding:8px 16px;display:flex;align-items:center;gap:8px;cursor:pointer;transition:transform 0.1s ease}
+        .street-btn:active{transform:scale(0.95)}
+        .street-icon{font-size:1.3rem}
+        .street-text{font-size:0.75rem;font-weight:bold;color:#FFD966}
+        .garage-btn{position:absolute;top:100px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,0.85);backdrop-filter:blur(8px);border:2px solid rgba(255,200,80,0.9);border-radius:60px;padding:18px 36px;display:flex;align-items:center;gap:15px;cursor:pointer;transition:transform 0.1s ease;z-index:30;white-space:nowrap}
+        .garage-btn:active{transform:scale(0.95)}
+        .garage-icon{font-size:2rem}
+        .garage-text{font-size:1.3rem;font-weight:bold;color:#FFD966;letter-spacing:1px}
+        .street-bike{position:absolute;bottom:40%;left:50%;transform:translateX(-50%);width:85%;max-width:500px;z-index:15;display:none;pointer-events:none}
+        .street-bike img{width:100%;height:auto;display:block;filter:drop-shadow(0 8px 20px rgba(0,0,0,0.4))}
+        .street-drawer{position:absolute;bottom:0;left:0;right:0;height:45%;background:rgba(10,10,15,0.95);backdrop-filter:blur(16px);border-top:2px solid rgba(255,180,60,0.6);border-radius:30px 30px 0 0;z-index:50;display:none;flex-direction:column;overflow-y:auto;padding:20px 16px}
+        .street-drawer::-webkit-scrollbar{width:4px}
+        .street-drawer::-webkit-scrollbar-track{background:rgba(255,255,255,0.1);border-radius:10px}
+        .street-drawer::-webkit-scrollbar-thumb{background:#ffaa66;border-radius:10px}
+        .street-drawer-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;padding-bottom:12px;border-bottom:1px solid rgba(255,180,60,0.4)}
+        .street-drawer-title{font-size:1.3rem;font-weight:bold;color:#ffcc66}
+        .street-drawer-content{flex:1;display:flex;flex-direction:column;gap:15px;padding-bottom:20px}
+        .shop-placeholder{background:rgba(255,200,100,0.1);border-radius:20px;padding:20px;text-align:center;color:#ffdd99;border:1px dashed rgba(255,200,100,0.4)}
+        .right-buttons{position:absolute;top:130px;right:20px;z-index:30;transition:opacity 0.3s ease,visibility 0.3s ease}
+        .daily-bonus-btn{background:rgba(0,0,0,0.75);backdrop-filter:blur(8px);border:1px solid rgba(255,200,80,0.6);border-radius:50px;padding:8px 16px;display:flex;align-items:center;gap:8px;cursor:pointer;transition:transform 0.1s ease}
+        .daily-bonus-btn:active{transform:scale(0.95)}
+        .daily-bonus-icon{font-size:1.5rem}
+        .daily-bonus-text{font-size:0.75rem;font-weight:bold;color:#FFD966}
+        .daily-bonus-timer{font-size:0.7rem;color:#aaa}
+        .garage-drawer-handle{position:absolute;right:0;top:50%;transform:translateY(-50%);width:28px;height:180px;background:linear-gradient(135deg,#8B6914,#5C4A0E);border-radius:20px 0 0 20px;z-index:40;cursor:pointer;box-shadow:-3px 0 15px rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:center;border:1px solid rgba(255,200,100,0.3);transition:opacity 0.3s ease,visibility 0.3s ease}
+        .garage-drawer-handle:active{opacity:0.8;transform:translateY(-50%) scale(0.97)}
+        .handle-arrow{width:24px;height:auto;display:block;filter:drop-shadow(0 1px 1px rgba(0,0,0,0.5))}
+        .garage-drawer{position:absolute;top:0;right:-360px;width:320px;height:100%;background:rgba(10,10,15,0.96);backdrop-filter:blur(16px);border-left:2px solid rgba(255,180,60,0.6);z-index:50;transition:right 0.3s cubic-bezier(0.2,0.9,0.4,1.1);display:flex;flex-direction:column;overflow-y:auto;padding:20px 16px}
+        .garage-drawer.open{right:0}
+        .garage-drawer-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;padding-bottom:12px;border-bottom:1px solid rgba(255,180,60,0.4)}
+        .garage-drawer-title{font-size:1.4rem;font-weight:bold;color:#ffcc66}
+        .garage-drawer-close{font-size:2rem;cursor:pointer;color:#ffaa66}
+        .garage-drawer-content{flex:1;display:flex;flex-direction:column;gap:20px}
+        .upgrade-card{background:rgba(255,200,100,0.1);border-radius:24px;padding:16px;border:1px solid rgba(255,200,100,0.4);display:flex;flex-direction:column;align-items:center;gap:10px;cursor:pointer}
+        .upgrade-card.purchased{background:rgba(100,200,100,0.15);border-color:#88ff88;cursor:default}
+        .upgrade-image img{width:100px;height:100px;object-fit:cover;border-radius:50%;border:2px solid #ffaa66}
+        .upgrade-name{font-size:1.2rem;font-weight:bold;color:#ffcc66}
+        .upgrade-description{font-size:0.8rem;color:#ffdd99;text-align:center}
+        .upgrade-price{font-size:1.4rem;font-weight:bold;color:#FFD966;background:rgba(0,0,0,0.5);padding:4px 16px;border-radius:40px;display:inline-block}
+        .upgrade-status{font-size:1rem;font-weight:bold;color:#88ff88;background:rgba(0,0,0,0.5);padding:4px 16px;border-radius:40px;display:inline-flex;align-items:center;gap:6px}
+        .content-center{position:relative;z-index:5;display:flex;flex-direction:column;align-items:center;justify-content:center;transform:translateY(40%);transition:opacity 0.3s ease,visibility 0.3s ease}
+        .sphere{position:absolute;width:320px;height:320px;border-radius:50%;background:radial-gradient(circle at 35% 35%,rgba(30,30,45,0.55) 0%,rgba(25,25,40,0.65) 30%,rgba(20,20,35,0.85) 60%,rgba(15,15,28,0.95) 85%,rgba(10,10,20,1) 100%);box-shadow:0 5px 20px rgba(0,0,0,0.5),inset 0 1px 0 rgba(255,255,255,0.08);border:1px solid rgba(120,100,80,0.4);pointer-events:none}
+        .spark-plug-wrapper{position:relative;display:flex;align-items:center;justify-content:center;cursor:pointer;width:80%;max-width:300px;transition:transform 0.07s cubic-bezier(0.2,0.9,0.4,1.1)}
+        .spark-plug{width:100%;height:auto;display:block;filter:drop-shadow(0 6px 12px rgba(0,0,0,0.5));pointer-events:none}
+        .spark-plug-wrapper.tap-active{transform:scale(0.94)}
+        .floating-message-container{position:absolute;top:120px;left:50%;transform:translateX(-50%);z-index:25;pointer-events:none;width:100%;display:flex;justify-content:center}
+        .floating-message{background:rgba(0,0,0,0.85);backdrop-filter:blur(8px);color:#FFD966;padding:8px 24px;border-radius:60px;font-size:1.2rem;font-weight:bold;border:1px solid rgba(255,200,80,0.5);animation:fadeUp 1.2s ease-out forwards;white-space:nowrap}
+        @keyframes fadeUp{0%{opacity:0;transform:translateY(10px)}15%{opacity:1;transform:translateY(0)}85%{opacity:1;transform:translateY(0)}100%{opacity:0;transform:translateY(-20px)}}
+        .debris-container{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:2000;overflow:hidden}
+        .debris{position:absolute;width:7px;height:7px;background:white;border-radius:2px;box-shadow:0 0 5px rgba(255,255,255,0.8);opacity:0.95;animation:fragmentFly 0.6s ease-out forwards}
+        .debris.rounded{border-radius:50%}
+        .debris.shard{border-radius:1px;transform:rotate(45deg);width:5px;height:10px}
+        .debris.tiny{width:4px;height:4px}
+        @keyframes fragmentFly{0%{transform:translate(0,0) scale(1) rotate(0deg);opacity:1}100%{transform:translate(var(--dx,60px), var(--dy,-70px)) scale(0.2) rotate(200deg);opacity:0}}
+        @media (max-width:600px){
+            .sphere{width:260px;height:260px}
+            .spark-plug-wrapper{max-width:240px}
+            .content-center{transform:translateY(43%)}
+            .stat-value{font-size:1.2rem}
+            .stats-panel{padding:10px 18px;top:35px}
+            .left-buttons{top:115px;left:12px}
+            .right-buttons{top:115px;right:12px}
+            .garage-btn{top:80px;padding:12px 24px}
+            .garage-icon{font-size:1.5rem}
+            .garage-text{font-size:1rem}
+            .street-bike{bottom:35%;width:90%;max-width:320px}
+            .street-drawer{height:50%}
+            .street-drawer-title{font-size:1.1rem}
+            .garage-drawer{width:280px;right:-300px}
+            .garage-drawer-handle{width:24px;height:140px}
+            .handle-arrow{width:20px}
         }
     </style>
 </head>
 <body>
 <div class="game-container" id="gameContainer">
-    <!-- Верхняя панель -->
     <div class="stats-panel" id="statsPanel">
         <div class="stat-item"><div class="stat-label">УРОВЕНЬ</div><div class="stat-value" id="levelValue">1</div></div>
         <div class="stat-divider"></div>
@@ -403,170 +98,86 @@
         <div class="stat-divider"></div>
         <div class="stat-item"><div class="stat-label">ДОХОД/ЧАС</div><div class="stat-value" id="incomeValue">0</div></div>
     </div>
-
-    <!-- Кнопка выхода на улицу (в гараже) -->
-    <div class="left-buttons">
-        <div class="street-btn" id="streetBtn">
-            <span class="street-icon">🌲</span>
-            <span class="street-text">Выйти на улицу</span>
-        </div>
-    </div>
-
-    <!-- Кнопка возврата в гараж (на улице) -->
-    <div class="garage-btn" id="garageBtn" style="display: none;">
-        <span class="garage-icon">🔧</span>
-        <span class="garage-text">Вернуться в гараж</span>
-    </div>
-
-    <!-- Мотоцикл на улице -->
-    <div class="street-bike" id="streetBike">
-        <img src="IMG_0901-photos.png" alt="Сломанный мотоцикл">
-    </div>
-
-    <!-- ВЫДВИНУТАЯ ШТОРКА НА УЛИЦЕ -->
-    <div class="street-drawer" id="streetDrawer">
-        <div class="street-drawer-header">
-            <span class="street-drawer-title">🛒 МАГАЗИН ЗАПЧАСТЕЙ</span>
-        </div>
-        <div class="street-drawer-content">
-            <div class="shop-placeholder">
-                ⚙️ ТОВАРЫ ПОЯВЯТСЯ СКОРО ⚙️<br><br>
-                Здесь можно будет купить детали для мотоцикла<br>
-                🔧 Колесо<br>
-                ⚡ Двигатель<br>
-                🛞 Тормозные колодки<br><br>
-                <span style="font-size:0.7rem; opacity:0.6;">листай вниз — контент будет</span>
-            </div>
-            <div style="height: 100px;"></div>
-        </div>
-    </div>
-
-    <!-- Кнопка бонуса справа -->
-    <div class="right-buttons" id="rightButtons">
-        <div class="daily-bonus-btn" id="dailyBonusBtn">
-            <span class="daily-bonus-icon">🎁</span>
-            <div><div class="daily-bonus-text" id="dailyBonusText">ЕЖЕДНЕВНЫЙ БОНУС</div><div class="daily-bonus-timer" id="dailyBonusTimer"></div></div>
-        </div>
-    </div>
-
-    <!-- Шторка в гараже (свайп) -->
+    <div class="left-buttons"><div class="street-btn" id="streetBtn"><span class="street-icon">🌲</span><span class="street-text">Выйти на улицу</span></div></div>
+    <div class="garage-btn" id="garageBtn" style="display:none;"><span class="garage-icon">🔧</span><span class="garage-text">Вернуться в гараж</span></div>
+    <div class="street-bike" id="streetBike"><img src="IMG_0901-photos.png" alt="Сломанный мотоцикл"></div>
+    <div class="street-drawer" id="streetDrawer"><div class="street-drawer-header"><span class="street-drawer-title">🛒 МАГАЗИН ЗАПЧАСТЕЙ</span></div><div class="street-drawer-content"><div class="shop-placeholder">⚙️ ТОВАРЫ ПОЯВЯТСЯ СКОРО ⚙️<br><br>Здесь можно будет купить детали для мотоцикла<br>🔧 Колесо<br>⚡ Двигатель<br>🛞 Тормозные колодки<br><br><span style="font-size:0.7rem;opacity:0.6;">листай вниз — контент будет</span></div><div style="height:100px;"></div></div></div>
+    <div class="right-buttons" id="rightButtons"><div class="daily-bonus-btn" id="dailyBonusBtn"><span class="daily-bonus-icon">🎁</span><div><div class="daily-bonus-text" id="dailyBonusText">ЕЖЕДНЕВНЫЙ БОНУС</div><div class="daily-bonus-timer" id="dailyBonusTimer"></div></div></div></div>
     <div class="garage-drawer-handle" id="garageDrawerHandle"><img src="IMG_0889-photos.png" alt="смахни" class="handle-arrow"></div>
-    <div class="garage-drawer" id="garageDrawer">
-        <div class="garage-drawer-header">
-            <span class="garage-drawer-title">📈 ПАССИВНЫЙ ДОХОД</span>
-            <span class="garage-drawer-close" id="garageDrawerClose">✕</span>
-        </div>
-        <div class="garage-drawer-content">
-            <div class="upgrade-card" id="yarikCard">
-                <div class="upgrade-image"><img src="IMG_0890.jpeg" alt="Школьник Ярик"></div>
-                <div class="upgrade-name">Школьник Ярик</div>
-                <div class="upgrade-description">Школьник Ярик мутит на металлоприёмке — 400 запчастей в час!</div>
-                <div id="yarikPriceBlock" class="upgrade-price">1500 🔩</div>
-                <div id="yarikStatusBlock" class="upgrade-status" style="display: none;">✅ АКТИВНО</div>
-            </div>
-            <div class="upgrade-card" id="stasyanCard">
-                <div class="upgrade-image"><img src="IMG_0895.jpeg" alt="Стасян"></div>
-                <div class="upgrade-name">Стасян</div>
-                <div class="upgrade-description">Стасян с детства изучал темки по заработку из тик тока, но теперь в свои 15 лет живёт на сдаче деталей</div>
-                <div id="stasyanPriceBlock" class="upgrade-price">4500 🔩</div>
-                <div id="stasyanStatusBlock" class="upgrade-status" style="display: none;">✅ АКТИВНО</div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Центральный контент в гараже (свеча + сфера) -->
-    <div class="content-center" id="contentCenter">
-        <div class="sphere"></div>
-        <div class="spark-plug-wrapper" id="tapZone"><img src="IMG_0884-photo.png" alt="Свеча зажигания" class="spark-plug"></div>
-    </div>
-
+    <div class="garage-drawer" id="garageDrawer"><div class="garage-drawer-header"><span class="garage-drawer-title">📈 ПАССИВНЫЙ ДОХОД</span><span class="garage-drawer-close" id="garageDrawerClose">✕</span></div><div class="garage-drawer-content"><div class="upgrade-card" id="yarikCard"><div class="upgrade-image"><img src="IMG_0890.jpeg" alt="Школьник Ярик"></div><div class="upgrade-name">Школьник Ярик</div><div class="upgrade-description">Школьник Ярик мутит на металлоприёмке — 400 запчастей в час!</div><div id="yarikPriceBlock" class="upgrade-price">1500 🔩</div><div id="yarikStatusBlock" class="upgrade-status" style="display:none;">✅ АКТИВНО</div></div><div class="upgrade-card" id="stasyanCard"><div class="upgrade-image"><img src="IMG_0895.jpeg" alt="Стасян"></div><div class="upgrade-name">Стасян</div><div class="upgrade-description">Стасян с детства изучал темки по заработку из тик тока, но теперь в свои 15 лет живёт на сдаче деталей</div><div id="stasyanPriceBlock" class="upgrade-price">4500 🔩</div><div id="stasyanStatusBlock" class="upgrade-status" style="display:none;">✅ АКТИВНО</div></div></div></div>
+    <div class="content-center" id="contentCenter"><div class="sphere"></div><div class="spark-plug-wrapper" id="tapZone"><img src="IMG_0884-photo.png" alt="Свеча зажигания" class="spark-plug"></div></div>
     <div class="floating-message-container" id="messageContainer"></div>
     <div class="debris-container" id="debrisContainer"></div>
 </div>
-
 <script>
-    // ПЕРЕКЛЮЧЕНИЕ МЕЖДУ ГАРАЖОМ И УЛИЦЕЙ
-    const gameContainer = document.getElementById('gameContainer');
-    const streetBtn = document.getElementById('streetBtn');
-    const garageBtn = document.getElementById('garageBtn');
-    const streetBike = document.getElementById('streetBike');
-    const streetDrawer = document.getElementById('streetDrawer');
-    const statsPanel = document.getElementById('statsPanel');
-    const rightButtons = document.getElementById('rightButtons');
-    const garageDrawerHandle = document.getElementById('garageDrawerHandle');
-    const contentCenter = document.getElementById('contentCenter');
-    const garageDrawer = document.getElementById('garageDrawer');
-
-    function goToStreet() {
-        gameContainer.style.backgroundImage = "url('IMG_0899.jpeg')";
-        statsPanel.style.opacity = '0';
-        statsPanel.style.visibility = 'hidden';
-        rightButtons.style.opacity = '0';
-        rightButtons.style.visibility = 'hidden';
-        garageDrawerHandle.style.opacity = '0';
-        garageDrawerHandle.style.visibility = 'hidden';
-        contentCenter.style.opacity = '0';
-        contentCenter.style.visibility = 'hidden';
-        garageDrawer.classList.remove('open');
-        streetBike.style.display = 'block';
-        streetDrawer.style.display = 'flex';
-        streetBtn.style.display = 'none';
-        garageBtn.style.display = 'flex';
-    }
-
-    function goToGarage() {
-        gameContainer.style.backgroundImage = "url('IMG_0881.png')";
-        statsPanel.style.opacity = '1';
-        statsPanel.style.visibility = 'visible';
-        rightButtons.style.opacity = '1';
-        rightButtons.style.visibility = 'visible';
-        garageDrawerHandle.style.opacity = '1';
-        garageDrawerHandle.style.visibility = 'visible';
-        contentCenter.style.opacity = '1';
-        contentCenter.style.visibility = 'visible';
-        streetBike.style.display = 'none';
-        streetDrawer.style.display = 'none';
-        garageBtn.style.display = 'none';
-        streetBtn.style.display = 'flex';
-    }
-
-    streetBtn.addEventListener('click', goToStreet);
-    garageBtn.addEventListener('click', goToGarage);
-
-    // --- ОСТАЛЬНАЯ ЛОГИКА ИГРЫ ---
-    const tapZone = document.getElementById('tapZone');
-    const debrisContainer = document.getElementById('debrisContainer');
-    const messageContainer = document.getElementById('messageContainer');
-    const dailyBonusBtn = document.getElementById('dailyBonusBtn');
-    const dailyBonusText = document.getElementById('dailyBonusText');
-    const dailyBonusTimer = document.getElementById('dailyBonusTimer');
-
-    let parts = 0, level = 1, incomePerSecond = 0, lastBonusTimestamp = 0;
-    const MAX_LEVEL = 30;
-    let yarikPurchased = false, stasyanPurchased = false;
-
-    const levelValueEl = document.getElementById('levelValue');
-    const partsValueEl = document.getElementById('partsValue');
-    const incomeValueEl = document.getElementById('incomeValue');
-
-    const yarikCard = document.getElementById('yarikCard'), yarikPriceBlock = document.getElementById('yarikPriceBlock'), yarikStatusBlock = document.getElementById('yarikStatusBlock');
-    const stasyanCard = document.getElementById('stasyanCard'), stasyanPriceBlock = document.getElementById('stasyanPriceBlock'), stasyanStatusBlock = document.getElementById('stasyanStatusBlock');
-
-    function updatePassiveIncome() { let newIncome = 0; if (yarikPurchased) newIncome += 400/3600; if (stasyanPurchased) newIncome += 1000/3600; incomePerSecond = newIncome; updateUI(); }
-    function getBonusAmount() { return 500; }
-    function formatTimeLeft(ms) { let h = Math.floor(ms/3600000), m = Math.floor((ms%3600000)/60000), s = Math.floor((ms%60000)/1000); if(h>0) return h+'ч '+m+'м'; if(m>0) return m+'м '+s+'с'; return s+'с'; }
-    function updateBonusUI() { let now = Date.now(), day = 86400000; if(lastBonusTimestamp===0 || now-lastBonusTimestamp>=day) { dailyBonusBtn.classList.remove('disabled'); dailyBonusText.innerText='ЕЖЕДНЕВНЫЙ БОНУС'; dailyBonusTimer.innerText=getBonusAmount()+' деталей!'; } else { dailyBonusBtn.classList.add('disabled'); dailyBonusText.innerText='СЛЕДУЮЩИЙ БОНУС'; dailyBonusTimer.innerText=formatTimeLeft(day-(now-lastBonusTimestamp)); } }
-    function claimBonus() { let now = Date.now(), day = 86400000; if(lastBonusTimestamp!==0 && now-lastBonusTimestamp<day) { showFloatingMessage('❌ Бонус уже получен!','#FF8888'); return; } let bonus = getBonusAmount(); addParts(bonus); lastBonusTimestamp=now; saveGame(); updateBonusUI(); showFloatingMessage('🎁 +'+bonus+' ДЕТАЛЕЙ!','#FFD966'); }
-    function getRequiredForNextLevel(lvl) { if(lvl>=MAX_LEVEL) return Infinity; if(lvl===1) return 1000; if(lvl===2) return 5000; let r=7000; for(let i=4;i<=lvl;i++) r+=2000; return r; }
-    function getTotalRequiredForLevel(tl) { if(tl<=1) return 0; if(tl>MAX_LEVEL) return Infinity; let t=0; for(let l=1;l<tl;l++) t+=getRequiredForNextLevel(l); return t; }
-    function showFloatingMessage(text,color='#FFD966') { let msg=document.createElement('div'); msg.className='floating-message'; msg.innerText=text; msg.style.color=color; msg.style.borderColor=color+'80'; messageContainer.appendChild(msg); setTimeout(()=>msg.remove(),1200); }
-    function checkLevelUp() { if(level>=MAX_LEVEL) return; let nl=level; while(nl<MAX_LEVEL && parts>=getTotalRequiredForLevel(nl+1)) nl++; if(nl>level) { level=nl; updateUI(); showFloatingMessage('⬆️ УРОВЕНЬ '+level+'!','#FFAA44'); if(level===MAX_LEVEL) showFloatingMessage('🏆 МАКСИМАЛЬНЫЙ УРОВЕНЬ!','#FFAA44'); saveGame(); } }
-    function updateUI() { partsValueEl.innerText=Math.floor(parts); levelValueEl.innerText=level; incomeValueEl.innerText=Math.floor(incomePerSecond*3600).toLocaleString(); updateBonusUI(); if(yarikPurchased) { yarikCard.classList.add('purchased'); yarikPriceBlock.style.display='none'; yarikStatusBlock.style.display='inline-flex'; } else { yarikCard.classList.remove('purchased'); yarikPriceBlock.style.display='inline-block'; yarikStatusBlock.style.display='none'; } if(stasyanPurchased) { stasyanCard.classList.add('purchased'); stasyanPriceBlock.style.display='none'; stasyanStatusBlock.style.display='inline-flex'; } else { stasyanCard.classList.remove('purchased'); stasyanPriceBlock.style.display='inline-block'; stasyanStatusBlock.style.display='none'; } }
-    function addParts(amt) { parts+=amt; updateUI(); checkLevelUp(); saveGame(); }
-    function buyYarik() { if(yarikPurchased) { showFloatingMessage('❌ Ярик уже работает!','#FF8888'); return; } if(parts>=1500) { parts-=1500; yarikPurchased=true; updatePassiveIncome(); showFloatingMessage('✅ Ярик теперь на металлоприёмке! +400 дет/час','#88FF88'); saveGame(); } else showFloatingMessage('❌ Не хватает деталей! Нужно 1500','#FF8888'); }
-    function buyStasyan() { if(stasyanPurchased) { showFloatingMessage('❌ Стасян уже в деле!','#FF8888'); return; } if(parts>=4500) { parts-=4500; stasyanPurchased=true; updatePassiveIncome(); showFloatingMessage('✅ Стасян сливает темки! +1000 дет/час','#88FF88'); saveGame(); } else showFloatingMessage('❌ Не хватает деталей! Нужно 4500','#FF8888'); }
-    yarikCard.addEventListener('click',(e)=>{ e.stopPropagation(); if(!yarikPurchased) buyYarik(); });
-    stasyanCard.addEventListener('click',(e)=>{ e.stopPropagation(); if(!stasyanPurchased) buyStasyan(); });
-    function createDebris(x,y) { let cnt=Math.floor(Math.random()*3)+1; for(let i=0;i<cnt;i++) { let d=document.createElement('div'); d.classList.add('debris'); let r=Math.random(); if(r<0.33) d.classList.add('rounded'); else if(r<0.66) d.classList.add('shard'); else d.classList.add('tiny'); let a=(Math.random()-0.5)*Math.PI*1.5-Math.PI/3, s=55+Math.random()*70, dx=Math.cos(a)*s*(Math.random()*0.8+0.6), dy=Math.sin(a)*s*0.9-40; d.style.setProperty('--dx',dx+'px'); d.style.setProperty('--dy',dy+'px'); d.style.left=(x-7+(Math.random()-0.5)*26)+'px'; d.style.top=(y-7+(Math.random()-0.5)*22)+'px'; d.style.backgroundColor='rgb(200,185,230)'; debrisContainer.appendChild(d); setTimeout(()=>d.remove(),600); } }
-    function animateTap() { tapZone.classList.add('tap-active'); setTimeout(()=>tapZone.classList.remove('tap-active'),100); if(window.navigator?.vibrate) navigator.vibrate(15); }
-    function handleTap(e) { let cx,cy; if(e.touches) { cx=e.touches[0].clientX; cy=e.touches[0].clientY; e.preventDefault(); } else { cx=e.clientX; cy=e.clientY; } animateTap(); addParts(1); createDebris(cx,cy); let sp=document.createElement('div'); sp.innerHTML='⚡'; sp.style.position='fixed'; sp.style.left=(cx-8)+'px'; sp.style.top=(cy-8)+'px'; sp.style.fontSize='0.9rem'; sp.style.opacity='0.5'; sp.style.pointerEvents='none'; sp.style.transition='all 0.
+    const gameContainer=document.getElementById('gameContainer');
+    const streetBtn=document.getElementById('streetBtn');
+    const garageBtn=document.getElementById('garageBtn');
+    const streetBike=document.getElementById('streetBike');
+    const streetDrawer=document.getElementById('streetDrawer');
+    const statsPanel=document.getElementById('statsPanel');
+    const rightButtons=document.getElementById('rightButtons');
+    const garageDrawerHandle=document.getElementById('garageDrawerHandle');
+    const contentCenter=document.getElementById('contentCenter');
+    const garageDrawer=document.getElementById('garageDrawer');
+    function goToStreet(){gameContainer.style.backgroundImage="url('IMG_0899.jpeg')";statsPanel.style.opacity='0';statsPanel.style.visibility='hidden';rightButtons.style.opacity='0';rightButtons.style.visibility='hidden';garageDrawerHandle.style.opacity='0';garageDrawerHandle.style.visibility='hidden';contentCenter.style.opacity='0';contentCenter.style.visibility='hidden';garageDrawer.classList.remove('open');streetBike.style.display='block';streetDrawer.style.display='flex';streetBtn.style.display='none';garageBtn.style.display='flex';}
+    function goToGarage(){gameContainer.style.backgroundImage="url('IMG_0881.png')";statsPanel.style.opacity='1';statsPanel.style.visibility='visible';rightButtons.style.opacity='1';rightButtons.style.visibility='visible';garageDrawerHandle.style.opacity='1';garageDrawerHandle.style.visibility='visible';contentCenter.style.opacity='1';contentCenter.style.visibility='visible';streetBike.style.display='none';streetDrawer.style.display='none';garageBtn.style.display='none';streetBtn.style.display='flex';}
+    streetBtn.addEventListener('click',goToStreet);
+    garageBtn.addEventListener('click',goToGarage);
+    const tapZone=document.getElementById('tapZone');
+    const debrisContainer=document.getElementById('debrisContainer');
+    const messageContainer=document.getElementById('messageContainer');
+    const dailyBonusBtn=document.getElementById('dailyBonusBtn');
+    const dailyBonusText=document.getElementById('dailyBonusText');
+    const dailyBonusTimer=document.getElementById('dailyBonusTimer');
+    let parts=0,level=1,incomePerSecond=0,lastBonusTimestamp=0;
+    const MAX_LEVEL=30;
+    let yarikPurchased=false,stasyanPurchased=false;
+    const levelValueEl=document.getElementById('levelValue');
+    const partsValueEl=document.getElementById('partsValue');
+    const incomeValueEl=document.getElementById('incomeValue');
+    const yarikCard=document.getElementById('yarikCard'),yarikPriceBlock=document.getElementById('yarikPriceBlock'),yarikStatusBlock=document.getElementById('yarikStatusBlock');
+    const stasyanCard=document.getElementById('stasyanCard'),stasyanPriceBlock=document.getElementById('stasyanPriceBlock'),stasyanStatusBlock=document.getElementById('stasyanStatusBlock');
+    function updatePassiveIncome(){let newIncome=0;if(yarikPurchased)newIncome+=400/3600;if(stasyanPurchased)newIncome+=1000/3600;incomePerSecond=newIncome;updateUI();}
+    function getBonusAmount(){return 500;}
+    function formatTimeLeft(ms){let h=Math.floor(ms/3600000),m=Math.floor((ms%3600000)/60000),s=Math.floor((ms%60000)/1000);if(h>0)return h+'ч '+m+'м';if(m>0)return m+'м '+s+'с';return s+'с';}
+    function updateBonusUI(){let now=Date.now(),day=86400000;if(lastBonusTimestamp===0||now-lastBonusTimestamp>=day){dailyBonusBtn.classList.remove('disabled');dailyBonusText.innerText='ЕЖЕДНЕВНЫЙ БОНУС';dailyBonusTimer.innerText=getBonusAmount()+' деталей!';}else{dailyBonusBtn.classList.add('disabled');dailyBonusText.innerText='СЛЕДУЮЩИЙ БОНУС';dailyBonusTimer.innerText=formatTimeLeft(day-(now-lastBonusTimestamp));}}
+    function claimBonus(){let now=Date.now(),day=86400000;if(lastBonusTimestamp!==0&&now-lastBonusTimestamp<day){showFloatingMessage('❌ Бонус уже получен!','#FF8888');return;}let bonus=getBonusAmount();addParts(bonus);lastBonusTimestamp=now;saveGame();updateBonusUI();showFloatingMessage('🎁 +'+bonus+' ДЕТАЛЕЙ!','#FFD966');}
+    function getRequiredForNextLevel(lvl){if(lvl>=MAX_LEVEL)return Infinity;if(lvl===1)return 1000;if(lvl===2)return 5000;let r=7000;for(let i=4;i<=lvl;i++)r+=2000;return r;}
+    function getTotalRequiredForLevel(tl){if(tl<=1)return 0;if(tl>MAX_LEVEL)return Infinity;let t=0;for(let l=1;l<tl;l++)t+=getRequiredForNextLevel(l);return t;}
+    function showFloatingMessage(text,color='#FFD966'){let msg=document.createElement('div');msg.className='floating-message';msg.innerText=text;msg.style.color=color;msg.style.borderColor=color+'80';messageContainer.appendChild(msg);setTimeout(()=>msg.remove(),1200);}
+    function checkLevelUp(){if(level>=MAX_LEVEL)return;let nl=level;while(nl<MAX_LEVEL&&parts>=getTotalRequiredForLevel(nl+1))nl++;if(nl>level){level=nl;updateUI();showFloatingMessage('⬆️ УРОВЕНЬ '+level+'!','#FFAA44');if(level===MAX_LEVEL)showFloatingMessage('🏆 МАКСИМАЛЬНЫЙ УРОВЕНЬ!','#FFAA44');saveGame();}}
+    function updateUI(){partsValueEl.innerText=Math.floor(parts);levelValueEl.innerText=level;incomeValueEl.innerText=Math.floor(incomePerSecond*3600).toLocaleString();updateBonusUI();if(yarikPurchased){yarikCard.classList.add('purchased');yarikPriceBlock.style.display='none';yarikStatusBlock.style.display='inline-flex';}else{yarikCard.classList.remove('purchased');yarikPriceBlock.style.display='inline-block';yarikStatusBlock.style.display='none';}if(stasyanPurchased){stasyanCard.classList.add('purchased');stasyanPriceBlock.style.display='none';stasyanStatusBlock.style.display='inline-flex';}else{stasyanCard.classList.remove('purchased');stasyanPriceBlock.style.display='inline-block';stasyanStatusBlock.style.display='none';}}
+    function addParts(amt){parts+=amt;updateUI();checkLevelUp();saveGame();}
+    function buyYarik(){if(yarikPurchased){showFloatingMessage('❌ Ярик уже работает!','#FF8888');return;}if(parts>=1500){parts-=1500;yarikPurchased=true;updatePassiveIncome();showFloatingMessage('✅ Ярик теперь на металлоприёмке! +400 дет/час','#88FF88');saveGame();}else showFloatingMessage('❌ Не хватает деталей! Нужно 1500','#FF8888');}
+    function buyStasyan(){if(stasyanPurchased){showFloatingMessage('❌ Стасян уже в деле!','#FF8888');return;}if(parts>=4500){parts-=4500;stasyanPurchased=true;updatePassiveIncome();showFloatingMessage('✅ Стасян сливает темки! +1000 дет/час','#88FF88');saveGame();}else showFloatingMessage('❌ Не хватает деталей! Нужно 4500','#FF8888');}
+    yarikCard.addEventListener('click',(e)=>{e.stopPropagation();if(!yarikPurchased)buyYarik();});
+    stasyanCard.addEventListener('click',(e)=>{e.stopPropagation();if(!stasyanPurchased)buyStasyan();});
+    function createDebris(x,y){let cnt=Math.floor(Math.random()*3)+1;for(let i=0;i<cnt;i++){let d=document.createElement('div');d.classList.add('debris');let r=Math.random();if(r<0.33)d.classList.add('rounded');else if(r<0.66)d.classList.add('shard');else d.classList.add('tiny');let a=(Math.random()-0.5)*Math.PI*1.5-Math.PI/3,s=55+Math.random()*70,dx=Math.cos(a)*s*(Math.random()*0.8+0.6),dy=Math.sin(a)*s*0.9-40;d.style.setProperty('--dx',dx+'px');d.style.setProperty('--dy',dy+'px');d.style.left=(x-7+(Math.random()-0.5)*26)+'px';d.style.top=(y-7+(Math.random()-0.5)*22)+'px';d.style.backgroundColor='rgb(200,185,230)';debrisContainer.appendChild(d);setTimeout(()=>d.remove(),600);}}
+    function animateTap(){tapZone.classList.add('tap-active');setTimeout(()=>tapZone.classList.remove('tap-active'),100);if(window.navigator?.vibrate)navigator.vibrate(15);}
+    function handleTap(e){let cx,cy;if(e.touches){cx=e.touches[0].clientX;cy=e.touches[0].clientY;e.preventDefault();}else{cx=e.clientX;cy=e.clientY;}animateTap();addParts(1);createDebris(cx,cy);let sp=document.createElement('div');sp.innerHTML='⚡';sp.style.position='fixed';sp.style.left=(cx-8)+'px';sp.style.top=(cy-8)+'px';sp.style.fontSize='0.9rem';sp.style.opacity='0.5';sp.style.pointerEvents='none';sp.style.transition='all 0.2s ease';document.body.appendChild(sp);setTimeout(()=>{sp.style.transform='translateY(-15px)';sp.style.opacity='0';},10);setTimeout(()=>sp.remove(),200);}
+    tapZone.addEventListener('click',handleTap);
+    tapZone.addEventListener('touchstart',(e)=>{e.preventDefault();for(let i=0;i<e.touches.length;i++)handleTap(e.touches[i]);});
+    dailyBonusBtn.addEventListener('click',claimBonus);
+    function saveGame(){localStorage.setItem('MotoTapSave',JSON.stringify({parts,level,incomePerSecond,lastBonusTimestamp,yarikPurchased,stasyanPurchased}));}
+    function loadGame(){let s=localStorage.getItem('MotoTapSave');if(s){let d=JSON.parse(s);parts=d.parts||0;level=d.level||1;if(level>MAX_LEVEL)level=MAX_LEVEL;incomePerSecond=d.incomePerSecond||0;lastBonusTimestamp=d.lastBonusTimestamp||0;yarikPurchased=d.yarikPurchased||false;stasyanPurchased=d.stasyanPurchased||false;updatePassiveIncome();updateUI();}updateUI();}
+    setInterval(()=>updateBonusUI(),1000);
+    setInterval(()=>saveGame(),5000);
+    setInterval(()=>{if(incomePerSecond>0)addParts(incomePerSecond);},1000);
+    loadGame();
+    let startX=0,isDragging=false;
+    function openDrawer(){garageDrawer.classList.add('open');}
+    function closeDrawerFunc(){garageDrawer.classList.remove('open');}
+    const garageDrawerHandleElem=document.getElementById('garageDrawerHandle');
+    const garageDrawerClose=document.getElementById('garageDrawerClose');
+    garageDrawerHandleElem.addEventListener('mousedown',(e)=>{startX=e.clientX;isDragging=true;document.body.style.userSelect='none';});
+    garageDrawerHandleElem.addEventListener('touchstart',(e)=>{startX=e.touches[0].clientX;isDragging=true;e.preventDefault();});
+    window.addEventListener('mousemove',(e)=>{if(!isDragging)return;if(e.clientX-startX<-20){openDrawer();isDragging=false;}});
+    window.addEventListener('touchmove',(e)=>{if(!isDragging)return;if(e.touches[0].clientX-startX<-20){openDrawer();isDragging=false;e.preventDefault();}});
+    window.addEventListener('mouseup',()=>{isDragging=false;});
+    window.addEventListener('touchend',()=>{isDragging=false;});
+    garageDrawerClose.addEventListener('click',closeDrawerFunc);
+    garageDrawerHandleElem.addEventListener('click',()=>{if(!garageDrawer.classList.contains('open'))openDrawer();});
+</script>
+</body>
+</html>
