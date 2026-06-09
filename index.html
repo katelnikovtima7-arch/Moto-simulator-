@@ -91,7 +91,7 @@
             height: 45px;
             background: rgba(255, 180, 60, 0.4);
         }
-        /* Блок левых кнопок */
+        /* Левая кнопка — улица */
         .left-buttons {
             position: absolute;
             top: 130px;
@@ -101,7 +101,6 @@
             gap: 12px;
             z-index: 30;
         }
-        /* Кнопка выхода на улицу (белая, красивая) */
         .street-btn {
             background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(4px);
@@ -115,18 +114,9 @@
             transition: transform 0.1s ease;
             box-shadow: 0 2px 10px rgba(0,0,0,0.2);
         }
-        .street-btn:active {
-            transform: scale(0.95);
-        }
-        .street-icon {
-            font-size: 1.4rem;
-        }
-        .street-text {
-            font-size: 0.85rem;
-            font-weight: bold;
-            color: #222;
-        }
-        /* Кнопка возврата в гараж */
+        .street-btn:active { transform: scale(0.95); }
+        .street-icon { font-size: 1.4rem; }
+        .street-text { font-size: 0.85rem; font-weight: bold; color: #222; }
         .garage-btn {
             background: rgba(0, 0, 0, 0.75);
             backdrop-filter: blur(8px);
@@ -139,18 +129,10 @@
             cursor: pointer;
             transition: transform 0.1s ease;
         }
-        .garage-btn:active {
-            transform: scale(0.95);
-        }
-        .garage-icon {
-            font-size: 1.3rem;
-        }
-        .garage-text {
-            font-size: 0.85rem;
-            font-weight: bold;
-            color: #FFD966;
-        }
-        /* Ежедневный бонус (справа) */
+        .garage-btn:active { transform: scale(0.95); }
+        .garage-icon { font-size: 1.3rem; }
+        .garage-text { font-size: 0.85rem; font-weight: bold; color: #FFD966; }
+        /* Правая кнопка — бонус */
         .right-buttons {
             position: absolute;
             top: 130px;
@@ -171,15 +153,8 @@
         }
         .daily-bonus-btn:active { transform: scale(0.95); }
         .daily-bonus-icon { font-size: 1.5rem; }
-        .daily-bonus-text {
-            font-size: 0.75rem;
-            font-weight: bold;
-            color: #FFD966;
-        }
-        .daily-bonus-timer {
-            font-size: 0.7rem;
-            color: #aaa;
-        }
+        .daily-bonus-text { font-size: 0.75rem; font-weight: bold; color: #FFD966; }
+        .daily-bonus-timer { font-size: 0.7rem; color: #aaa; }
         /* Шторка */
         .drawer-handle {
             position: absolute;
@@ -193,34 +168,23 @@
             z-index: 40;
             cursor: pointer;
             box-shadow: -3px 0 15px rgba(0,0,0,0.5);
-            transition: 0.1s;
             display: flex;
             align-items: center;
             justify-content: center;
-            border: 1px solid rgba(255, 200, 100, 0.3);
+            border: 1px solid rgba(255,200,100,0.3);
         }
-        .drawer-handle:active {
-            opacity: 0.8;
-            transform: translateY(-50%) scale(0.97);
-        }
-        .handle-arrow {
-            width: 24px;
-            height: auto;
-            display: block;
-            filter: drop-shadow(0 1px 1px rgba(0,0,0,0.5));
-        }
+        .handle-arrow { width: 24px; height: auto; display: block; filter: drop-shadow(0 1px 1px rgba(0,0,0,0.5)); }
         .drawer {
             position: absolute;
             top: 0;
             right: -360px;
             width: 320px;
             height: 100%;
-            background: rgba(10, 10, 15, 0.96);
+            background: rgba(10,10,15,0.96);
             backdrop-filter: blur(16px);
-            border-left: 2px solid rgba(255, 180, 60, 0.6);
-            box-shadow: -8px 0 30px rgba(0, 0, 0, 0.6);
+            border-left: 2px solid rgba(255,180,60,0.6);
             z-index: 50;
-            transition: right 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            transition: right 0.3s cubic-bezier(0.2,0.9,0.4,1.1);
             display: flex;
             flex-direction: column;
             overflow-y: auto;
@@ -233,95 +197,44 @@
             align-items: center;
             margin-bottom: 24px;
             padding-bottom: 12px;
-            border-bottom: 1px solid rgba(255, 180, 60, 0.4);
+            border-bottom: 1px solid rgba(255,180,60,0.4);
         }
-        .drawer-title {
-            font-size: 1.4rem;
-            font-weight: bold;
-            color: #ffcc66;
-            letter-spacing: 1px;
-        }
-        .drawer-close {
-            font-size: 2rem;
-            cursor: pointer;
-            color: #ffaa66;
-            transition: 0.1s;
-            line-height: 1;
-        }
-        .drawer-close:active { transform: scale(0.9); }
+        .drawer-title { font-size: 1.4rem; font-weight: bold; color: #ffcc66; }
+        .drawer-close { font-size: 2rem; cursor: pointer; color: #ffaa66; }
         .drawer-content {
             flex: 1;
-            color: #ddd;
-            font-size: 0.95rem;
-            text-align: center;
-            padding: 10px 0;
             display: flex;
             flex-direction: column;
             gap: 20px;
         }
         /* Карточки улучшений */
         .upgrade-card {
-            background: rgba(255, 200, 100, 0.1);
+            background: rgba(255,200,100,0.1);
             border-radius: 24px;
             padding: 16px;
-            border: 1px solid rgba(255, 200, 100, 0.4);
+            border: 1px solid rgba(255,200,100,0.4);
             display: flex;
             flex-direction: column;
             align-items: center;
             gap: 10px;
-            transition: 0.2s;
             cursor: pointer;
         }
-        .upgrade-card:active { transform: scale(0.98); }
         .upgrade-card.purchased {
-            background: rgba(100, 200, 100, 0.15);
+            background: rgba(100,200,100,0.15);
             border-color: #88ff88;
             cursor: default;
-            opacity: 0.9;
         }
-        .upgrade-card.purchased:active { transform: none; }
         .upgrade-image img {
             width: 100px;
             height: 100px;
             object-fit: cover;
             border-radius: 50%;
             border: 2px solid #ffaa66;
-            box-shadow: 0 0 10px rgba(0,0,0,0.5);
         }
-        .upgrade-card.purchased .upgrade-image img { border-color: #88ff88; }
-        .upgrade-name {
-            font-size: 1.2rem;
-            font-weight: bold;
-            color: #ffcc66;
-        }
-        .upgrade-description {
-            font-size: 0.8rem;
-            font-weight: normal;
-            color: #ffdd99;
-            text-align: center;
-            line-height: 1.3;
-        }
-        .upgrade-price {
-            font-size: 1.4rem;
-            font-weight: bold;
-            color: #FFD966;
-            text-shadow: 0 1px 0 #7a5c00;
-            background: rgba(0,0,0,0.5);
-            padding: 4px 16px;
-            border-radius: 40px;
-            display: inline-block;
-        }
-        .upgrade-status {
-            font-size: 1rem;
-            font-weight: bold;
-            color: #88ff88;
-            background: rgba(0,0,0,0.5);
-            padding: 4px 16px;
-            border-radius: 40px;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-        }
+        .upgrade-name { font-size: 1.2rem; font-weight: bold; color: #ffcc66; }
+        .upgrade-description { font-size: 0.8rem; color: #ffdd99; text-align: center; }
+        .upgrade-price { font-size: 1.4rem; font-weight: bold; color: #FFD966; background: rgba(0,0,0,0.5); padding: 4px 16px; border-radius: 40px; display: inline-block; }
+        .upgrade-status { font-size: 1rem; font-weight: bold; color: #88ff88; background: rgba(0,0,0,0.5); padding: 4px 16px; border-radius: 40px; display: inline-flex; align-items: center; gap: 6px; }
         /* Всплывающие сообщения */
         .floating-message-container {
             position: absolute;
@@ -335,18 +248,16 @@
             justify-content: center;
         }
         .floating-message {
-            background: rgba(0, 0, 0, 0.85);
+            background: rgba(0,0,0,0.85);
             backdrop-filter: blur(8px);
             color: #FFD966;
             padding: 8px 24px;
             border-radius: 60px;
             font-size: 1.2rem;
             font-weight: bold;
-            letter-spacing: 1px;
-            border: 1px solid rgba(255, 200, 80, 0.5);
+            border: 1px solid rgba(255,200,80,0.5);
             animation: fadeUp 1.2s ease-out forwards;
             white-space: nowrap;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
         }
         @keyframes fadeUp {
             0% { opacity: 0; transform: translateY(10px); }
@@ -354,7 +265,7 @@
             85% { opacity: 1; transform: translateY(0); }
             100% { opacity: 0; transform: translateY(-20px); }
         }
-        /* Центральный контент (свеча и сфера) */
+        /* Свеча и сфера */
         .content-center {
             position: relative;
             z-index: 5;
@@ -374,17 +285,6 @@
             border: 1px solid rgba(120,100,80,0.4);
             pointer-events: none;
         }
-        .sphere::after {
-            content: '';
-            position: absolute;
-            top: 5px;
-            left: 5px;
-            right: 5px;
-            bottom: 5px;
-            border-radius: 50%;
-            background: radial-gradient(circle at 30% 30%, rgba(200,170,120,0.08) 0%, transparent 70%);
-            pointer-events: none;
-        }
         .spark-plug-wrapper {
             position: relative;
             display: flex;
@@ -393,13 +293,13 @@
             cursor: pointer;
             width: 80%;
             max-width: 300px;
-            transition: transform 0.07s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            transition: transform 0.07s cubic-bezier(0.2,0.9,0.4,1.1);
         }
         .spark-plug {
             width: 100%;
             height: auto;
             display: block;
-            filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.5));
+            filter: drop-shadow(0 6px 12px rgba(0,0,0,0.5));
             pointer-events: none;
         }
         .spark-plug-wrapper.tap-active { transform: scale(0.94); }
@@ -420,8 +320,7 @@
             height: 7px;
             background: white;
             border-radius: 2px;
-            box-shadow: 0 0 5px rgba(255, 255, 255, 0.8);
-            pointer-events: none;
+            box-shadow: 0 0 5px rgba(255,255,255,0.8);
             opacity: 0.95;
             animation: fragmentFly 0.6s ease-out forwards;
         }
@@ -430,36 +329,24 @@
         .debris.tiny { width: 4px; height: 4px; }
         @keyframes fragmentFly {
             0% { transform: translate(0,0) scale(1) rotate(0deg); opacity: 1; }
-            30% { opacity: 1; }
             100% { transform: translate(var(--dx,60px), var(--dy,-70px)) scale(0.2) rotate(200deg); opacity: 0; }
         }
-        /* Адаптация под телефоны */
         @media (max-width: 600px) {
             .sphere { width: 260px; height: 260px; }
             .spark-plug-wrapper { max-width: 240px; }
             .content-center { transform: translateY(43%); }
             .stat-value { font-size: 1.2rem; }
-            .stat-label { font-size: 0.65rem; }
             .stats-panel { padding: 10px 18px; top: 35px; }
-            .floating-message-container { top: 105px; }
-            .right-buttons { top: 115px; right: 12px; }
             .left-buttons { top: 115px; left: 12px; }
-            .daily-bonus-btn { padding: 5px 12px; }
-            .street-btn, .garage-btn { padding: 6px 14px; }
-            .street-text, .garage-text { font-size: 0.7rem; }
+            .right-buttons { top: 115px; right: 12px; }
             .drawer { width: 280px; right: -300px; }
             .drawer-handle { width: 24px; height: 140px; }
             .handle-arrow { width: 20px; }
-            .upgrade-price { font-size: 1.2rem; }
-            .upgrade-description { font-size: 0.7rem; }
-            .upgrade-image img { width: 80px; height: 80px; }
-            .upgrade-name { font-size: 1rem; }
         }
     </style>
 </head>
 <body>
 <div class="game-container" id="gameContainer">
-    <!-- Верхняя панель -->
     <div class="stats-panel">
         <div class="stat-item"><div class="stat-label">УРОВЕНЬ</div><div class="stat-value" id="levelValue">1</div></div>
         <div class="stat-divider"></div>
@@ -468,38 +355,21 @@
         <div class="stat-item"><div class="stat-label">ДОХОД/ЧАС</div><div class="stat-value" id="incomeValue">0</div></div>
     </div>
 
-    <!-- Кнопки слева -->
     <div class="left-buttons">
-        <div class="street-btn" id="streetBtn">
-            <span class="street-icon">🏍️</span>
-            <span class="street-text">Выйти на улицу</span>
-        </div>
-        <div class="garage-btn" id="garageBtn" style="display: none;">
-            <span class="garage-icon">🔧</span>
-            <span class="garage-text">Вернуться в гараж</span>
-        </div>
+        <div class="street-btn" id="streetBtn"><span class="street-icon">🏍️</span><span class="street-text">Выйти на улицу</span></div>
+        <div class="garage-btn" id="garageBtn" style="display: none;"><span class="garage-icon">🔧</span><span class="garage-text">Вернуться в гараж</span></div>
     </div>
 
-    <!-- Кнопки справа -->
     <div class="right-buttons">
         <div class="daily-bonus-btn" id="dailyBonusBtn">
             <span class="daily-bonus-icon">🎁</span>
-            <div>
-                <div class="daily-bonus-text" id="dailyBonusText">ЕЖЕДНЕВНЫЙ БОНУС</div>
-                <div class="daily-bonus-timer" id="dailyBonusTimer"></div>
-            </div>
+            <div><div class="daily-bonus-text" id="dailyBonusText">ЕЖЕДНЕВНЫЙ БОНУС</div><div class="daily-bonus-timer" id="dailyBonusTimer"></div></div>
         </div>
     </div>
 
-    <!-- Шторка -->
-    <div class="drawer-handle" id="drawerHandle">
-        <img src="IMG_0889-photos.png" alt="смахни" class="handle-arrow">
-    </div>
+    <div class="drawer-handle" id="drawerHandle"><img src="IMG_0889-photos.png" alt="смахни" class="handle-arrow"></div>
     <div class="drawer" id="drawer">
-        <div class="drawer-header">
-            <span class="drawer-title">📈 ПАССИВНЫЙ ДОХОД</span>
-            <span class="drawer-close" id="drawerClose">✕</span>
-        </div>
+        <div class="drawer-header"><span class="drawer-title">📈 ПАССИВНЫЙ ДОХОД</span><span class="drawer-close" id="drawerClose">✕</span></div>
         <div class="drawer-content">
             <div class="upgrade-card" id="yarikCard">
                 <div class="upgrade-image"><img src="IMG_0890.jpeg" alt="Школьник Ярик"></div>
@@ -519,297 +389,80 @@
     </div>
 
     <div class="floating-message-container" id="messageContainer"></div>
-
     <div class="content-center">
         <div class="sphere"></div>
-        <div class="spark-plug-wrapper" id="tapZone">
-            <img src="IMG_0884-photo.png" alt="Свеча зажигания" class="spark-plug">
-        </div>
+        <div class="spark-plug-wrapper" id="tapZone"><img src="IMG_0884-photo.png" alt="Свеча зажигания" class="spark-plug"></div>
     </div>
     <div class="debris-container" id="debrisContainer"></div>
 </div>
 
 <script>
-    // ---------- ПЕРЕКЛЮЧЕНИЕ ФОНА ----------
+    // Переключение фона
     const gameContainer = document.getElementById('gameContainer');
     const streetBtn = document.getElementById('streetBtn');
     const garageBtn = document.getElementById('garageBtn');
-
-    function goToStreet() {
-        gameContainer.style.backgroundImage = "url('IMG_0899.jpeg')";
-        streetBtn.style.display = 'none';
-        garageBtn.style.display = 'flex';
-        showFloatingMessage('🏍️ Ты выехал на улицу!', '#88AAFF');
-    }
-
-    function goToGarage() {
-        gameContainer.style.backgroundImage = "url('IMG_0881.png')";
-        garageBtn.style.display = 'none';
-        streetBtn.style.display = 'flex';
-        showFloatingMessage('🔧 Добро пожаловать в гараж!', '#FFAA66');
-    }
-
+    function goToStreet() { gameContainer.style.backgroundImage = "url('IMG_0899.jpeg')"; streetBtn.style.display = 'none'; garageBtn.style.display = 'flex'; showFloatingMessage('🏍️ Ты выехал на улицу!', '#88AAFF'); }
+    function goToGarage() { gameContainer.style.backgroundImage = "url('IMG_0881.png')"; garageBtn.style.display = 'none'; streetBtn.style.display = 'flex'; showFloatingMessage('🔧 Добро пожаловать в гараж!', '#FFAA66'); }
     streetBtn.addEventListener('click', goToStreet);
     garageBtn.addEventListener('click', goToGarage);
 
-    // ---------- ОСТАЛЬНАЯ ЛОГИКА ИГРЫ ----------
+    // Игровая логика
     const tapZone = document.getElementById('tapZone');
     const debrisContainer = document.getElementById('debrisContainer');
     const messageContainer = document.getElementById('messageContainer');
     const dailyBonusBtn = document.getElementById('dailyBonusBtn');
     const dailyBonusText = document.getElementById('dailyBonusText');
     const dailyBonusTimer = document.getElementById('dailyBonusTimer');
-
-    let parts = 0;
-    let level = 1;
-    let incomePerSecond = 0;
-    let lastBonusTimestamp = 0;
+    let parts = 0, level = 1, incomePerSecond = 0, lastBonusTimestamp = 0;
     const MAX_LEVEL = 30;
-    let yarikPurchased = false;
-    let stasyanPurchased = false;
-
+    let yarikPurchased = false, stasyanPurchased = false;
     const levelValueEl = document.getElementById('levelValue');
     const partsValueEl = document.getElementById('partsValue');
     const incomeValueEl = document.getElementById('incomeValue');
+    const yarikCard = document.getElementById('yarikCard'), yarikPriceBlock = document.getElementById('yarikPriceBlock'), yarikStatusBlock = document.getElementById('yarikStatusBlock');
+    const stasyanCard = document.getElementById('stasyanCard'), stasyanPriceBlock = document.getElementById('stasyanPriceBlock'), stasyanStatusBlock = document.getElementById('stasyanStatusBlock');
 
-    const yarikCard = document.getElementById('yarikCard');
-    const yarikPriceBlock = document.getElementById('yarikPriceBlock');
-    const yarikStatusBlock = document.getElementById('yarikStatusBlock');
-    const stasyanCard = document.getElementById('stasyanCard');
-    const stasyanPriceBlock = document.getElementById('stasyanPriceBlock');
-    const stasyanStatusBlock = document.getElementById('stasyanStatusBlock');
-
-    function updatePassiveIncome() {
-        let newIncomePerSecond = 0;
-        if (yarikPurchased) newIncomePerSecond += 400 / 3600;
-        if (stasyanPurchased) newIncomePerSecond += 1000 / 3600;
-        incomePerSecond = newIncomePerSecond;
-        updateUI();
-    }
-
+    function updatePassiveIncome() { let newIncome = 0; if (yarikPurchased) newIncome += 400/3600; if (stasyanPurchased) newIncome += 1000/3600; incomePerSecond = newIncome; updateUI(); }
     function getBonusAmount() { return 500; }
-    function formatTimeLeft(ms) {
-        const hours = Math.floor(ms / (1000 * 60 * 60));
-        const minutes = Math.floor((ms % (1000 * 60 * 60)) / (1000 * 60));
-        const seconds = Math.floor((ms % (1000 * 60)) / 1000);
-        if (hours > 0) return `${hours}ч ${minutes}м`;
-        if (minutes > 0) return `${minutes}м ${seconds}с`;
-        return `${seconds}с`;
-    }
+    function formatTimeLeft(ms) { let h = Math.floor(ms/3600000), m = Math.floor((ms%3600000)/60000), s = Math.floor((ms%60000)/1000); if(h>0) return h+'ч '+m+'м'; if(m>0) return m+'м '+s+'с'; return s+'с'; }
+    function updateBonusUI() { let now = Date.now(), day = 86400000; if(lastBonusTimestamp===0 || now-lastBonusTimestamp>=day) { dailyBonusBtn.classList.remove('disabled'); dailyBonusText.innerText='ЕЖЕДНЕВНЫЙ БОНУС'; dailyBonusTimer.innerText=getBonusAmount()+' деталей!'; } else { dailyBonusBtn.classList.add('disabled'); dailyBonusText.innerText='СЛЕДУЮЩИЙ БОНУС'; dailyBonusTimer.innerText=formatTimeLeft(day-(now-lastBonusTimestamp)); } }
+    function claimBonus() { let now = Date.now(), day = 86400000; if(lastBonusTimestamp!==0 && now-lastBonusTimestamp<day) { showFloatingMessage('❌ Бонус уже получен!','#FF8888'); return; } let bonus = getBonusAmount(); addParts(bonus); lastBonusTimestamp=now; saveGame(); updateBonusUI(); showFloatingMessage('🎁 +'+bonus+' ДЕТАЛЕЙ!','#FFD966'); }
+    function getRequiredForNextLevel(lvl) { if(lvl>=MAX_LEVEL) return Infinity; if(lvl===1) return 1000; if(lvl===2) return 5000; let r=7000; for(let i=4;i<=lvl;i++) r+=2000; return r; }
+    function getTotalRequiredForLevel(tl) { if(tl<=1) return 0; if(tl>MAX_LEVEL) return Infinity; let t=0; for(let l=1;l<tl;l++) t+=getRequiredForNextLevel(l); return t; }
+    function showFloatingMessage(text,color='#FFD966') { let msg=document.createElement('div'); msg.className='floating-message'; msg.innerText=text; msg.style.color=color; msg.style.borderColor=color+'80'; messageContainer.appendChild(msg); setTimeout(()=>msg.remove(),1200); }
+    function checkLevelUp() { if(level>=MAX_LEVEL) return; let nl=level; while(nl<MAX_LEVEL && parts>=getTotalRequiredForLevel(nl+1)) nl++; if(nl>level) { level=nl; updateUI(); showFloatingMessage('⬆️ УРОВЕНЬ '+level+'!','#FFAA44'); if(level===MAX_LEVEL) showFloatingMessage('🏆 МАКСИМАЛЬНЫЙ УРОВЕНЬ!','#FFAA44'); saveGame(); } }
+    function updateUI() { partsValueEl.innerText=Math.floor(parts); levelValueEl.innerText=level; incomeValueEl.innerText=Math.floor(incomePerSecond*3600).toLocaleString(); updateBonusUI(); if(yarikPurchased) { yarikCard.classList.add('purchased'); yarikPriceBlock.style.display='none'; yarikStatusBlock.style.display='inline-flex'; } else { yarikCard.classList.remove('purchased'); yarikPriceBlock.style.display='inline-block'; yarikStatusBlock.style.display='none'; } if(stasyanPurchased) { stasyanCard.classList.add('purchased'); stasyanPriceBlock.style.display='none'; stasyanStatusBlock.style.display='inline-flex'; } else { stasyanCard.classList.remove('purchased'); stasyanPriceBlock.style.display='inline-block'; stasyanStatusBlock.style.display='none'; } }
+    function addParts(amt) { parts+=amt; updateUI(); checkLevelUp(); saveGame(); }
+    function buyYarik() { if(yarikPurchased) { showFloatingMessage('❌ Ярик уже работает!','#FF8888'); return; } if(parts>=1500) { parts-=1500; yarikPurchased=true; updatePassiveIncome(); showFloatingMessage('✅ Ярик теперь на металлоприёмке! +400 дет/час','#88FF88'); saveGame(); } else showFloatingMessage('❌ Не хватает деталей! Нужно 1500','#FF8888'); }
+    function buyStasyan() { if(stasyanPurchased) { showFloatingMessage('❌ Стасян уже в деле!','#FF8888'); return; } if(parts>=4500) { parts-=4500; stasyanPurchased=true; updatePassiveIncome(); showFloatingMessage('✅ Стасян сливает темки! +1000 дет/час','#88FF88'); saveGame(); } else showFloatingMessage('❌ Не хватает деталей! Нужно 4500','#FF8888'); }
+    yarikCard.addEventListener('click',(e)=>{ e.stopPropagation(); if(!yarikPurchased) buyYarik(); });
+    stasyanCard.addEventListener('click',(e)=>{ e.stopPropagation(); if(!stasyanPurchased) buyStasyan(); });
+    function createDebris(x,y) { let cnt=Math.floor(Math.random()*3)+1; for(let i=0;i<cnt;i++) { let d=document.createElement('div'); d.classList.add('debris'); let r=Math.random(); if(r<0.33) d.classList.add('rounded'); else if(r<0.66) d.classList.add('shard'); else d.classList.add('tiny'); let a=(Math.random()-0.5)*Math.PI*1.5-Math.PI/3, s=55+Math.random()*70, dx=Math.cos(a)*s*(Math.random()*0.8+0.6), dy=Math.sin(a)*s*0.9-40; d.style.setProperty('--dx',dx+'px'); d.style.setProperty('--dy',dy+'px'); d.style.left=(x-7+(Math.random()-0.5)*26)+'px'; d.style.top=(y-7+(Math.random()-0.5)*22)+'px'; d.style.backgroundColor='rgb(200,185,230)'; debrisContainer.appendChild(d); setTimeout(()=>d.remove(),600); } }
+    function animateTap() { tapZone.classList.add('tap-active'); setTimeout(()=>tapZone.classList.remove('tap-active'),100); if(window.navigator?.vibrate) navigator.vibrate(15); }
+    function handleTap(e) { let cx,cy; if(e.touches) { cx=e.touches[0].clientX; cy=e.touches[0].clientY; e.preventDefault(); } else { cx=e.clientX; cy=e.clientY; } animateTap(); addParts(1); createDebris(cx,cy); let sp=document.createElement('div'); sp.innerHTML='⚡'; sp.style.position='fixed'; sp.style.left=(cx-8)+'px'; sp.style.top=(cy-8)+'px'; sp.style.fontSize='0.9rem'; sp.style.opacity='0.5'; sp.style.pointerEvents='none'; sp.style.transition='all 0.2s ease'; document.body.appendChild(sp); setTimeout(()=>{ sp.style.transform='translateY(-15px)'; sp.style.opacity='0'; },10); setTimeout(()=>sp.remove(),200); }
+    tapZone.addEventListener('click',handleTap);
+    tapZone.addEventListener('touchstart',(e)=>{ e.preventDefault(); for(let i=0;i<e.touches.length;i++) handleTap(e.touches[i]); });
+    dailyBonusBtn.addEventListener('click',claimBonus);
+    function saveGame() { localStorage.setItem('MotoTapSave',JSON.stringify({parts,level,incomePerSecond,lastBonusTimestamp,yarikPurchased,stasyanPurchased})); }
+    function loadGame() { let s=localStorage.getItem('MotoTapSave'); if(s) { let d=JSON.parse(s); parts=d.parts||0; level=d.level||1; if(level>MAX_LEVEL) level=MAX_LEVEL; incomePerSecond=d.incomePerSecond||0; lastBonusTimestamp=d.lastBonusTimestamp||0; yarikPurchased=d.yarikPurchased||false; stasyanPurchased=d.stasyanPurchased||false; updatePassiveIncome(); updateUI(); } updateUI(); }
+    setInterval(()=>updateBonusUI(),1000);
+    setInterval(()=>saveGame(),5000);
+    setInterval(()=>{ if(incomePerSecond>0) addParts(incomePerSecond); },1000);
+    loadGame();
 
-    function updateBonusUI() {
-        const now = Date.now();
-        const hours24 = 24 * 60 * 60 * 1000;
-        if (lastBonusTimestamp === 0 || now - lastBonusTimestamp >= hours24) {
-            dailyBonusBtn.classList.remove('disabled');
-            dailyBonusText.innerText = 'ЕЖЕДНЕВНЫЙ БОНУС';
-            dailyBonusTimer.innerText = `${getBonusAmount()} деталей!`;
-        } else {
-            dailyBonusBtn.classList.add('disabled');
-            const timeLeft = hours24 - (now - lastBonusTimestamp);
-            dailyBonusText.innerText = 'СЛЕДУЮЩИЙ БОНУС';
-            dailyBonusTimer.innerText = formatTimeLeft(timeLeft);
-        }
-    }
-
-    function claimBonus() {
-        const now = Date.now();
-        const hours24 = 24 * 60 * 60 * 1000;
-        if (lastBonusTimestamp !== 0 && now - lastBonusTimestamp < hours24) {
-            showFloatingMessage('❌ Бонус уже получен!', '#FF8888');
-            return false;
-        }
-        const bonus = getBonusAmount();
-        addParts(bonus);
-        lastBonusTimestamp = now;
-        saveGame();
-        updateBonusUI();
-        showFloatingMessage(`🎁 +${bonus} ДЕТАЛЕЙ!`, '#FFD966');
-        return true;
-    }
-
-    function getRequiredForNextLevel(currentLevel) {
-        if (currentLevel >= MAX_LEVEL) return Infinity;
-        if (currentLevel === 1) return 1000;
-        if (currentLevel === 2) return 5000;
-        let required = 7000;
-        for (let i = 4; i <= currentLevel; i++) required += 2000;
-        return required;
-    }
-    function getTotalRequiredForLevel(targetLevel) {
-        if (targetLevel <= 1) return 0;
-        if (targetLevel > MAX_LEVEL) return Infinity;
-        let total = 0;
-        for (let lvl = 1; lvl < targetLevel; lvl++) total += getRequiredForNextLevel(lvl);
-        return total;
-    }
-
-    function showFloatingMessage(text, color = '#FFD966') {
-        const msg = document.createElement('div');
-        msg.className = 'floating-message';
-        msg.innerText = text;
-        msg.style.color = color;
-        msg.style.borderColor = color + '80';
-        messageContainer.appendChild(msg);
-        setTimeout(() => msg.remove(), 1200);
-    }
-
-    function checkLevelUp() {
-        if (level >= MAX_LEVEL) return;
-        let newLevel = level;
-        while (newLevel < MAX_LEVEL) {
-            const totalForNext = getTotalRequiredForLevel(newLevel + 1);
-            if (parts >= totalForNext) newLevel++;
-            else break;
-        }
-        if (newLevel > level) {
-            level = newLevel;
-            updateUI();
-            showFloatingMessage(`⬆️ УРОВЕНЬ ${level}!`, '#FFAA44');
-            if (level === MAX_LEVEL) showFloatingMessage(`🏆 МАКСИМАЛЬНЫЙ УРОВЕНЬ!`, '#FFAA44');
-            saveGame();
-        }
-    }
-
-    function updateUI() {
-        partsValueEl.innerText = Math.floor(parts);
-        levelValueEl.innerText = level;
-        const incomePerHour = Math.floor(incomePerSecond * 3600);
-        incomeValueEl.innerText = incomePerHour.toLocaleString();
-        updateBonusUI();
-
-        if (yarikPurchased) {
-            yarikCard.classList.add('purchased');
-            yarikPriceBlock.style.display = 'none';
-            yarikStatusBlock.style.display = 'inline-flex';
-        } else {
-            yarikCard.classList.remove('purchased');
-            yarikPriceBlock.style.display = 'inline-block';
-            yarikStatusBlock.style.display = 'none';
-        }
-        if (stasyanPurchased) {
-            stasyanCard.classList.add('purchased');
-            stasyanPriceBlock.style.display = 'none';
-            stasyanStatusBlock.style.display = 'inline-flex';
-        } else {
-            stasyanCard.classList.remove('purchased');
-            stasyanPriceBlock.style.display = 'inline-block';
-            stasyanStatusBlock.style.display = 'none';
-        }
-    }
-
-    function addParts(amount) {
-        parts += amount;
-        updateUI();
-        checkLevelUp();
-        saveGame();
-    }
-
-    function buyYarik() {
-        if (yarikPurchased) { showFloatingMessage('❌ Ярик уже работает!', '#FF8888'); return; }
-        const cost = 1500;
-        if (parts >= cost) {
-            parts -= cost;
-            yarikPurchased = true;
-            updatePassiveIncome();
-            showFloatingMessage('✅ Ярик теперь на металлоприёмке! +400 дет/час', '#88FF88');
-            saveGame();
-        } else { showFloatingMessage(`❌ Не хватает деталей! Нужно ${cost}`, '#FF8888'); }
-    }
-    function buyStasyan() {
-        if (stasyanPurchased) { showFloatingMessage('❌ Стасян уже в деле!', '#FF8888'); return; }
-        const cost = 4500;
-        if (parts >= cost) {
-            parts -= cost;
-            stasyanPurchased = true;
-            updatePassiveIncome();
-            showFloatingMessage('✅ Стасян сливает темки! +1000 дет/час', '#88FF88');
-            saveGame();
-        } else { showFloatingMessage(`❌ Не хватает деталей! Нужно ${cost}`, '#FF8888'); }
-    }
-
-    yarikCard.addEventListener('click', (e) => { e.stopPropagation(); if (!yarikPurchased) buyYarik(); });
-    stasyanCard.addEventListener('click', (e) => { e.stopPropagation(); if (!stasyanPurchased) buyStasyan(); });
-
-    function createDebris(x, y) {
-        const debrisCount = Math.floor(Math.random() * 3) + 1;
-        for (let i = 0; i < debrisCount; i++) {
-            const debris = document.createElement('div');
-            debris.classList.add('debris');
-            const shape = Math.random();
-            if (shape < 0.33) debris.classList.add('rounded');
-            else if (shape < 0.66) debris.classList.add('shard');
-            else debris.classList.add('tiny');
-            const angle = (Math.random() - 0.5) * Math.PI * 1.5 - Math.PI / 3;
-            const speed = 55 + Math.random() * 70;
-            const dx = Math.cos(angle) * speed * (Math.random() * 0.8 + 0.6);
-            const dy = Math.sin(angle) * speed * 0.9 - 40;
-            debris.style.setProperty('--dx', dx + 'px');
-            debris.style.setProperty('--dy', dy + 'px');
-            debris.style.left = (x - 7 + (Math.random() - 0.5) * 26) + 'px';
-            debris.style.top = (y - 7 + (Math.random() - 0.5) * 22) + 'px';
-            const brightness = 200 + Math.random() * 55;
-            debris.style.backgroundColor = `rgb(${brightness}, ${brightness - 15}, 230)`;
-            debrisContainer.appendChild(debris);
-            setTimeout(() => debris.remove(), 600);
-        }
-    }
-
-    function animateTap() {
-        tapZone.classList.add('tap-active');
-        setTimeout(() => tapZone.classList.remove('tap-active'), 100);
-        if (window.navigator && window.navigator.vibrate) navigator.vibrate(15);
-    }
-
-    function handleTap(clientX, clientY) {
-        animateTap();
-        addParts(1);
-        createDebris(clientX, clientY);
-        const spark = document.createElement('div');
-        spark.innerHTML = '⚡';
-        spark.style.position = 'fixed';
-        spark.style.left = (clientX - 8) + 'px';
-        spark.style.top = (clientY - 8) + 'px';
-        spark.style.fontSize = '0.9rem';
-        spark.style.opacity = '0.5';
-        spark.style.pointerEvents = 'none';
-        spark.style.zIndex = '1000';
-        spark.style.transition = 'all 0.2s ease';
-        document.body.appendChild(spark);
-        setTimeout(() => { spark.style.transform = 'translateY(-15px)'; spark.style.opacity = '0'; }, 10);
-        setTimeout(() => spark.remove(), 200);
-    }
-
-    tapZone.addEventListener('click', (e) => handleTap(e.clientX, e.clientY));
-    tapZone.addEventListener('touchstart', (e) => {
-        e.preventDefault();
-        for (let i = 0; i < e.touches.length; i++) handleTap(e.touches[i].clientX, e.touches[i].clientY);
-    });
-    dailyBonusBtn.addEventListener('click', () => claimBonus());
-
-    function saveGame() {
-        const save = { parts, level, incomePerSecond, lastBonusTimestamp, yarikPurchased, stasyanPurchased };
-        localStorage.setItem('MotoTapSave', JSON.stringify(save));
-    }
-    function loadGame() {
-        const saved = localStorage.getItem('MotoTapSave');
-        if (saved) {
-            try {
-                const data = JSON.parse(saved);
-                parts = data.parts || 0;
-                level = data.level || 1;
-                if (level > MAX_LEVEL) level = MAX_LEVEL;
-                incomePerSecond = data.incomePerSecond || 0;
-                lastBonusTimestamp = data.lastBonusTimestamp || 0;
-                yarikPurchased = data.yarikPurchased || false;
-                stasyanPurchased = data.stasyanPurchased || false;
-                updatePassiveIncome();
-                updateUI();
-            } catch(e) {}
-        }
-        updateUI();
-    }
-
-    setInterval(() => updateBonusUI(), 1000);
-    setInterval(() => saveGame(), 5000);
-    setInterval(() => { if (incomePerSecond > 0) addParts(income
+    // Логика шторки
+    const drawer=document.getElementById('drawer'), drawerHandle=document.getElementById('drawerHandle'), drawerClose=document.getElementById('drawerClose');
+    let startX=0, isDragging=false;
+    function openDrawer() { drawer.classList.add('open'); }
+    function closeDrawer() { drawer.classList.remove('open'); }
+    drawerHandle.addEventListener('mousedown',(e)=>{ startX=e.clientX; isDragging=true; document.body.style.userSelect='none'; });
+    drawerHandle.addEventListener('touchstart',(e)=>{ startX=e.touches[0].clientX; isDragging=true; e.preventDefault(); });
+    window.addEventListener('mousemove',(e)=>{ if(!isDragging) return; if(e.clientX-startX<-20) { openDrawer(); isDragging=false; } });
+    window.addEventListener('touchmove',(e)=>{ if(!isDragging) return; if(e.touches[0].clientX-startX<-20) { openDrawer(); isDragging=false; e.preventDefault(); } });
+    window.addEventListener('mouseup',()=>{ isDragging=false; });
+    window.addEventListener('touchend',()=>{ isDragging=false; });
+    drawerClose.addEventListener('click',closeDrawer);
+    drawerHandle.addEventListener('click',()=>{ if(!drawer.classList.contains('open')) openDrawer(); });
+</script>
+</body>
+</html>
