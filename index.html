@@ -118,13 +118,11 @@
             <span class="bottom-drawer-close" id="bottomDrawerClose">✕</span>
         </div>
         <div class="horizontal-scroll" id="horizontalScroll">
-            <!-- КОЛЕСО МОТАРД -->
             <div class="shop-item" id="wheelItem">
                 <img src="IMG_0904-photos.png" alt="Колесо мотард" style="width:60px; height:60px; object-fit:contain; margin-bottom:4px;">
                 <div class="shop-item-name">Колесо мотард</div>
                 <div class="shop-item-price" id="wheelPrice">2000 🔩</div>
             </div>
-            <!-- ГЛУШИТЕЛЬ -->
             <div class="shop-item" id="exhaustItem">
                 <img src="IMG_0908-photos.png" alt="Глушитель" style="width:60px; height:60px; object-fit:contain; margin-bottom:4px;">
                 <div class="shop-item-name">Глушитель</div>
@@ -142,6 +140,14 @@
         <div class="garage-drawer-content">
             <div class="upgrade-card" id="yarikCard"><div class="upgrade-image"><img src="IMG_0890.jpeg" alt="Ярик"></div><div class="upgrade-name">Школьник Ярик</div><div class="upgrade-description">Школьник Ярик мутит на металлоприёмке — 400 запчастей в час!</div><div id="yarikPriceBlock" class="upgrade-price">1500 🔩</div><div id="yarikStatusBlock" class="upgrade-status" style="display:none;">✅ АКТИВНО</div></div>
             <div class="upgrade-card" id="stasyanCard"><div class="upgrade-image"><img src="IMG_0895.jpeg" alt="Стасян"></div><div class="upgrade-name">Стасян</div><div class="upgrade-description">Стасян с детства изучал темки по заработку из тик тока, но теперь в свои 15 лет живёт на сдаче деталей</div><div id="stasyanPriceBlock" class="upgrade-price">4500 🔩</div><div id="stasyanStatusBlock" class="upgrade-status" style="display:none;">✅ АКТИВНО</div></div>
+            <!-- СТРОИТЕЛЬ БИЛЛ -->
+            <div class="upgrade-card" id="billCard">
+                <div class="upgrade-image"><img src="IMG_0911.jpeg" alt="Строитель Билл"></div>
+                <div class="upgrade-name">Строитель Билл</div>
+                <div class="upgrade-description">Строитель Билл готов работать и создавать тебе 2000 деталей в час!</div>
+                <div id="billPriceBlock" class="upgrade-price">8000 🔩</div>
+                <div id="billStatusBlock" class="upgrade-status" style="display:none;">✅ АКТИВНО</div>
+            </div>
         </div>
     </div>
     <div class="content-center" id="contentCenter"><div class="sphere"></div><div class="spark-plug-wrapper" id="tapZone"><img src="IMG_0884-photo.png" class="spark-plug"></div></div>
@@ -163,14 +169,18 @@
         const contentCenter = document.getElementById('contentCenter');
         const garageDrawer = document.getElementById('garageDrawer');
         
-        // Товары
         const wheelItem = document.getElementById('wheelItem');
         const wheelPriceSpan = document.getElementById('wheelPrice');
         const exhaustItem = document.getElementById('exhaustItem');
         const exhaustPriceSpan = document.getElementById('exhaustPrice');
+        
+        const billCard = document.getElementById('billCard');
+        const billPriceBlock = document.getElementById('billPriceBlock');
+        const billStatusBlock = document.getElementById('billStatusBlock');
 
         let wheelPurchased = false;
         let exhaustPurchased = false;
+        let billPurchased = false;
         let isMessageShowing = false;
         let messageTimeout = null;
 
@@ -310,6 +320,7 @@
             let newIncome = 0;
             if (yarikPurchased) newIncome += 400 / 3600;
             if (stasyanPurchased) newIncome += 1000 / 3600;
+            if (billPurchased) newIncome += 2000 / 3600;
             incomePerSecond = newIncome;
             updateUI();
         }
@@ -417,6 +428,16 @@
                 stasyanPriceBlock.style.display = 'inline-block';
                 stasyanStatusBlock.style.display = 'none';
             }
+
+            if (billPurchased) {
+                billCard.classList.add('purchased');
+                billPriceBlock.style.display = 'none';
+                billStatusBlock.style.display = 'inline-flex';
+            } else {
+                billCard.classList.remove('purchased');
+                billPriceBlock.style.display = 'inline-block';
+                billStatusBlock.style.display = 'none';
+            }
         }
 
         function addParts(amount) {
@@ -458,6 +479,22 @@
             }
         }
 
+        function buyBill() {
+            if (billPurchased) {
+                showFloatingMessageAntiSpam('❌ Билл уже работает!', '#FF8888');
+                return;
+            }
+            if (parts >= 8000) {
+                parts -= 8000;
+                billPurchased = true;
+                updatePassiveIncome();
+                showFloatingMessageAntiSpam('✅ Строитель Билл теперь создаёт тебе 2000 деталей в час!', '#88FF88');
+                saveGame();
+            } else {
+                showFloatingMessageAntiSpam('❌ Не хватает деталей! Нужно 8000', '#FF8888');
+            }
+        }
+
         yarikCard.addEventListener('click', (e) => {
             e.stopPropagation();
             if (!yarikPurchased) buyYarik();
@@ -466,6 +503,11 @@
         stasyanCard.addEventListener('click', (e) => {
             e.stopPropagation();
             if (!stasyanPurchased) buyStasyan();
+        });
+
+        billCard.addEventListener('click', (e) => {
+            e.stopPropagation();
+            if (!billPurchased) buyBill();
         });
 
         if (wheelItem) {
@@ -559,6 +601,7 @@
                 lastBonusTimestamp: lastBonusTimestamp,
                 yarikPurchased: yarikPurchased,
                 stasyanPurchased: stasyanPurchased,
+                billPurchased: billPurchased,
                 wheelPurchased: wheelPurchased,
                 exhaustPurchased: exhaustPurchased
             };
@@ -577,6 +620,7 @@
                     lastBonusTimestamp = data.lastBonusTimestamp || 0;
                     yarikPurchased = data.yarikPurchased || false;
                     stasyanPurchased = data.stasyanPurchased || false;
+                    billPurchased = data.billPurchased || false;
                     wheelPurchased = data.wheelPurchased || false;
                     exhaustPurchased = data.exhaustPurchased || false;
                     updateBikeImage();
