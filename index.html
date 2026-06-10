@@ -118,12 +118,18 @@
             <span class="bottom-drawer-close" id="bottomDrawerClose">✕</span>
         </div>
         <div class="horizontal-scroll" id="horizontalScroll">
+            <!-- КОЛЕСО МОТАРД -->
             <div class="shop-item" id="wheelItem">
                 <img src="IMG_0904-photos.png" alt="Колесо мотард" style="width:60px; height:60px; object-fit:contain; margin-bottom:4px;">
                 <div class="shop-item-name">Колесо мотард</div>
                 <div class="shop-item-price" id="wheelPrice">2000 🔩</div>
             </div>
-            <div class="shop-item"><div class="shop-item-icon">⚡</div><div class="shop-item-name">Двигатель</div><div class="shop-item-price">2500 🔩</div></div>
+            <!-- ГЛУШИТЕЛЬ -->
+            <div class="shop-item" id="exhaustItem">
+                <img src="IMG_0908-photos.png" alt="Глушитель" style="width:60px; height:60px; object-fit:contain; margin-bottom:4px;">
+                <div class="shop-item-name">Глушитель</div>
+                <div class="shop-item-price" id="exhaustPrice">1500 🔩</div>
+            </div>
             <div class="shop-item"><div class="shop-item-icon">🛞</div><div class="shop-item-name">Тормоза</div><div class="shop-item-price">1000 🔩</div></div>
             <div class="shop-item"><div class="shop-item-icon">⛽</div><div class="shop-item-name">Топливо</div><div class="shop-item-price">300 🔩</div></div>
             <div class="shop-item"><div class="shop-item-icon">💡</div><div class="shop-item-name">Фары</div><div class="shop-item-price">400 🔩</div></div>
@@ -156,10 +162,15 @@
         const garageDrawerHandle = document.getElementById('garageDrawerHandle');
         const contentCenter = document.getElementById('contentCenter');
         const garageDrawer = document.getElementById('garageDrawer');
+        
+        // Товары
         const wheelItem = document.getElementById('wheelItem');
         const wheelPriceSpan = document.getElementById('wheelPrice');
+        const exhaustItem = document.getElementById('exhaustItem');
+        const exhaustPriceSpan = document.getElementById('exhaustPrice');
 
         let wheelPurchased = false;
+        let exhaustPurchased = false;
         let isMessageShowing = false;
         let messageTimeout = null;
 
@@ -215,6 +226,25 @@
                 wheelItem.classList.remove('purchased-item');
                 wheelPriceSpan.innerHTML = '2000 🔩';
             }
+            if (exhaustPurchased) {
+                exhaustItem.classList.add('purchased-item');
+                exhaustPriceSpan.innerHTML = 'КУПЛЕНО';
+            } else {
+                exhaustItem.classList.remove('purchased-item');
+                exhaustPriceSpan.innerHTML = '1500 🔩';
+            }
+        }
+        
+        function updateBikeImage() {
+            if (wheelPurchased && exhaustPurchased) {
+                bikeImage.src = 'IMG_0907-photos.png';
+            } else if (wheelPurchased) {
+                bikeImage.src = 'IMG_0905-photos.png';
+            } else if (exhaustPurchased) {
+                bikeImage.src = 'IMG_0907-photos.png';
+            } else {
+                bikeImage.src = 'IMG_0901-photos.png';
+            }
         }
         
         function buyWheel(partsAmount, setPartsCallback) {
@@ -225,13 +255,32 @@
             if (partsAmount >= 2000) {
                 setPartsCallback(partsAmount - 2000);
                 wheelPurchased = true;
-                bikeImage.src = 'IMG_0905-photos.png';
+                updateBikeImage();
                 updateShopUI();
                 saveGame();
                 showFloatingMessageAntiSpam('✅ Колесо мотард установлено! Мотоцикл преобразился', '#88FF88');
                 return true;
             } else {
                 showFloatingMessageAntiSpam('❌ Не хватает деталей! Нужно 2000', '#FF8888');
+                return false;
+            }
+        }
+        
+        function buyExhaust(partsAmount, setPartsCallback) {
+            if (exhaustPurchased) {
+                showFloatingMessageAntiSpam('❌ Глушитель уже установлен!', '#FF8888');
+                return false;
+            }
+            if (partsAmount >= 1500) {
+                setPartsCallback(partsAmount - 1500);
+                exhaustPurchased = true;
+                updateBikeImage();
+                updateShopUI();
+                saveGame();
+                showFloatingMessageAntiSpam('✅ Глушитель установлен! Мотоцикл зазвучал иначе', '#88FF88');
+                return true;
+            } else {
+                showFloatingMessageAntiSpam('❌ Не хватает деталей! Нужно 1500', '#FF8888');
                 return false;
             }
         }
@@ -426,6 +475,13 @@
             });
         }
 
+        if (exhaustItem) {
+            exhaustItem.addEventListener('click', (e) => {
+                e.stopPropagation();
+                buyExhaust(parts, (newAmount) => { parts = newAmount; updateUI(); saveGame(); });
+            });
+        }
+
         function createDebris(x, y) {
             const cnt = Math.floor(Math.random() * 3) + 1;
             for (let i = 0; i < cnt; i++) {
@@ -503,7 +559,8 @@
                 lastBonusTimestamp: lastBonusTimestamp,
                 yarikPurchased: yarikPurchased,
                 stasyanPurchased: stasyanPurchased,
-                wheelPurchased: wheelPurchased
+                wheelPurchased: wheelPurchased,
+                exhaustPurchased: exhaustPurchased
             };
             localStorage.setItem('MotoTapSave', JSON.stringify(saveData));
         }
@@ -521,11 +578,8 @@
                     yarikPurchased = data.yarikPurchased || false;
                     stasyanPurchased = data.stasyanPurchased || false;
                     wheelPurchased = data.wheelPurchased || false;
-                    if (wheelPurchased) {
-                        bikeImage.src = 'IMG_0905-photos.png';
-                    } else {
-                        bikeImage.src = 'IMG_0901-photos.png';
-                    }
+                    exhaustPurchased = data.exhaustPurchased || false;
+                    updateBikeImage();
                     updatePassiveIncome();
                     updateUI();
                     updateShopUI();
