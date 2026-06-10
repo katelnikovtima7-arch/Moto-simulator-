@@ -128,7 +128,12 @@
                 <div class="shop-item-name">Глушитель</div>
                 <div class="shop-item-price" id="exhaustPrice">1500 🔩</div>
             </div>
-            <div class="shop-item"><div class="shop-item-icon">🛞</div><div class="shop-item-name">Тормоза</div><div class="shop-item-price">1000 🔩</div></div>
+            <!-- НОВЫЙ ПЛАСТИК -->
+            <div class="shop-item" id="plasticItem">
+                <img src="IMG_0915-photos.png" alt="Новый пластик" style="width:60px; height:60px; object-fit:contain; margin-bottom:4px;">
+                <div class="shop-item-name">Новый пластик</div>
+                <div class="shop-item-price" id="plasticPrice">3000 🔩</div>
+            </div>
             <div class="shop-item"><div class="shop-item-icon">⛽</div><div class="shop-item-name">Топливо</div><div class="shop-item-price">300 🔩</div></div>
             <div class="shop-item"><div class="shop-item-icon">💡</div><div class="shop-item-name">Фары</div><div class="shop-item-price">400 🔩</div></div>
         </div>
@@ -140,14 +145,7 @@
         <div class="garage-drawer-content">
             <div class="upgrade-card" id="yarikCard"><div class="upgrade-image"><img src="IMG_0890.jpeg" alt="Ярик"></div><div class="upgrade-name">Школьник Ярик</div><div class="upgrade-description">Школьник Ярик мутит на металлоприёмке — 400 запчастей в час!</div><div id="yarikPriceBlock" class="upgrade-price">1500 🔩</div><div id="yarikStatusBlock" class="upgrade-status" style="display:none;">✅ АКТИВНО</div></div>
             <div class="upgrade-card" id="stasyanCard"><div class="upgrade-image"><img src="IMG_0895.jpeg" alt="Стасян"></div><div class="upgrade-name">Стасян</div><div class="upgrade-description">Стасян с детства изучал темки по заработку из тик тока, но теперь в свои 15 лет живёт на сдаче деталей</div><div id="stasyanPriceBlock" class="upgrade-price">4500 🔩</div><div id="stasyanStatusBlock" class="upgrade-status" style="display:none;">✅ АКТИВНО</div></div>
-            <!-- СТРОИТЕЛЬ БИЛЛ -->
-            <div class="upgrade-card" id="billCard">
-                <div class="upgrade-image"><img src="IMG_0911.jpeg" alt="Строитель Билл"></div>
-                <div class="upgrade-name">Строитель Билл</div>
-                <div class="upgrade-description">Строитель Билл готов работать и создавать тебе 2000 деталей в час!</div>
-                <div id="billPriceBlock" class="upgrade-price">8000 🔩</div>
-                <div id="billStatusBlock" class="upgrade-status" style="display:none;">✅ АКТИВНО</div>
-            </div>
+            <div class="upgrade-card" id="billCard"><div class="upgrade-image"><img src="IMG_0911.jpeg" alt="Строитель Билл"></div><div class="upgrade-name">Строитель Билл</div><div class="upgrade-description">Строитель Билл готов работать и создавать тебе 2000 деталей в час!</div><div id="billPriceBlock" class="upgrade-price">8000 🔩</div><div id="billStatusBlock" class="upgrade-status" style="display:none;">✅ АКТИВНО</div></div>
         </div>
     </div>
     <div class="content-center" id="contentCenter"><div class="sphere"></div><div class="spark-plug-wrapper" id="tapZone"><img src="IMG_0884-photo.png" class="spark-plug"></div></div>
@@ -173,6 +171,8 @@
         const wheelPriceSpan = document.getElementById('wheelPrice');
         const exhaustItem = document.getElementById('exhaustItem');
         const exhaustPriceSpan = document.getElementById('exhaustPrice');
+        const plasticItem = document.getElementById('plasticItem');
+        const plasticPriceSpan = document.getElementById('plasticPrice');
         
         const billCard = document.getElementById('billCard');
         const billPriceBlock = document.getElementById('billPriceBlock');
@@ -180,6 +180,7 @@
 
         let wheelPurchased = false;
         let exhaustPurchased = false;
+        let plasticPurchased = false;
         let billPurchased = false;
         let isMessageShowing = false;
         let messageTimeout = null;
@@ -243,10 +244,19 @@
                 exhaustItem.classList.remove('purchased-item');
                 exhaustPriceSpan.innerHTML = '1500 🔩';
             }
+            if (plasticPurchased) {
+                plasticItem.classList.add('purchased-item');
+                plasticPriceSpan.innerHTML = 'КУПЛЕНО';
+            } else {
+                plasticItem.classList.remove('purchased-item');
+                plasticPriceSpan.innerHTML = '3000 🔩';
+            }
         }
         
         function updateBikeImage() {
-            if (wheelPurchased && exhaustPurchased) {
+            if (plasticPurchased) {
+                bikeImage.src = 'IMG_0913-photos.png';
+            } else if (wheelPurchased && exhaustPurchased) {
                 bikeImage.src = 'IMG_0907-photos.png';
             } else if (wheelPurchased) {
                 bikeImage.src = 'IMG_0905-photos.png';
@@ -291,6 +301,25 @@
                 return true;
             } else {
                 showFloatingMessageAntiSpam('❌ Не хватает деталей! Нужно 1500', '#FF8888');
+                return false;
+            }
+        }
+        
+        function buyPlastic(partsAmount, setPartsCallback) {
+            if (plasticPurchased) {
+                showFloatingMessageAntiSpam('❌ Пластик уже установлен!', '#FF8888');
+                return false;
+            }
+            if (partsAmount >= 3000) {
+                setPartsCallback(partsAmount - 3000);
+                plasticPurchased = true;
+                updateBikeImage();
+                updateShopUI();
+                saveGame();
+                showFloatingMessageAntiSpam('✅ Новый пластик установлен! Мотоцикл сияет свежестью', '#88FF88');
+                return true;
+            } else {
+                showFloatingMessageAntiSpam('❌ Не хватает деталей! Нужно 3000', '#FF8888');
                 return false;
             }
         }
@@ -524,6 +553,13 @@
             });
         }
 
+        if (plasticItem) {
+            plasticItem.addEventListener('click', (e) => {
+                e.stopPropagation();
+                buyPlastic(parts, (newAmount) => { parts = newAmount; updateUI(); saveGame(); });
+            });
+        }
+
         function createDebris(x, y) {
             const cnt = Math.floor(Math.random() * 3) + 1;
             for (let i = 0; i < cnt; i++) {
@@ -603,7 +639,8 @@
                 stasyanPurchased: stasyanPurchased,
                 billPurchased: billPurchased,
                 wheelPurchased: wheelPurchased,
-                exhaustPurchased: exhaustPurchased
+                exhaustPurchased: exhaustPurchased,
+                plasticPurchased: plasticPurchased
             };
             localStorage.setItem('MotoTapSave', JSON.stringify(saveData));
         }
@@ -623,6 +660,7 @@
                     billPurchased = data.billPurchased || false;
                     wheelPurchased = data.wheelPurchased || false;
                     exhaustPurchased = data.exhaustPurchased || false;
+                    plasticPurchased = data.plasticPurchased || false;
                     updateBikeImage();
                     updatePassiveIncome();
                     updateUI();
